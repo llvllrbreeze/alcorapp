@@ -18,7 +18,7 @@ namespace all { namespace am { namespace detail {
   ///
   am_event_listener_imp();
   ///
-  void start();
+  //void start();
   ///
   void recv_task_imp( ArNetPacket* pkt);
   ///
@@ -52,16 +52,10 @@ void am_event_listener_imp::recv_task_imp( ArNetPacket* pkt)
 	notify();
 }
 //###########################################################################
-void am_event_listener_imp::start() 
-{
-   //parte il thread    
-  printf("DEPRECATED :: am_event_listener::Start Thread\n");
-
-  //conn_thr=
-  //    new boost::thread(
-  //    boost::bind(&core::i_connection_handler_t::runThread, &connection_handler)
-  //    );
-}
+//void am_event_listener_imp::start() 
+//{
+//
+//}
 //###########################################################################
 void am_event_listener_imp::register_to()
 {

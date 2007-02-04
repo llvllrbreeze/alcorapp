@@ -14,7 +14,7 @@ struct am_event_listener_t : public all::core::i_observable
 {
 am_event_listener_t(){};
 
-virtual void start()=0;
+//virtual void start()=0;
 virtual events::tag get_event() const = 0;
 
 };
