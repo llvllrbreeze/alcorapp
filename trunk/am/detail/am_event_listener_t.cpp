@@ -30,8 +30,6 @@ namespace all { namespace am { namespace detail {
   ///
 	void lost_connection();
   ///
-  //boost::thread conn_thr;
-  ///
   all::core::i_connection_handler_t connection_handler;
   ///
 	ArFunctor1C<am_event_listener_imp, ArNetPacket* > 
