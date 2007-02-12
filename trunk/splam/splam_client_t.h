@@ -12,7 +12,7 @@ class SlamClient;
 struct splam_client_t
 {
 public:
-  splam_client_t();
+  splam_client_t(); 
 
 public:
   void get_slam_data(SlamData&);
