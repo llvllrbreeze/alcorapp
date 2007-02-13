@@ -18,7 +18,7 @@
 //device
 #include "alcor/sense/bumblebee_ipc_recv_t.h"
 #include "alcor/act/directed_perception_ptu_t.h"
-#include "alcor/act/pantilt_control_loop_t.h"
+#include "alcor/act/pantilt_control_loop_t.hpp"
 //-----------------------------------------------------------------------++
 #include "alcor.apps/splam/splam_client_t.h"
 //-----------------------------------------------------------------------++
