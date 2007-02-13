@@ -95,8 +95,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../alcor.bin"
-			IntermediateDirectory="../obj/$(ProjectName)"
+			OutputDirectory="../../alcor.bin"
+			IntermediateDirectory="../../obj/$(ProjectName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -118,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".."
+				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_NO_SECURE_DEPRECATE"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -140,7 +140,7 @@
 				AdditionalDependencies="winmm.lib iniwrapper.lib"
 				OutputFile="$(OutDir)\$(ProjectName)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../alcor.lib"
+				AdditionalLibraryDirectories="../../alcor.lib"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
@@ -189,15 +189,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\alcor.apps\am\attentive_search_t.cpp"
+				RelativePath="..\am\attentive_search_t.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\alcor\act\pantilt_control_loop_t.cpp"
 				>
 			</File>
 		</Filter>
@@ -207,23 +203,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\alcor.apps\am\attentive_search_t.h"
-				>
-			</File>
-			<File
-				RelativePath="..\alcor\math\metric_utils.h"
-				>
-			</File>
-			<File
-				RelativePath="..\alcor\act\pantilt_control_loop_t.h"
-				>
-			</File>
-			<File
-				RelativePath="..\alcor\sense\slam2d_adpater.h"
-				>
-			</File>
-			<File
-				RelativePath="..\alcor\core\slam_data_adapter_i.h"
+				RelativePath="..\am\attentive_search_t.h"
 				>
 			</File>
 		</Filter>
