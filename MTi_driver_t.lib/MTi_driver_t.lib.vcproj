@@ -112,7 +112,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\.."
-				PreprocessorDefinitions="NDEBUG;WIN32"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="true"
-				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
+				OutputFile="..\..\alcor.lib\$(ProjectName)"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
 			<Tool
@@ -160,6 +160,10 @@
 			>
 			<File
 				RelativePath="..\..\alcor.extern\xsens\MTComm.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\sense\detail\MTi_driver_impl.cpp"
 				>
 			</File>
 			<File
