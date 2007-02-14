@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bumblebee_driver_t.lib", "bumblebee_driver_t.lib\bumblebee_driver_t.lib.vcproj", "{5695C528-96A6-4DB5-ADBB-DDE703D632DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "directed_perception_ptu.lib", "directed_perception_ptu\directed_perception_ptu.vcproj", "{69E1DA5C-EBC4-49BD-9C9D-218810431E35}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MTi_driver_t.lib", "MTi_driver_t.lib\MTi_driver_t.lib.vcproj", "{004D5855-E6BE-4453-9AFA-3E37A010F162}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opencv_grabber_t.lib", "opencv_grabber_t\opencv_grabber_t.vcproj", "{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5695C528-96A6-4DB5-ADBB-DDE703D632DB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5695C528-96A6-4DB5-ADBB-DDE703D632DB}.Debug|Win32.Build.0 = Debug|Win32
+		{5695C528-96A6-4DB5-ADBB-DDE703D632DB}.Release|Win32.ActiveCfg = Release|Win32
+		{5695C528-96A6-4DB5-ADBB-DDE703D632DB}.Release|Win32.Build.0 = Release|Win32
+		{69E1DA5C-EBC4-49BD-9C9D-218810431E35}.Debug|Win32.ActiveCfg = Debug|Win32
+		{69E1DA5C-EBC4-49BD-9C9D-218810431E35}.Debug|Win32.Build.0 = Debug|Win32
+		{69E1DA5C-EBC4-49BD-9C9D-218810431E35}.Release|Win32.ActiveCfg = Release|Win32
+		{69E1DA5C-EBC4-49BD-9C9D-218810431E35}.Release|Win32.Build.0 = Release|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.ActiveCfg = Debug|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.Build.0 = Debug|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.ActiveCfg = Release|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.Build.0 = Release|Win32
+		{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}.Debug|Win32.Build.0 = Debug|Win32
+		{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}.Release|Win32.ActiveCfg = Release|Win32
+		{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
