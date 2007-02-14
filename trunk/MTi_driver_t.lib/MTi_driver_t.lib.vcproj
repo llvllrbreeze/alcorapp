@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="true"
-				OutputFile="..\..\alcor.lib\$(ProjectName)"
+				OutputFile="$(OutDir)\$(ProjectName)"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
 			<Tool
