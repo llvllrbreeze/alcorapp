@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jpeg_codec.lib", "jpeg_codec.lib.vcproj", "{004D5855-E6BE-4453-9AFA-3E37A010F162}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jpeg_encode_test.exe", "..\jpeg_encode_test.exe\jpeg_encode_test.exe.vcproj", "{161C7C90-C964-4511-843E-7C5C4F77862F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{004D5855-E6BE-4453-9AFA-3E37A010F162} = {004D5855-E6BE-4453-9AFA-3E37A010F162}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.ActiveCfg = Debug|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.Build.0 = Debug|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.ActiveCfg = Release|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.Build.0 = Release|Win32
+		{161C7C90-C964-4511-843E-7C5C4F77862F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{161C7C90-C964-4511-843E-7C5C4F77862F}.Debug|Win32.Build.0 = Debug|Win32
+		{161C7C90-C964-4511-843E-7C5C4F77862F}.Release|Win32.ActiveCfg = Release|Win32
+		{161C7C90-C964-4511-843E-7C5C4F77862F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
