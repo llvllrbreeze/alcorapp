@@ -134,10 +134,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="jpeg_codec.lib"
+				AdditionalDependencies="jpeg_codec.lib bumblebee_ipc_recv_t.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../alcor.lib"
+				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
