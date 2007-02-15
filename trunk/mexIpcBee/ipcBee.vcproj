@@ -140,7 +140,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies=" libmx.lib libmex.lib libmat.lib "
-				OutputFile="..\..\alcor.lib\$(ProjectName).dll"
+				OutputFile="..\..\alcor.bin\$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\matlab\ipcBee\bee_grab_all.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\matlab\ipcBee\bee_grab_color_and_depth.cpp"
 				>
 			</File>
@@ -236,23 +240,31 @@
 			Name="matlab"
 			>
 			<File
-				RelativePath="..\..\alcor\matlab\@ipcBee\private\close.m"
+				RelativePath="..\..\alcor\matlab\@ipcbee\private\close.m"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\@ipcBee\private\grab_color.m"
+				RelativePath="..\..\alcor\matlab\@ipcbee\private\grab_all.m"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\@ipcBee\ipcBee.m"
+				RelativePath="..\..\alcor\matlab\@ipcbee\private\grab_color.m"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\@ipcBee\private\open.m"
+				RelativePath="..\..\alcor\matlab\@ipcbee\private\grab_color_and_depth.m"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\@ipcBee\subsref.m"
+				RelativePath="..\..\alcor\matlab\@ipcbee\ipcBee.m"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\matlab\@ipcbee\private\open.m"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\matlab\@ipcbee\subsref.m"
 				>
 			</File>
 		</Filter>
