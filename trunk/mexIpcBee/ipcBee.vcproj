@@ -139,8 +139,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ipc_bumblebee_recv_t.lib libmx.lib libmex.lib libmat.lib"
-				OutputFile="..\..\alcor.lib\ipc_bee_mex.dll"
+				AdditionalDependencies=" libmx.lib libmex.lib libmat.lib "
+				OutputFile="..\..\alcor.lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"

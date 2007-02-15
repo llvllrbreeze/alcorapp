@@ -2,6 +2,16 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mexIpcBee", "ipcBee.vcproj", "{9F2B8AF6-9240-43C8-9C55-8AEDDA113BDD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{004D5855-E6BE-4453-9AFA-3E37A010F162} = {004D5855-E6BE-4453-9AFA-3E37A010F162}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bumblebee_driver_t.lib", "..\bumblebee_driver_t.lib\bumblebee_driver_t.lib.vcproj", "{5695C528-96A6-4DB5-ADBB-DDE703D632DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bumblebee_ipc_recv_t.lib", "..\bumblebee_ipc_recv_t.lib\bumblebee_ipc_recv_t.lib.vcproj", "{004D5855-E6BE-4453-9AFA-3E37A010F162}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5695C528-96A6-4DB5-ADBB-DDE703D632DB} = {5695C528-96A6-4DB5-ADBB-DDE703D632DB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +23,14 @@ Global
 		{9F2B8AF6-9240-43C8-9C55-8AEDDA113BDD}.Debug|Win32.Build.0 = Debug|Win32
 		{9F2B8AF6-9240-43C8-9C55-8AEDDA113BDD}.Release|Win32.ActiveCfg = Release|Win32
 		{9F2B8AF6-9240-43C8-9C55-8AEDDA113BDD}.Release|Win32.Build.0 = Release|Win32
+		{5695C528-96A6-4DB5-ADBB-DDE703D632DB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5695C528-96A6-4DB5-ADBB-DDE703D632DB}.Debug|Win32.Build.0 = Debug|Win32
+		{5695C528-96A6-4DB5-ADBB-DDE703D632DB}.Release|Win32.ActiveCfg = Release|Win32
+		{5695C528-96A6-4DB5-ADBB-DDE703D632DB}.Release|Win32.Build.0 = Release|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.ActiveCfg = Debug|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.Build.0 = Debug|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.ActiveCfg = Release|Win32
+		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
