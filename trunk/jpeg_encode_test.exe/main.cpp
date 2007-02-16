@@ -56,10 +56,13 @@ int main ()
     //CORRUPT HEADER!!!!
     //decomment to test decoder error triggering
     //memset(jpegenc.data.get()+16, 123, 8);
+    core::uint8_sarr rotto(new core::uint8_t[jpegenc.size-1024]);
+
+    memcpy(rotto.get(),jpegenc.data.get(),jpegenc.size-1024);
 
     printf("Decompress\n");
     timer.restart();
-    if( decoder.decode(jpegdec, jpegenc.data, jpegenc.size) )
+    if( decoder.decode(jpegdec ,  rotto, jpegenc.size-1024) )
     {
     elapsed  = timer.elapsed();
     printf("Decoded succesfully! size: %d %d %d\n", 
