@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="true"
-				OutputFile="..\..\alcor.lib\MTi_driver_t.lib"
+				OutputFile="$(OutDir)\$(ProjectName)"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
 			<Tool
