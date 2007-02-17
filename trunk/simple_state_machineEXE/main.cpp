@@ -1,80 +1,151 @@
-#include "mpl_state_machine.hpp"  
+#include "state_machine.hpp"
+#include <boost/mpl/list.hpp>
+
+#include <iostream>
+
+#include <boost\function.hpp>
+#include <boost\bind.hpp>
+#include <boost\thread.hpp>
+#include <boost\shared_ptr.hpp>
 
 
-struct generic_event {};
-
-struct explore : public generic_event {};
-
-struct reset : public generic_event {};
-
-struct stop : public generic_event {};
-
-struct idle : public generic_event {};
-
+namespace mpl = boost::mpl;
 
 // concrete FSM implementation 
-class mission : public state_machine<mission>
+class mission : public fsm::state_machine<mission>
 {
- private:
-    // the list of FSM states
-    enum states {
-        Idle, Exploring, Stopped
-      , initial_state = Idle
-    };
+public:
+  mission()
+  {
+    ////
+    fire = boost::bind
+      (&mission::idle_cb, this);
+  }
 
-    //actions
-    void start_exploring  (explore const&);
-    void resume_exploring (explore const&);
+  struct explore_event  : event<explore_event>{};
+  struct reset_event : event<reset_event> {};
+  struct stop_event : event<stop_event>{};
+  struct idle_event  : event<idle_event>{};
 
-    void go_idle            (idle const&);
-    void go_reset           (reset const&);
-    void go_stop            (stop const&);
-    
-    friend class state_machine<mission>;
+  typedef mission self_t;
 
-    typedef mission m; // makes transition table cleaner
+    // state invariants
+  void idled_state_invariant() const {}
+  void stopped_state_invariant() const {}
+  void exploring_state_invariant() const {}
 
-    // transition table
-    struct transition_table : mpl::vector6<
 
-    //    Start     Event         Next      Action
-    //  +-----------+-------------+-------------+----------------------+
-    row<  Idle      , explore     , Exploring   ,&m::start_exploring  >,
-    //  +-----------+-------------+-------------+----------------------+
-    row<  Exploring , idle        , Idle        ,&m::go_idle          >,
-    row<  Exploring , reset       , Idle        ,&m::go_reset         >,
-    row<  Exploring , stop        , Stopped     ,&m::go_stop          >,
-    //  +-----------+-------------+-------------+----------------------+
-    row<  Stopped   , explore     , Exploring   ,&m::resume_exploring  >,
-    row<  Stopped   , idle        , Idle        ,&m::go_idle           >
-    //  +-----------+-------------+-------------+----------------------+
-    > {};
+  // states (invariants are passed as non-type template arguments)
+  typedef state<0, &self_t::idled_state_invariant>      idled;
+  typedef state<1, &self_t::stopped_state_invariant>    stopped;
+  typedef state<2, &self_t::exploring_state_invariant>  exploring;
+
+
+ //private:
+
+    // transition functions
+    bool start_exploring  (explore_event const&);
+    bool resume_exploring (explore_event const&);
+    bool go_idle            (idle_event const&);
+    bool go_reset           (reset_event const&);
+    bool go_stop            (stop_event const&);
+
+    //per-state stuff
+    boost::function< void (void) > fire;
+
+    //
+    void idle_cb();
+    void exploring_cb();
+    void stopped_cb();
+    void reset_cb();
+
+
+    friend class fsm::state_machine<mission>;
+    typedef mpl::list<
+          transition<idled    , explore_event,  exploring, &mission::start_exploring>
+
+        , transition<exploring, idle_event ,  idled,   &mission::go_idle>
+        , transition<exploring, reset_event,  idled,   &mission::go_reset> 
+        , transition<exploring, stop_event ,  stopped, &mission::go_stop> 
+
+        , transition<stopped  , stop_event ,  stopped, &mission::go_stop>
+        , transition<stopped  , idle_event ,  idled  , &mission::go_idle>
+        , transition<stopped  , reset_event , idled  , &mission::go_reset>
+        >::type transition_table;
+
+    typedef idled initial_state;
 
     int somedata;
     void somemethod(){};
 };
 
-void mission::start_exploring  (explore const&) {printf("start_exploring\n");};
-void mission::resume_exploring (explore const&){printf("resume_exploring\n");};
+//###################################################################
+///
+bool mission::start_exploring  (explore_event const&) 
+  {
+    printf("start_exploring\n");
+    fire = boost::bind(&mission::exploring_cb,this);
+      return true;
+  };
 
-void mission::go_idle           (idle const&){printf("go_idle\n");};
-void mission::go_reset          (reset const&){printf("go_reset\n");};
-void mission::go_stop           (stop const&){printf("go_stop\n");};
+bool mission::resume_exploring (explore_event const&)
+{
+  printf("resume_exploring\n");
+  fire = boost::bind(&mission::exploring_cb,this);
+  return true;
+};
 
+bool mission::go_idle (idle_event const&)
+{
+  printf("go_idle\n");
+  fire = boost::bind(&mission::idle_cb,this);
+  return true;
+};
 
+bool mission::go_reset    (reset_event const&)
+{
+  printf("go_reset\n");
+  fire = boost::bind(&mission::reset_cb,this);
+    return true;
+};
+
+bool mission::go_stop     (stop_event const&)
+{
+  printf("go_stop\n");
+  fire = boost::bind(&mission::stopped_cb, this);
+    return true;
+
+};
+/////////////////////////////////////////////////////////////////////
+//    //
+void mission::idle_cb()
+{
+};
+//
+void mission::exploring_cb()
+{
+};
+
+void mission::stopped_cb()
+{
+};
+
+void mission::reset_cb()
+{
+};
+
+//###################################################################
 
 int main()
 {
     mission m;                      // An instance of the FSM
 
-    m.process_event( explore()  );  
-    m.process_event( reset()    );  
-    m.process_event( idle()     );
-    m.process_event( stop()     );
-    m.process_event( explore()  );
-    m.process_event( stop()     );
-    m.process_event( explore()  );
-    m.process_event( reset()    );
+    m.process_event( mission::explore_event() );  
+    m.process_event( mission::stop_event()    );  
+    m.process_event( mission::reset_event()     );
+ 
+    m.process_event( mission::explore_event() );
+    m.process_event( mission::idle_event()     );
 
     return 0;
 }
