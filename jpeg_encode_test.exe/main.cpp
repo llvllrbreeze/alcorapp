@@ -31,12 +31,14 @@ int main ()
     CImgDisplay viewdec(bee.width(), bee.height(),"Decoded");
 
     //retrieve frame from shared-memory
-    core::uint8_sarr img = bee.get_color_buffer(core::right_img);
+    core::uint8_sarr img = 
+      bee.get_color_buffer(core::right_img);
 
     //original image
     CImg<unsigned char> cimage; 
     //decoded image
     CImg<unsigned char> decimg; 
+
     //fill original
     cimage.assign(img.get(),bee.width(), bee.height(),1,3);
     //show it
@@ -54,6 +56,9 @@ int main ()
     printf("Elapsed: %f\n", elapsed);
     printf("crc: %x\n\n",jpegenc.crc);
 
+    printf("sizeof crc %d\n",sizeof(jpegenc.crc));
+    printf("sizeof crc::value_type %d\n", 
+      sizeof(boost::crc_32_type::value_type));
 
     getchar();
 
@@ -98,19 +103,23 @@ int main ()
     }
 
     getchar();
+    CImgDisplay viewdec2(bee.width(), bee.height(),"Decoded");
+    //decoded image
+    CImg<unsigned char> decimg2; 
 
     printf("Decompress with  header corrupted\n");
-    memset(jpegenc.data.get()+16, 123, 16);
+    memset(jpegenc.data.get(), 123, 16);
+    core::jpeg_data_t jpegdec2;
     timer.restart();
-    if( decoder.decode( jpegdec , jpegenc.data, jpegenc.size) )
+    if( decoder.decode( jpegdec2 , jpegenc.data, jpegenc.size) )
     {
     elapsed  = timer.elapsed();
     printf("Decoded succesfully! size: %d %d %d\n", 
-        jpegdec.height, jpegdec.width, jpegdec.depth);
+        jpegdec2.height, jpegdec2.width, jpegdec2.depth);
     printf("Elapsed: %f\n\n", elapsed);
 
-    decimg.assign(jpegdec.data.get(),bee.width(), bee.height(),1,3);
-    decimg.display(viewdec );
+    decimg2.assign(jpegdec2.data.get(),bee.width(), bee.height(),1,3);
+    decimg2.display(viewdec2 );
     }
     else
     {
