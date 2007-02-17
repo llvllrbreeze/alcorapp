@@ -5,9 +5,10 @@
 
 #include <boost\function.hpp>
 #include <boost\bind.hpp>
-#include <boost\thread.hpp>
+#include <boost\thread\thread.hpp>
 #include <boost\shared_ptr.hpp>
 
+#include <windows.h>
 
 namespace mpl = boost::mpl;
 
@@ -15,11 +16,32 @@ namespace mpl = boost::mpl;
 class mission : public fsm::state_machine<mission>
 {
 public:
-  mission()
+  mission():running_(true)
   {
-    ////
+        ////
     fire = boost::bind
       (&mission::idle_cb, this);
+
+    thisthread.reset( 
+        new boost::thread
+        (
+            boost::bind(&mission::loop_thread, this) 
+        )
+      );  
+
+  }
+
+  void loop_thread()
+  {
+
+    while (running_)
+    {
+    //printf("fire\n");
+    fire();    
+    boost::thread::yield();    
+    Sleep(500);
+    }
+
   }
 
   struct explore_event  : event<explore_event>{};
@@ -51,32 +73,40 @@ public:
     bool go_stop            (stop_event const&);
 
     //per-state stuff
-    boost::function< void (void) > fire;
+    typedef boost::function< void (void) > fire_func;
 
+    fire_func fire;
+
+    friend class fsm::state_machine<mission>;
+    typedef mpl::list<
+          transition<idled    , explore_event,  exploring, &self_t::start_exploring>
+
+        , transition<exploring, idle_event ,  idled,   &self_t::go_idle>
+        , transition<exploring, reset_event,  idled,   &self_t::go_reset> 
+        , transition<exploring, stop_event ,  stopped, &self_t::go_stop> 
+
+        , transition<stopped  , stop_event ,  stopped, &self_t::go_stop>
+        , transition<stopped  , idle_event ,  idled  , &self_t::go_idle>
+        , transition<stopped  , reset_event , idled  , &self_t::go_reset>
+        , transition<stopped  , explore_event , exploring  , &self_t::resume_exploring>  
+        >::type transition_table;
+
+    typedef idled initial_state;
+
+    void cancel() {running_ = false;};
+
+private:
+    int somedata;
+    void somemethod(){};
     //
     void idle_cb();
     void exploring_cb();
     void stopped_cb();
     void reset_cb();
 
+    boost::shared_ptr<boost::thread> thisthread;
 
-    friend class fsm::state_machine<mission>;
-    typedef mpl::list<
-          transition<idled    , explore_event,  exploring, &mission::start_exploring>
-
-        , transition<exploring, idle_event ,  idled,   &mission::go_idle>
-        , transition<exploring, reset_event,  idled,   &mission::go_reset> 
-        , transition<exploring, stop_event ,  stopped, &mission::go_stop> 
-
-        , transition<stopped  , stop_event ,  stopped, &mission::go_stop>
-        , transition<stopped  , idle_event ,  idled  , &mission::go_idle>
-        , transition<stopped  , reset_event , idled  , &mission::go_reset>
-        >::type transition_table;
-
-    typedef idled initial_state;
-
-    int somedata;
-    void somemethod(){};
+    volatile bool running_;
 };
 
 //###################################################################
@@ -84,8 +114,8 @@ public:
 bool mission::start_exploring  (explore_event const&) 
   {
     printf("start_exploring\n");
-    fire = boost::bind(&mission::exploring_cb,this);
-      return true;
+    this->fire = boost::bind(&mission::exploring_cb,this);
+    return true;
   };
 
 bool mission::resume_exploring (explore_event const&)
@@ -120,18 +150,22 @@ bool mission::go_stop     (stop_event const&)
 //    //
 void mission::idle_cb()
 {
+  printf("idled\n");
 };
 //
 void mission::exploring_cb()
 {
+    printf("exploring_cb\n");
 };
 
 void mission::stopped_cb()
 {
+    printf("idled\n");
 };
 
 void mission::reset_cb()
 {
+    printf("stopped_cb\n");
 };
 
 //###################################################################
@@ -140,12 +174,27 @@ int main()
 {
     mission m;                      // An instance of the FSM
 
-    m.process_event( mission::explore_event() );  
-    m.process_event( mission::stop_event()    );  
+    m.process_event( mission::explore_event() );
+
+    getchar();
+
+    m.process_event( mission::stop_event()    );
+
+    getchar();
+
+    m.process_event( mission::explore_event()    );
+    
+    getchar();
     m.process_event( mission::reset_event()     );
  
+    getchar();
     m.process_event( mission::explore_event() );
+    
+    getchar();
     m.process_event( mission::idle_event()     );
 
+    getchar();
+
+    m.cancel();
     return 0;
 }
