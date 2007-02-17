@@ -54,11 +54,8 @@ int main ()
     printf("Elapsed: %f\n", elapsed);
     printf("crc: %x\n\n",jpegenc.crc);
 
-    //CORRUPT HEADER!!!!
-    //decomment to test decoder error triggering
-    //memset(jpegenc.data.get()+16, 123, 8);
-    core::uint8_sarr rotto(new core::uint8_t[jpegenc.size-1024]);
-    memcpy(rotto.get(),jpegenc.data.get(),jpegenc.size-1024);
+
+    getchar();
 
     printf("Decompress with no errors\n");
     timer.restart();
@@ -77,7 +74,13 @@ int main ()
       printf("DECODER ERROR!\n");
     }
 
-    printf("Decompress with  errors\n");
+    getchar();
+
+    //spacca il buffer
+    core::uint8_sarr rotto(new core::uint8_t[jpegenc.size-1024]);
+    memcpy(rotto.get(),jpegenc.data.get(),jpegenc.size-1024);
+
+    printf("Decompress with  size errors\n");
     timer.restart();
     if( decoder.decode(jpegdec , rotto, jpegenc.size-1024, jpegenc.crc  ) )
     {
@@ -93,6 +96,27 @@ int main ()
     {
       printf("DECODER ERROR!\n");
     }
+
+    getchar();
+
+    printf("Decompress with  header corrupted\n");
+    memset(jpegenc.data.get()+16, 123, 16);
+    timer.restart();
+    if( decoder.decode( jpegdec , jpegenc.data, jpegenc.size) )
+    {
+    elapsed  = timer.elapsed();
+    printf("Decoded succesfully! size: %d %d %d\n", 
+        jpegdec.height, jpegdec.width, jpegdec.depth);
+    printf("Elapsed: %f\n\n", elapsed);
+
+    decimg.assign(jpegdec.data.get(),bee.width(), bee.height(),1,3);
+    decimg.display(viewdec );
+    }
+    else
+    {
+      printf("DECODER ERROR!\n");
+    }
+
   ////////////////////////////////////////////////
   getchar();
   }

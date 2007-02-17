@@ -129,7 +129,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="true"
-				AdditionalDependencies="jpeg.lib"
+				AdditionalDependencies=" libjpeg-static-mt.lib"
 				OutputFile="..\..\alcor.lib\$(ProjectName)"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
