@@ -57,12 +57,11 @@ int main ()
     //decomment to test decoder error triggering
     //memset(jpegenc.data.get()+16, 123, 8);
     core::uint8_sarr rotto(new core::uint8_t[jpegenc.size-1024]);
-
     memcpy(rotto.get(),jpegenc.data.get(),jpegenc.size-1024);
 
     printf("Decompress\n");
     timer.restart();
-    if( decoder.decode(jpegdec ,  rotto, jpegenc.size-1024) )
+    if( decoder.decode(jpegdec ,  jpegenc.data, jpegenc.size ) )
     {
     elapsed  = timer.elapsed();
     printf("Decoded succesfully! size: %d %d %d\n", 
@@ -79,35 +78,6 @@ int main ()
     }
 
   ////////////////////////////////////////////////
-  ////////////////////////////////////////////////
-
-    //encoder.reset(core::gray_tag, 240,320);
-
-    //temp.reset(new core::uint8_t[240*320]);
-
-
-    //timer.restart();
-    //  jpegenc = encoder.encode(temp, 100);
-    //elapsed  = timer.elapsed();
-    //printf("Compressed size: %d\n", jpeg.size);
-    //printf("Elapsed: %f\n\n", elapsed);
-
-    //printf("Decompress\n");
-
-    //timer.restart();  
-    //bool dec_ok =   decoder.decode(jpegdec, jpeg.data, jpeg.size);
-    //elapsed  = timer.elapsed();
-
-    //if(dec_ok)
-    //{
-    //printf("Decoded succesfully! size: %d %d %d\n", 
-    //  jpegdec.height, jpegdec.width, jpegdec.depth);
-    //printf("Elapsed: %f\n\n", elapsed);
-    //}
-    //else
-    //{
-    //  printf("DECODER ERROR!\n");
-    //}
   getchar();
   }
 
