@@ -181,7 +181,10 @@ struct generate_dispatcher
   struct play {};
   struct open_close {};
   struct cd_detected { 
-    cd_detected(char const*, std::vector<std::clock_t> const&) {}
+    cd_detected(char* ititle, std::vector<std::clock_t> const& tracks):
+    title(ititle)
+    {}
+    char* title;
   };
   #ifdef __GNUC__ // in which pause seems to have a predefined meaning
   # define pause pause_
@@ -244,6 +247,9 @@ class player : public state_machine<player>
     //  +---------+-------------+---------+---------------------+
 
     > {};
+
+    int somedata;
+    void somemethod(){};
 //typedef
 // 
 //event_dispatcher<
@@ -259,7 +265,13 @@ class player : public state_machine<player>
   void player::start_playback(play const&){printf("start_playback\n");}
   void player::open_drawer(open_close const&){printf("open_drawer\n");}
   void player::close_drawer(open_close const&){printf("close_drawer\n");}
-  void player::store_cd_info(cd_detected const&){printf("store_cd_info\n");}
+
+  void player::store_cd_info(cd_detected const& cd)
+  {
+    printf("store_cd_info: %s\n", cd.title);
+    this->somemethod();
+  }
+
   void player::stop_playback(stop const&){printf("stop_playback\n");}
   void player::pause_playback(pause const&){printf("pause_playback\n");}
   void player::resume_playback(play const&){printf("resume_playback\n");}
