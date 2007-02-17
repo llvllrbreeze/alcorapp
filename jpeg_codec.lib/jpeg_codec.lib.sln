@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jpeg_codec.lib", "jpeg_codec.lib.vcproj", "{775E1E4B-D1F4-4520-9313-E0370240D1F5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jpeg_encode_test.exe", "..\jpeg_encode_test.exe\jpeg_encode_test.exe.vcproj", "{161C7C90-C964-4511-843E-7C5C4F77862F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{775E1E4B-D1F4-4520-9313-E0370240D1F5} = {775E1E4B-D1F4-4520-9313-E0370240D1F5}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "boost_crc_test.exe", "..\boost_crc_test.exe\boost_crc_test.exe.vcproj", "{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
 EndProject
