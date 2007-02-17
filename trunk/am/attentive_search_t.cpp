@@ -15,7 +15,6 @@ am::attentive_search_t::attentive_search_t()
 {
   ///
   current_state = &listen::Instance();
-
   ///
   evt_listener = create_listener();
   ///
@@ -28,7 +27,7 @@ am::attentive_search_t::attentive_search_t()
   //adesso hard coded .. ma poi
   //saranno letti direttamente da ipc_bumblebee_recv_t...
   pinhole.focal = bumblebee.focal();//pare non andare bene .. chissà
-  pinhole.focal = 253.07;
+  //pinhole.focal = 253.07;
   pinhole.ncols = bumblebee.width();
   pinhole.nrows = bumblebee.height();
   ////USING THE MARLIN
@@ -37,9 +36,7 @@ am::attentive_search_t::attentive_search_t()
   //pinhole.nrows = 480;
 
   ///
-#ifdef USEPANTILT
   init_ptu();
-#endif
 
 #ifdef XODOLOG
   xlog.open("odolog.txt",std::ios::out);
