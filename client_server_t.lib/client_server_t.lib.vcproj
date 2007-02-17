@@ -154,15 +154,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\core\client_base_t.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\alcor\core\client_connection_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\client_connection_t.hpp"
 				>
 			</File>
 			<File
@@ -170,15 +162,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\core\net_packet_t.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\alcor\core\server_base_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\server_base_t.hpp"
 				>
 			</File>
 		</Filter>
@@ -187,6 +171,22 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\alcor\core\client_base_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\client_connection_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\net_packet_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\server_base_t.hpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
