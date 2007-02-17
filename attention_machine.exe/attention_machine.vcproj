@@ -217,23 +217,19 @@
 			Name="states"
 			>
 			<File
-				RelativePath="..\alcor.apps\am\detail\debug_mode_t.h"
+				RelativePath="..\am\detail\debug_mode_t.h"
 				>
 			</File>
 			<File
-				RelativePath="..\alcor.apps\am\detail\idle_mode_t.h"
+				RelativePath="..\am\detail\idle_mode_t.h"
 				>
 			</File>
 			<File
-				RelativePath="..\alcor.apps\am\detail\search_mode_t.h"
+				RelativePath="..\am\detail\search_mode_t.h"
 				>
 			</File>
 			<File
-				RelativePath="..\alcor.apps\am\detail\tracking_mode_t.h"
-				>
-			</File>
-			<File
-				RelativePath="..\alcor.apps\am\detail\unit_state_t.h"
+				RelativePath="..\am\detail\unit_state_t.h"
 				>
 			</File>
 		</Filter>
