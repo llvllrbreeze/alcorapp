@@ -54,6 +54,8 @@ public:
   }
 
   struct explore_event  : event<explore_event>{};
+  struct resume_event  : event<resume_event>{};
+  
   struct reset_event : event<reset_event> {};
   struct stop_event : event<stop_event>{};
   struct idle_event  : event<idle_event>{};
@@ -97,15 +99,14 @@ public:
     friend class fsm::state_machine<mission>;
     typedef mpl::list<
           transition<idled    , explore_event,  exploring, &self_t::start_exploring>
-
-        ,transition<failed    , reset_event  ,  idled    , &self_t::recover_fail>
+        //can only reset if failed ...
+        , transition<failed   , reset_event  ,  idled    , &self_t::recover_fail>
 
         , transition<exploring, idle_event ,  idled,   &self_t::go_idle>
         , transition<exploring, reset_event,  idled,   &self_t::go_reset> 
         , transition<exploring, stop_event ,  stopped, &self_t::go_stop> 
         , transition<exploring, fail_event ,  failed,  &self_t::go_fail> 
 
-        , transition<stopped  , stop_event ,  stopped, &self_t::go_stop>
         , transition<stopped  , idle_event ,  idled  , &self_t::go_idle>
         , transition<stopped  , reset_event , idled  , &self_t::go_reset>
         , transition<stopped  , explore_event , exploring  , &self_t::resume_exploring> 
