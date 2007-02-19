@@ -7,7 +7,7 @@
 
 using namespace all;
 
-void main(int argc, char* argv[])
+int main(int argc, char* argv[])
 	{
   //
   std::string config;
@@ -19,16 +19,16 @@ void main(int argc, char* argv[])
   else
    config = "config/bumblebeeA.ini";
 
-  if(  ipc_grabber.open(config) )
+  boost::shared_ptr<sense::bumblebee_driver_t> 
+    beesp(new sense::bumblebee_driver_t());
+
+  if (beesp->open(config))
   {
-    //Thread has started.
-    getchar();  
-    //
-    ipc_grabber.cancel();
+    ipc_grabber.assign_bumblebee(beesp);
+    ipc_grabber.open();    
   }
-  else
-    printf("Quitting!\n");
+  getchar();
+  ipc_grabber.cancel();
 
-
-  return;
+  return 0;
 	}
