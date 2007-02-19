@@ -122,7 +122,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\$(ProjectName)"
+				OutputFile="..\..\alcor.lib\$(ProjectName)"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -158,11 +158,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\core\detail\client_manager_t.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\core\net_packet_t.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\alcor\core\server_base_t.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\detail\tcp_pkt_receiver_t.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\detail\tcp_pkt_sender_t.cpp"
 				>
 			</File>
 		</Filter>
@@ -180,11 +192,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\core\detail\client_manager_t.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\core\net_packet_t.hpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\alcor\core\server_base_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\detail\tcp_pkt_receiver_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\detail\tcp_pkt_sender_t.hpp"
 				>
 			</File>
 		</Filter>
