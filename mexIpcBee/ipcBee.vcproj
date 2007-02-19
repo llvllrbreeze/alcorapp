@@ -120,6 +120,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;MATLAB_IPC_BUMBLEBEE_EXPORTS"
 				RuntimeLibrary="0"

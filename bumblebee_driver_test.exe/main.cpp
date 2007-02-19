@@ -7,7 +7,7 @@ using namespace cimg_library;
 int main ()
 {
   sense::bumblebee_ipc_recv_t beeA;
-   if (beeA.open("config/bumblebeeA.ini"))
+   if (beeA.open("config/bumblebeeB.ini"))
    {
     //printf("Tout bien!\n");
 
@@ -27,7 +27,7 @@ int main ()
             && !displ.is_closed) 
   {
 
-    //beeA.lock();
+    beeA.lock();
 
     core::uint8_sarr imgl =
       beeA.get_color_buffer(core::left_img);
@@ -44,7 +44,7 @@ int main ()
     right.display(dispr);
     }
 
-    //beeA.unlock();
+    beeA.unlock();
     
     if( dispr.button&1  && dispr.mouse_y >= 0)
     {
@@ -58,7 +58,7 @@ int main ()
       printf(" Right Button clicked");      
       printf("x: %d y: %d\n",dispr.mouse_x, dispr.mouse_y);
     }
-    cimg::wait(10);
+    cimg::wait(50);
   }
   
 }
