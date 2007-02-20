@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="simple_state_machine"
-	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
+	ProjectGUID="{BB12AFFF-6F5D-4270-8F6D-B0E645E8900D}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
