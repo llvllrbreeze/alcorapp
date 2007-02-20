@@ -75,7 +75,7 @@ namespace all { namespace trm {
   ///RESET
   bool go_reset         (reset_event const&){return true;};
   ///START TRACKING
-  bool start_tracking   (track_event const&){return true;};
+  bool start_tracking   (track_event const&);
   ///RESUME TRACKING
   bool resume_tracking  (resume_event const&){return true;};
   ///FAIL
@@ -94,7 +94,9 @@ namespace all { namespace trm {
   //...
   transition<idled  , setup_event        ,  setup          , &self_t::start_setup>
 , transition<idled  , reset_event        ,  idled          , &self_t::go_reset>
-, transition<idled  , idle_track_event   ,  idled_tracking , &self_t::go_idle_tracking>//ad hoc?
+
+, transition<setup  , idle_track_event   ,  idled_tracking , &self_t::go_idle_tracking>//ad hoc?
+, transition<setup  , reset_event   ,  idled , &self_t::go_reset>//ad hoc?
 
 ///can only reset if failed ...
 , transition<idled_tracking   , track_event   ,  tracking   , &self_t::start_tracking>
@@ -130,21 +132,28 @@ namespace all { namespace trm {
   volatile bool running_;
 
 private:
+  ///
+  void taskreceived(int);
     //
   void idle_cb(){};
   void tracking_cb(){};
   void idle_tracking_cb(){};
-  void setup_cb(){};
+  ///calls setup script
+  void setup_cb();
   void failed_cb(){};
   void recovering_cb(){};
 
 private:
   ///MATLAB
   boost::shared_ptr<matlab::matlab_engine_t> workspace;
+  ///DORO CLIENT
+  act::p3dx_client_sptr p3dx;
   ///
   sense::bumblebee_sptr bee;
   ///
   act::directed_perception_sptr ptu;
+  //
+  boost::shared_ptr<all::trm::task_listener> tasklistener;
   ///Pihole util
   math::pinhole_t pinhole;  
 //---------------------------------------------------------------------------
