@@ -217,7 +217,7 @@ void mission::exploring_cb()
 printf("exploring_cb\n");
  mission::cycle++;
  if(mission::cycle > 100){
-  process_event( mission::fail_event() );
+  process_event( fail_event() );
   mission::cycle = 0;
  }
 };
