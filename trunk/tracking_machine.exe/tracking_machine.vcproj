@@ -129,6 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies=" "
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -202,6 +203,10 @@
 			</File>
 			<File
 				RelativePath="..\trm\tracking_machine.h"
+				>
+			</File>
+			<File
+				RelativePath="..\trm\trm_app_inc.h"
 				>
 			</File>
 		</Filter>
