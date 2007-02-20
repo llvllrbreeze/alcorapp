@@ -33,7 +33,7 @@ namespace all { namespace trm {
 
   void threadloop();
 
-  private:
+
   boost::mutex process_guard;
 
   struct setup_event        : event<setup_event>{};
@@ -49,6 +49,8 @@ namespace all { namespace trm {
 
 
   typedef tracking_machine self_t;
+
+  private:
   // state invariants
   void idled_state_invariant() const {printf("idled_state_invariant\n");}
   void setup_state_invariant() const {printf("setup_state_invariant\n");}
@@ -69,11 +71,11 @@ namespace all { namespace trm {
 
   /// transition functions
   ///START_SETUP
-  bool start_setup      (setup_event const&){return true;};
+  bool start_setup      (setup_event const&);
   ///IDLE TRACKING
-  bool go_idle_tracking (idle_track_event const&){return true;};
+  bool go_idle_tracking (idle_track_event const&);
   ///RESET
-  bool go_reset         (reset_event const&){return true;};
+  bool go_reset         (reset_event const&);
   ///START TRACKING
   bool start_tracking   (track_event const&);
   ///RESUME TRACKING
@@ -135,9 +137,9 @@ private:
   ///
   void taskreceived(int);
     //
-  void idle_cb(){};
+  void idle_cb();
   void tracking_cb(){};
-  void idle_tracking_cb(){};
+  void idle_tracking_cb();
   ///calls setup script
   void setup_cb();
   void failed_cb(){};

@@ -27,7 +27,9 @@ tracking_machine::tracking_machine():running_(true)
   //bumblebee
   bee.reset(new sense::bumblebee_driver_t());
   bee->open("config/bumblebeeB.ini");
-
+  //
+  ptu.reset (new act::directed_perception_ptu_t);
+  ptu->open("config/dpptu_conf.ini");
   //
   pinhole.focal = bee->focal();//pare non andare bene .. chissà
   //pinhole.focal = 253.07;
@@ -53,6 +55,13 @@ void tracking_machine::threadloop()
     Sleep(50);
     }
   }
+//###########################################################################
+//CALLBACK
+//---------------------------------------------------------------------------
+void tracking_machine::idle_cb()
+{
+
+}
 //---------------------------------------------------------------------------
 void tracking_machine::setup_cb()
 {
@@ -67,7 +76,41 @@ void tracking_machine::setup_cb()
   process_event(idle_track_event());
 }
 //---------------------------------------------------------------------------
+void tracking_machine::idle_tracking_cb()
+{
+
+}
+//---------------------------------------------------------------------------
 //###########################################################################
+//---------------------------------------------------------------------------
+  ///START_SETUP
+bool tracking_machine::start_setup      (setup_event const&)
+{
+  ////
+  fire_callback = boost::bind
+    (&tracking_machine::setup_cb, this);
+  ///
+  return true;
+}
+//---------------------------------------------------------------------------
+  ///RESET
+bool tracking_machine::go_reset (reset_event const&)
+{
+  ////
+  fire_callback = boost::bind
+    (&tracking_machine::setup_cb, this);
+  ///
+  return true;
+}
+//---------------------------------------------------------------------------
+  ///IDLE TRACKING
+bool tracking_machine::go_idle_tracking (idle_track_event const&)
+{
+  ////
+  fire_callback = boost::bind
+    (&tracking_machine::idle_tracking_cb, this);
+  return true;
+}
 //---------------------------------------------------------------------------
   ///START TRACKING
 bool tracking_machine::start_tracking   (track_event const&)
