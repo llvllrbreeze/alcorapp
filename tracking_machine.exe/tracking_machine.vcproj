@@ -180,10 +180,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\trm\task_dispatcher.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\trm\task_listener.cpp"
 				>
 			</File>
@@ -199,10 +195,6 @@
 			>
 			<File
 				RelativePath="..\..\alcor.extern\statemachine\state_machine.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\trm\task_dispatcher.h"
 				>
 			</File>
 			<File

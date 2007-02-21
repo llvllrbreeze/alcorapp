@@ -114,7 +114,8 @@ bool tracking_machine::start_setup(setup_event const&)
   ///RESET
 bool tracking_machine::go_reset (reset_event const&)
 {
-    boost::mutex::scoped_lock lock(process_guard);
+  printf("\nReset\n");
+  boost::mutex::scoped_lock lock(process_guard);
   ////
   fire_callback = boost::bind
     (&tracking_machine::idle_cb, this);
@@ -125,7 +126,7 @@ bool tracking_machine::go_reset (reset_event const&)
   ///IDLE TRACKING
 bool tracking_machine::go_idle_tracking (idle_track_event const&)
 {
-    boost::mutex::scoped_lock lock(process_guard);
+  boost::mutex::scoped_lock lock(process_guard);
   ////
   fire_callback = boost::bind
     (&tracking_machine::idle_tracking_cb, this);
