@@ -74,7 +74,9 @@ void tracking_machine::setup_cb()
                                                           ,matlab::row_major
                                                           ,bee->nrows()
                                                           ,bee->ncols());
-
+    
+  //Push into Workspace
+    workspace->put_array("rgb", mx_rimage);
     printf("SETUP\n");
     ////
     workspace->command_line("[centro_r centro_c coerente] = fh_setup(rgb)");
