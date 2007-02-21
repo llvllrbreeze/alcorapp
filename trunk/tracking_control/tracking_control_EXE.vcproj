@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="PLEASE_CHANGE_ME_EXE"
-	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
+	Name="tracking_control_test"
+	ProjectGUID="{DED908E3-C31E-4325-8D6E-D0FB0305C615}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
@@ -112,7 +112,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="NDEBUG;WIN32"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WIN32_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -129,6 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="client_server_t.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -175,7 +176,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\empty.cpp"
+				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\trm\task_dispatcher.cpp"
 				>
 			</File>
 		</Filter>
@@ -184,6 +189,14 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\trm\task_dispatcher.h"
+				>
+			</File>
+			<File
+				RelativePath="..\trm\trm_tags_inc.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
