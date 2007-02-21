@@ -146,16 +146,20 @@ private:
   void failed_cb(){};
   void recovering_cb(){};
 
+private://routines
+  ///
+  void move_ptu_to_screen_rc(float row, float col, double waitsec);
+
 private:
   ///MATLAB
   boost::shared_ptr<matlab::matlab_engine_t> workspace;
   ///DORO CLIENT
   act::p3dx_client_sptr p3dx;
-  ///
+  ///Bumblebee
   sense::bumblebee_sptr bee;
-  ///
+  ///PTU
   act::directed_perception_sptr ptu;
-  //
+  //EVENTS
   boost::shared_ptr<all::trm::task_listener> tasklistener;
   ///Pihole util
   math::pinhole_t pinhole;  

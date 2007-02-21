@@ -141,7 +141,7 @@ bool tracking_machine::start_tracking   (track_event const&)
   double  centro_r = workspace->get_scalar_double("centro_r");
   double  centro_c = workspace->get_scalar_double("centro_c");
   //
-  //pt_move_to_screen_coord(centro_r, centro_c, 1.5);
+  move_ptu_to_screen_rc(centro_r, centro_c, 1.5);
 
   //INIT TRACKING ...
   //TODO:Aggiorna i setpoint
@@ -168,18 +168,39 @@ bool tracking_machine::start_tracking   (track_event const&)
 }
 //---------------------------------------------------------------------------
 //###########################################################################
+void tracking_machine::move_ptu_to_screen_rc(float row, float col, double waitsec)
+{
+  if(ptu)
+  {
+  //
+  float pan, tilt;
+  //
+  core::pantilt_angle_t pt = ptu->get_fast_pantilt();
+  //
+  core::pantilt_angle_t delta;
+  pinhole.pantilt_from_pixel(row, col, delta);
+  //
+  float nupan  = static_cast<float>(-delta.pan)  + pt.pan;
+  float nutilt = static_cast<float>(-delta.tilt) + pt.tilt;
+
+  ptu->set_pantilt(nupan, nutilt, waitsec);
+      //printf("\nCentro %d : %d\n", (int)row, (int)col);
+      printf("PTU COM %f : %f\n", nupan, nutilt);
+  }
+}
+//###########################################################################
 //---------------------------------------------------------------------------
 void tracking_machine::taskreceived(int evt)
 {
   boost::mutex::scoped_lock lock(process_guard);
   switch (evt)
-  {
-  case etag::SETUP :
-    process_event(trm::tracking_machine::setup_event() );
-    break;
-
+  {  
   case etag::RESET :
     process_event(trm::tracking_machine::reset_event() );
+    break;
+
+  case etag::SETUP :
+    process_event(trm::tracking_machine::setup_event() );
     break;
 
   case etag::TRACK :
