@@ -65,6 +65,7 @@ void tracking_machine::idle_cb()
 //---------------------------------------------------------------------------
 void tracking_machine::setup_cb()
 {
+  
   //TODO: grab!
   printf("SETUP\n");
   ////
@@ -84,7 +85,7 @@ void tracking_machine::idle_tracking_cb()
 //###########################################################################
 //---------------------------------------------------------------------------
   ///START_SETUP
-bool tracking_machine::start_setup      (setup_event const&)
+bool tracking_machine::start_setup(setup_event const&)
 {
   ////
   fire_callback = boost::bind
@@ -98,7 +99,7 @@ bool tracking_machine::go_reset (reset_event const&)
 {
   ////
   fire_callback = boost::bind
-    (&tracking_machine::setup_cb, this);
+    (&tracking_machine::idle_cb, this);
   ///
   return true;
 }
@@ -148,8 +149,42 @@ bool tracking_machine::start_tracking   (track_event const&)
 //---------------------------------------------------------------------------
 //###########################################################################
 //---------------------------------------------------------------------------
-void tracking_machine::taskreceived(int)
+void tracking_machine::taskreceived(int evt)
 {
+  boost::mutex::scoped_lock lock(process_guard);
+  switch (evt)
+  {
+  case etag::SETUP :
+    process_event(trm::tracking_machine::setup_event() );
+    break;
+
+  case etag::RESET :
+    process_event(trm::tracking_machine::reset_event() );
+    break;
+
+  case etag::TRACK :
+    process_event(trm::tracking_machine::track_event() );
+    break;
+
+  case etag::IDLETRACK :
+    process_event(trm::tracking_machine::idle_track_event() );
+    break;
+
+  case etag::RESUME :
+    process_event(trm::tracking_machine::resume_event() );
+    break;
+
+  case etag::FAIL :
+    process_event(trm::tracking_machine::fail_event() );
+    break;
+
+  case etag::RECOVER :
+    process_event(trm::tracking_machine::recover_event() );
+    break;
+
+  default:
+    break;
+  }
 
 }
 //---------------------------------------------------------------------------

@@ -13,8 +13,9 @@
 #include <boost\thread\thread.hpp>
 #include <boost\shared_ptr.hpp>
 #include <boost\thread\mutex.hpp>
-#include <boost\enable_shared_from_this.hpp>
+//#include <boost\enable_shared_from_this.hpp>
 //---------------------------------------------------------------------------
+#include "trm_tags_inc.h"
 #include "trm_app_inc.h"
 //---------------------------------------------------------------------------
 #include <windows.h>
@@ -24,8 +25,8 @@ namespace mpl = boost::mpl;
 namespace all { namespace trm {
 //---------------------------------------------------------------------------
   class tracking_machine :    public fsm::state_machine<tracking_machine>
-                            , public boost::enable_shared_from_this<tracking_machine>
-                            //, public
+                            //, public boost::enable_shared_from_this<tracking_machine>
+                            
   {
   public:
     ///
@@ -62,12 +63,12 @@ namespace all { namespace trm {
   void recover_state_invariant() const {printf("recover_state_invariant\n");}
 
   // states (invariants are passed as non-type template arguments)
-  typedef state<0, &self_t::idled_state_invariant>      idled;
-  typedef state<1, &self_t::setup_state_invariant>      setup;
-  typedef state<2, &self_t::idled_tracking_invariant>   idled_tracking;
-  typedef state<3, &self_t::tracking_state_invariant>   tracking;
-  typedef state<4, &self_t::fail_state_invariant>       failed;
-  typedef state<5, &self_t::recover_state_invariant>    recovering;
+  typedef state<stag::IDLED, &self_t::idled_state_invariant>      idled;
+  typedef state<stag::SETUP, &self_t::setup_state_invariant>      setup;
+  typedef state<stag::IDLED_TRACKING, &self_t::idled_tracking_invariant>   idled_tracking;
+  typedef state<stag::TRACKING, &self_t::tracking_state_invariant>   tracking;
+  typedef state<stag::FAILED, &self_t::fail_state_invariant>       failed;
+  typedef state<stag::RECOVERING, &self_t::recover_state_invariant>    recovering;
 
   /// transition functions
   ///START_SETUP
