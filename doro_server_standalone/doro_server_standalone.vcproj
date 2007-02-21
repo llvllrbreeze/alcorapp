@@ -92,8 +92,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../alcor.bin"
-			IntermediateDirectory="../obj/$(ProjectName)"
+			OutputDirectory="..\..\obj\$(ProjectName)"
+			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".."
+				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;ARIA_STATIC;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -135,8 +135,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="AriaStatic.lib ArNetWorkingStatic.lib winmm.lib wsock32.lib"
+				OutputFile="../../alcor.bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../alcor.lib"
+				AdditionalLibraryDirectories="../../alcor.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
