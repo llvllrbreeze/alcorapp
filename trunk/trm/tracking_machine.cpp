@@ -27,10 +27,10 @@ tracking_machine::tracking_machine():running_(true)
   //bumblebee
   bee.reset(new sense::bumblebee_driver_t());
   bee->open("config/bumblebeeB.ini");
-  //
+  //PTU
   ptu.reset (new act::directed_perception_ptu_t);
   ptu->open("config/dpptu_conf.ini");
-  //
+  //PINHOLE
   pinhole.focal = bee->focal();//pare non andare bene .. chissà
   //pinhole.focal = 253.07;
   pinhole.ncols = bee->ncols();
@@ -65,16 +65,30 @@ void tracking_machine::idle_cb()
 //---------------------------------------------------------------------------
 void tracking_machine::setup_cb()
 {
-  
-  //TODO: grab!
-  printf("SETUP\n");
-  ////
-  workspace->command_line("[centro_r centro_c coerente] = fh_setup(rgb)");
-  ///
+  if (bee->grab())
+  {
+    core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
 
-  printf("Done Setup\n\n");
-  //Se tutto a posto vai in idled_tracking
-  process_event(idle_track_event());
+    mxArray* mx_rimage = 
+      matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
+                                                          ,matlab::row_major
+                                                          ,bee->nrows()
+                                                          ,bee->ncols());
+
+    printf("SETUP\n");
+    ////
+    workspace->command_line("[centro_r centro_c coerente] = fh_setup(rgb)");
+    ///
+
+    printf("Done Setup\n\n");
+    //Se tutto a posto vai in idled_tracking
+    process_event(idle_track_event());
+  }
+  else
+  {
+    printf("\nERROR : Cannot GRAB!\n");
+    process_event(reset_event());
+  }
 }
 //---------------------------------------------------------------------------
 void tracking_machine::idle_tracking_cb()
@@ -87,6 +101,7 @@ void tracking_machine::idle_tracking_cb()
   ///START_SETUP
 bool tracking_machine::start_setup(setup_event const&)
 {
+    boost::mutex::scoped_lock lock(process_guard);
   ////
   fire_callback = boost::bind
     (&tracking_machine::setup_cb, this);
@@ -97,6 +112,7 @@ bool tracking_machine::start_setup(setup_event const&)
   ///RESET
 bool tracking_machine::go_reset (reset_event const&)
 {
+    boost::mutex::scoped_lock lock(process_guard);
   ////
   fire_callback = boost::bind
     (&tracking_machine::idle_cb, this);
@@ -107,6 +123,7 @@ bool tracking_machine::go_reset (reset_event const&)
   ///IDLE TRACKING
 bool tracking_machine::go_idle_tracking (idle_track_event const&)
 {
+    boost::mutex::scoped_lock lock(process_guard);
   ////
   fire_callback = boost::bind
     (&tracking_machine::idle_tracking_cb, this);
