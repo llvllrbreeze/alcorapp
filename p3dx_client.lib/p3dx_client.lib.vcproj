@@ -123,8 +123,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				LinkLibraryDependencies="true"
-				AdditionalDependencies="AriaStatic.lib ArNetWorkingStatic.lib wsock32.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies=" wsock32.lib"
 				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
