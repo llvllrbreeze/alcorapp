@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies=" client_server_t.lib winmm.lib"
+				AdditionalDependencies=" client_server_t.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
