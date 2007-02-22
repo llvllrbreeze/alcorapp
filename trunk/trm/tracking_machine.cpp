@@ -22,8 +22,6 @@ tracking_machine::tracking_machine():running_(true)
   tasklistener->notify = boost::bind(&tracking_machine::taskreceived, this, ::_1);
   tasklistener->run_async();
 
-  //P3DX
-  p3dx = act::create_p3dx_client();
   //bumblebee
   bee.reset(new sense::bumblebee_driver_t());
   bee->open("config/bumblebeeB.ini");
@@ -35,6 +33,15 @@ tracking_machine::tracking_machine():running_(true)
   //pinhole.focal = 253.07;
   pinhole.ncols = bee->ncols();
   pinhole.nrows = bee->nrows();
+
+   //P3DX
+  p3dx = act::create_p3dx_client(); 
+
+  p3_adapter.reset(new act::p3_odometry_adapter_t(p3dx) );
+
+  ptu_control.reset(new act::pantilt_control_loop_t );
+  ptu_control->set_ptu(ptu);
+  ptu_control->set_slam(p3_adapter);
 
 }
 //---------------------------------------------------------------------------
@@ -145,21 +152,17 @@ bool tracking_machine::start_tracking   (track_event const&)
 
   //INIT TRACKING ...
   //TODO:Aggiorna i setpoint
-  //float pan, tilt;
-  //machine.ptu->get_current_pantilt(pan,tilt);
-
-  //double pan_error = machine.pinhole.delta_pan_from_pixel(centro_c) ;
+  float pan, tilt;
+  ptu->get_current_pantilt(pan,tilt);
+  //
+  double pan_error = pinhole.delta_pan_from_pixel(centro_c) ;
   //Desired Heading
-  //double theta_rob = machine.p3dx->get_odometry().getTh().deg();
+  double theta_rob = p3dx->get_odometry().getTh().deg();
 
-  //tracking_loop::Instance().theta_target =  
-  //          theta_rob + pan;
-
-  //tracking_loop::Instance().current_pan =
-  //          pan;
-
-  //tracking_loop::Instance().current_tilt =
-  //          tilt;
+  //
+  ptu_control->set_polar_reference(math::deg_tag,theta_rob + pan);
+  //
+  ptu_control->enable(true);
 
   //tracking_loop::Instance().centro_r = 240;
   //tracking_loop::Instance().centro_c = 320;
@@ -172,8 +175,6 @@ void tracking_machine::move_ptu_to_screen_rc(float row, float col, double waitse
 {
   if(ptu)
   {
-  //
-  float pan, tilt;
   //
   core::pantilt_angle_t pt = ptu->get_fast_pantilt();
   //
