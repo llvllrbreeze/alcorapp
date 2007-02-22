@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opencv_grabber_t.lib", "opencv_grabber_t.vcproj", "{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opencv_test.exe", "..\opencv_test.exe\opencv_test.exe.vcproj", "{F5D1BE85-1079-42D8-A5D1-9D4A7F328CE2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969} = {A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +18,10 @@ Global
 		{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}.Debug|Win32.Build.0 = Debug|Win32
 		{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}.Release|Win32.ActiveCfg = Release|Win32
 		{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}.Release|Win32.Build.0 = Release|Win32
+		{F5D1BE85-1079-42D8-A5D1-9D4A7F328CE2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F5D1BE85-1079-42D8-A5D1-9D4A7F328CE2}.Debug|Win32.Build.0 = Debug|Win32
+		{F5D1BE85-1079-42D8-A5D1-9D4A7F328CE2}.Release|Win32.ActiveCfg = Release|Win32
+		{F5D1BE85-1079-42D8-A5D1-9D4A7F328CE2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
