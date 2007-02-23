@@ -30,7 +30,6 @@ tracking_machine::tracking_machine():running_(true)
   ptu->open("config/dpptu_conf.ini");
   //PINHOLE
   pinhole.focal = bee->focal();//pare non andare bene .. chissà
-  //pinhole.focal = 253.07;
   pinhole.ncols = bee->ncols();
   pinhole.nrows = bee->nrows();
 
@@ -90,8 +89,12 @@ void tracking_machine::setup_cb()
     ///
 
     printf("Done Setup\n\n");
-    //Se tutto a posto vai in idled_tracking
-    process_event(idle_track_event());
+    int coerente = workspace->get_scalar_int("coerente");
+    if(coerente)
+      //Se tutto a posto vai in idled_tracking
+      process_event(idle_track_event());
+    else
+      process_event(reset_event());
   }
   else
   {
