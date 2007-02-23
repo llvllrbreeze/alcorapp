@@ -22,13 +22,16 @@ int main(int argc, char* argv[])
   boost::shared_ptr<sense::bumblebee_driver_t> 
     beesp(new sense::bumblebee_driver_t());
 
-  if (beesp->open(config))
-  {
-    ipc_grabber.assign_bumblebee(beesp);
-    ipc_grabber.open();    
-  }
+  if (!beesp->open(config))
+  {  
+    return 1;
+  }    
+
+  ipc_grabber.assign_bumblebee(beesp);
+  ipc_grabber.open();    
   getchar();
   ipc_grabber.cancel();
+
 
   return 0;
 	}

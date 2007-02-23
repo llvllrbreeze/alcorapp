@@ -1,4 +1,3 @@
-//#include "alcor/sense/bumblebee_driver_t.h"
 #include "alcor/sense/bumblebee_ipc_recv_t.h"
 #include "alcor.extern/CImg/CImg.h"
 using namespace all;
@@ -27,7 +26,7 @@ int main ()
             && !displ.is_closed) 
   {
 
-    beeA.lock();
+    //beeA.lock();
 
     core::uint8_sarr imgl =
       beeA.get_color_buffer(core::left_img);
@@ -44,7 +43,7 @@ int main ()
     right.display(dispr);
     }
 
-    beeA.unlock();
+    //beeA.unlock();
     
     if( dispr.button&1  && dispr.mouse_y >= 0)
     {
