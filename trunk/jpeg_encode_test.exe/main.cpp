@@ -24,7 +24,7 @@ int main ()
 
   sense::bumblebee_ipc_recv_t bee;
   
-  if( bee.open("config/bumblebeeA.ini") )
+  if( bee.open("config/bumblebeeB.ini") )
   {
      //view-related stuff
     CImgDisplay view(bee.width(), bee.height(),"Bumblebee Right Image");   

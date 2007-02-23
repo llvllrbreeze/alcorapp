@@ -30,7 +30,7 @@ int main ()
       imag.display(view); 
     }
 
-        cimg::wait(100);
+        cimg::wait(40);
   }
   //if( code == 27 || code == 'q' || code == 'Q' )
   //    break;
