@@ -7,7 +7,7 @@ using namespace cimg_library;
 int main ()
 {
   all::sense::opencv_grabber_t cam;
-  cam.open(core::open_camera, 0);
+  cam.open(core::open_camera, -1);
 
   //getchar();
 
