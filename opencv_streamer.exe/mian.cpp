@@ -9,7 +9,7 @@ int main() {
 
   sense::opencv_data_source_t m_source;
 
-  //m_source.set_quality(85);
+  m_source.set_quality(85);
 
 	all::core::stream_server_t server(m_source,"config/stream_server.ini");
 
@@ -23,6 +23,6 @@ int main() {
 
 	server.stop();
 
-	getchar();
+	//getchar();
 
 } 
