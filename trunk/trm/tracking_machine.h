@@ -18,8 +18,6 @@
 #include "trm_tags_inc.h"
 #include "trm_app_inc.h"
 //---------------------------------------------------------------------------
-#include <windows.h>
-//---------------------------------------------------------------------------
 namespace mpl = boost::mpl;
 //---------------------------------------------------------------------------
 namespace all { namespace trm {
@@ -131,24 +129,29 @@ namespace all { namespace trm {
   void cancel() {running_ = false;};
   ///
   boost::shared_ptr<boost::thread> thisthread;
+
+
+private:  
   ///
   volatile bool running_;
-
-private:
   ///
-  void taskreceived(int);
-    //
   void idle_cb();
+  ///
   void tracking_cb(){};
+  ///
   void idle_tracking_cb();
   ///calls setup script
   void setup_cb();
+  ///
   void failed_cb(){};
+  ///
   void recovering_cb(){};
 
 private://routines
   ///
   void move_ptu_to_screen_rc(float row, float col, double waitsec);
+  ///
+  void taskreceived(int);
 
 private:
   ///MATLAB

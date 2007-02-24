@@ -58,7 +58,7 @@ void tracking_machine::threadloop()
               fire_callback();    
       }
     boost::thread::yield();    
-    Sleep(50);
+    core::BOOST_SLEEP(100);
     }
   }
 //###########################################################################
@@ -192,7 +192,7 @@ void tracking_machine::move_ptu_to_screen_rc(float row, float col, double waitse
 
   ptu->set_pantilt(nupan, nutilt, waitsec);
       //printf("\nCentro %d : %d\n", (int)row, (int)col);
-      printf("PTU COM %f : %f\n", nupan, nutilt);
+  printf("PTU COM %f : %f\n", nupan, nutilt);
   }
 }
 //###########################################################################
