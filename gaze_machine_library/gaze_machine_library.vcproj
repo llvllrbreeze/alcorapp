@@ -79,8 +79,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="..\..\obj\$(ProjectName)"
+			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -102,13 +102,15 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".."
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				OmitFramePointers="true"
+				AdditionalIncludeDirectories="../.."
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -121,8 +123,9 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\alcor.lib\$(ProjectName).lib"
-				AdditionalLibraryDirectories="..\alcor.lib"
+				LinkLibraryDependencies="false"
+				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
+				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -150,7 +153,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\alcor.apps\gaze\detail\gaze_machine_t.cpp"
+				RelativePath="..\gaze\gaze_machine_t.cpp"
 				>
 			</File>
 		</Filter>
@@ -160,7 +163,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\alcor.apps\gaze\gaze_machine_t.h"
+				RelativePath="..\gaze\gaze_machine_inc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\gaze\gaze_machine_t.h"
+				>
+			</File>
+			<File
+				RelativePath="..\gaze\gaze_machine_thread_t.hpp"
 				>
 			</File>
 		</Filter>
