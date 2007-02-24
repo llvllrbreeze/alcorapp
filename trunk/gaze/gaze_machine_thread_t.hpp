@@ -3,7 +3,6 @@
 //-------------------------------------------------------------------------++
 #include "alcor.apps/gaze/gaze_machine_t.h"
 #include <boost/thread/thread.hpp>
-#include <windows.h>
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze{
 
@@ -18,18 +17,18 @@ public:
 
     void run_thread()
     {
+      //int device in the thread loop!
         if(gaze_->start_machine())
         {
-
             while (running_)
             {
                 gaze_->sample_gaze();
                 boost::thread::yield();
-                ::Sleep(75);
+                all::core::BOOST_SLEEP(75);
             }
         }
         else
-            std::cout << "devices not started!" << std::endl;
+            printf("devices not started!\n");  
 
     }
 
@@ -38,8 +37,8 @@ public:
     void cancel(){running_=false;};
 
 private:
-    all::gaze::sp_gaze_t gaze_;
-    bool running_;
+    gaze::gaze_machine_ptr gaze_;
+    volatile bool running_;
 };
 //-------------------------------------------------------------------------++
 }}
