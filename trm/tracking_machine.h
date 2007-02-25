@@ -1,6 +1,8 @@
 #ifndef tracking_machine_H_INCLUDED
 #define tracking_machine_H_INCLUDED
 //---------------------------------------------------------------------------
+#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
+//---------------------------------------------------------------------------
 #include "alcor.extern/statemachine/state_machine.hpp"
 //---------------------------------------------------------------------------
 #include <boost/mpl/list.hpp>
@@ -137,7 +139,7 @@ private:
   ///
   void idle_cb();
   ///
-  void tracking_cb(){};
+  void tracking_cb();
   ///
   void idle_tracking_cb();
   ///calls setup script

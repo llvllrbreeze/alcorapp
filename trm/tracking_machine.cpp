@@ -29,7 +29,7 @@ tracking_machine::tracking_machine():running_(true)
   ptu.reset (new act::directed_perception_ptu_t);
   ptu->open("config/dpptu_conf.ini");
   //PINHOLE
-  pinhole.focal = bee->focal();//pare non andare bene .. chissà
+  pinhole.focal = bee->focal();
   pinhole.ncols = bee->ncols();
   pinhole.nrows = bee->nrows();
 
@@ -103,6 +103,11 @@ void tracking_machine::setup_cb()
   }
 }
 //---------------------------------------------------------------------------
+void tracking_machine::tracking_cb()
+{
+
+}
+//---------------------------------------------------------------------------
 void tracking_machine::idle_tracking_cb()
 {
 
@@ -172,10 +177,15 @@ bool tracking_machine::start_tracking   (track_event const&)
 
   //tracking_loop::Instance().centro_r = 240;
   //tracking_loop::Instance().centro_c = 320;
+  ///
+  fire_callback = boost::bind
+    (&tracking_machine::tracking_cb, this);
 
   return true;
 }
 //---------------------------------------------------------------------------
+//###########################################################################
+//Support Routines
 //###########################################################################
 void tracking_machine::move_ptu_to_screen_rc(float row, float col, double waitsec)
 {
