@@ -112,7 +112,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;_WIN32_WINDOWS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
