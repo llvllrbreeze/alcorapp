@@ -25,6 +25,8 @@ public:
     ///
     virtual int  nsamples() const=0;
     ///
+    virtual void  start_timing()= 0;
+    ///
     virtual double elapsed()= 0;
 };
 //-------------------------------------------------------------------------++

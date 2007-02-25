@@ -20,12 +20,15 @@ public:
       //int device in the thread loop!
         if(gaze_->start_machine())
         {
+            gaze_->start_timing();
+
             while (running_)
             {
                 gaze_->sample_gaze();
                 boost::thread::yield();
-                all::core::BOOST_SLEEP(75);
+                all::core::BOOST_SLEEP(70);
             }
+
             elapsed_=gaze_->elapsed();
         }
         else
