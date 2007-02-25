@@ -4,7 +4,6 @@
 #include "alcor/sense/opencv_grabber_t.h"
 #include "alcor/sense/bumblebee_driver_t.h"
 #include "alcor/sense/MTi_driver_t.h"
-//#include "alcor/core/config_parser_t.h"
 
 #include <iostream>
 #include <vector>
