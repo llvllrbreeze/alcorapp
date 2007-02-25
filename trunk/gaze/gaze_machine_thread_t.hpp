@@ -9,7 +9,7 @@ namespace all { namespace gaze{
 class gaze_machine_thread_t
 {
 public:
-    gaze_machine_thread_t():running_(true)
+    gaze_machine_thread_t():running_(true),elapsed_(0)
     {
         gaze_ = all::gaze::create_gaze_machine();
         gaze_->print_welcome();
@@ -26,6 +26,7 @@ public:
                 boost::thread::yield();
                 all::core::BOOST_SLEEP(75);
             }
+            elapsed_=gaze_->elapsed();
         }
         else
             printf("devices not started!\n");  
@@ -33,12 +34,14 @@ public:
     }
 
     int nsamples() const {return gaze_->nsamples();};
+    double elapsed()const {return elapsed_;};
 
     void cancel(){running_=false;};
 
 private:
     gaze::gaze_machine_ptr gaze_;
     volatile bool running_;
+    double elapsed_;
 };
 //-------------------------------------------------------------------------++
 }}
