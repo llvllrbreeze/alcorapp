@@ -137,10 +137,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gaze_machine_library.lib"
+				AdditionalDependencies="MTi_driver_t.lib opencv_grabber_t.lib bumblebee_driver_t.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\alcor.lib"
+				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\ALCORLAB\Documenti\Visual Studio 2005\Projects\alcor.lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -182,6 +182,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\gaze\detail\gaze_machine_t.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -191,6 +195,18 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\gaze\gaze_machine_inc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\gaze\gaze_machine_t.h"
+				>
+			</File>
+			<File
+				RelativePath="..\gaze\gaze_machine_thread_t.hpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

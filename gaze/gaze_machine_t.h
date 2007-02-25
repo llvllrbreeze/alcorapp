@@ -1,8 +1,6 @@
 #ifndef gaze_machine_t_H_INCLUDED
 #define gaze_machine_t_H_INCLUDED
 //-------------------------------------------------------------------------++
-//#pragma comment(lib, "gaze_machine_library.lib")
-//-------------------------------------------------------------------------++
 #include "alcor/core/core.h"
 //-------------------------------------------------------------------------++
 #include <boost/shared_ptr.hpp>
