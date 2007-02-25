@@ -124,7 +124,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -140,11 +140,13 @@
 				AdditionalDependencies="MTi_driver_t.lib opencv_grabber_t.lib bumblebee_driver_t.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\ALCORLAB\Documenti\Visual Studio 2005\Projects\alcor.lib&quot;"
-				GenerateDebugInformation="true"
+				AdditionalLibraryDirectories="..\..\alcor.lib"
+				GenerateManifest="false"
+				GenerateDebugInformation="false"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				OptimizeForWindows98="1"
 				TargetMachine="1"
 			/>
 			<Tool

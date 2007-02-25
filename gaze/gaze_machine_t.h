@@ -8,22 +8,24 @@
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze{
 ///
-class gaze_machine_t;
+struct gaze_machine_t;
 typedef boost::shared_ptr<gaze_machine_t> gaze_machine_ptr;
 }}
 //-------------------------------------------------------------------------++
 ///
-class all::gaze::gaze_machine_t
+struct all::gaze::gaze_machine_t
 {
 public:
     ///
     virtual bool start_machine()=0;
     ///
     virtual void print_welcome()=0;
-
+    ///
     virtual void sample_gaze()=0;
-
+    ///
     virtual int  nsamples() const=0;
+    ///
+    virtual double elapsed()= 0;
 };
 //-------------------------------------------------------------------------++
 //-------------------------------------------------------------------------++
