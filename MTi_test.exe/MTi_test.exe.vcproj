@@ -110,6 +110,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="true"
 				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="NDEBUG;WIN32"
 				RuntimeLibrary="0"
@@ -128,14 +130,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="MTi_driver_t.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName)"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
-				GenerateManifest="true"
+				GenerateManifest="false"
 				GenerateDebugInformation="false"
 				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
-				LinkTimeCodeGeneration="0"
+				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
 			/>
 			<Tool
