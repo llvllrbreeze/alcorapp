@@ -1,12 +1,11 @@
 #include "alcor/sense/MTi_driver_t.h"
-
+#pragma comment (lib, "MTi_driver_t.lib")
 using namespace all;
 
 int main()
 {
   all::sense::MTi_driver_t mti;
-  std::string  afile("config/mti_config.ini");
-  if ( mti.open( afile ))
+  if ( mti.open(std::string("config/mti_config.ini") ))
   {
     printf("MTi opened!\n");
     //
