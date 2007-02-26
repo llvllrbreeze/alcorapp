@@ -6,22 +6,22 @@
 #include "alcor/core/client_base_t.hpp"
 //---------------------------------------------------------------------------
 namespace all { namespace trm {
-  ///
-  class task_dispatcher : public all::core::client_base_t
-  {
-  public:
-  ///
-  task_dispatcher(const std::string& ini);
-  ///
-  void send_event(int);
+        ///
+        class task_dispatcher : public all::core::client_base_t
+        {
+        public:
+            ///
+            task_dispatcher(const std::string& ini);
+            ///
+            void send_event(int);
 
-  private:
-  ///
-	void connected_cb();  
-  ///
-  void updatetask(core::net_packet_ptr_t);
-  };
-//---------------------------------------------------------------------------
-}}
+        private:
+            ///
+            void connected_cb();
+            ///
+            void updatetask(core::net_packet_ptr_t);
+        };
+        //---------------------------------------------------------------------------
+    }}
 //---------------------------------------------------------------------------
 #endif //trm_task_dispatcher_H_INC
