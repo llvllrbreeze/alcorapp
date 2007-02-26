@@ -178,6 +178,14 @@
 				RelativePath="..\..\alcor.extern\wxctb\match.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\alcor.extern\wxctb\win32\serport.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor.extern\wxctb\win32\timer.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
