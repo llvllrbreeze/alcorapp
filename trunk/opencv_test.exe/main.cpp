@@ -7,7 +7,7 @@ using namespace cimg_library;
 int main ()
 {
   all::sense::opencv_grabber_t cam;
-  cam.open(core::open_camera, -1);
+  cam.open("config/cmoscam.ini");
 
   //getchar();
 
@@ -26,8 +26,8 @@ int main ()
 
     if (cam.get_color_buffer(imag_sptr) )
     {
-      imag.assign( imag_sptr.get(),  cam.width(), cam.height(), 1,3);
-      imag.display(view); 
+      imag.assign( imag_sptr.get(),  cam.width(), cam.height(), 1,cam.channels());
+      imag.display(view) ; 
     }
 
         cimg::wait(40);
