@@ -1,41 +1,71 @@
 #ifndef gaze_machine_t_H_INCLUDED
-#define gaze_machine_t_H_INCLUDED
+#define gaze_machine_t_H_INCLUDE
 //-------------------------------------------------------------------------++
-#include "alcor/core/core.h"
+#include "gaze_machine_inc.h"
 //-------------------------------------------------------------------------++
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze{
-///
-struct gaze_machine_t;
-typedef boost::shared_ptr<gaze_machine_t> gaze_machine_ptr;
-}}
 //-------------------------------------------------------------------------++
 ///
-struct all::gaze::gaze_machine_t
+class  gaze_machine_t
 {
 public:
-    ///
-    virtual bool start_machine()=0;
-    ///
-    virtual void print_welcome()=0;
-    ///
-    virtual void sample_gaze()=0;
-    ///
-    virtual int  nsamples() const=0;
-    ///
-    virtual void  start_timing()= 0;
-    ///
-    virtual double elapsed()= 0;
+  ///
+  gaze_machine_t();
+  ///
+  ~gaze_machine_t();
+  ///
+  bool start_machine();
+  ///
+  void print_welcome();
+  ///
+  void sample_gaze();
+  ///
+  int nsamples() const;
+  ///
+  void  start_timing(){timer_.restart();};
+  ///
+  double elapsed(){return timer_.elapsed();}
+
+private:
+  ///
+  boost::timer timer_;
+    ///Eye Camera
+  all::sense::opencv_grabber_ptr    eye_;
+  ///
+  all::sense::MTi_driver_ptr        mti_;
+  ///Scene Camera
+  all::sense::bumblebee_sptr        bee_; 
+
+  ///allocate enough space .. 
+  void allocate_();
+  void write_header_();
+
+  ///Binary Data Stream
+  boost::shared_ptr<FILE> binstream_;
+
+  ///eye buffer
+  all::core::uint8_sarr   ieye;
+  ///rgb scene buffer
+  all::core::uint8_sarr   iscene;
+  ///xyz depth
+  all::core::single_sarr  idepth;
+  ///Orientation
+  all::math::rpy_angle_t  ihead;
+  ///Size ...
+  size_t  elapsed_sz  ;
+  size_t eye_sz       ;
+  size_t scene_sz     ;
+  size_t depth_sz     ;
+  size_t head_sz     ; 
+
+  ///Samples tag
+  int nsamples_;
 };
 //-------------------------------------------------------------------------++
-//-------------------------------------------------------------------------++
-namespace all { namespace gaze {
-//-------------------------------------------------------------------------++
-///
-gaze_machine_ptr  create_gaze_machine();
-
+typedef boost::shared_ptr<gaze_machine_t> gaze_machine_ptr;
 //-------------------------------------------------------------------------++
 }}
 //-------------------------------------------------------------------------++
