@@ -9,11 +9,13 @@ gaze_machine_t::gaze_machine_t():nsamples_(0)
     //using namespace boost::posix_time;
     ////get the current time from the clock -- one second resolution
     //ptime now = second_clock::local_time();
-    binstream_.reset(::fopen("gaze_log.bin","wb"));
+    //binstream_.reset(::fopen("gaze_log.bin","wb"));
+    gazelog_.open("gazelog.bin",std::ios::out|std::ios::trunc|std::ios::binary);
 }
 /////////////////////////////////////////////////////////////////////////////
 gaze_machine_t::~gaze_machine_t()
 {
+  gazelog_.close();
 }
 /////////////////////////////////////////////////////////////////////////////
 bool gaze_machine_t::start_machine()
@@ -82,11 +84,13 @@ void gaze_machine_t::write_header_()
   depth_sz   = bee_->depth_buffer_size();
   head_sz    = sizeof(math::rpy_angle_t);
 
-  ::fwrite(&elapsed_sz,sizeof(elapsed_sz),1,binstream_.get());
-  ::fwrite(&eye_sz,sizeof(eye_sz),1,binstream_.get());
-  ::fwrite(&scene_sz,sizeof(scene_sz),1,binstream_.get()); 
-  ::fwrite(&depth_sz,sizeof(depth_sz),1,binstream_.get());
-  ::fwrite(&head_sz,sizeof(head_sz),1,binstream_.get());
+  //::fwrite(&elapsed_sz,sizeof(elapsed_sz),1,binstream_.get());
+  //::fwrite(&eye_sz,sizeof(eye_sz),1,binstream_.get());
+  //::fwrite(&scene_sz,sizeof(scene_sz),1,binstream_.get()); 
+  //::fwrite(&depth_sz,sizeof(depth_sz),1,binstream_.get());
+  //::fwrite(&head_sz,sizeof(head_sz),1,binstream_.get());
+
+  gazelog_ << elapsed_sz;
 }
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -136,11 +140,16 @@ void gaze_machine_t::sample_gaze()
   bee_->get_color_buffer(core::right_img, iscene);  
   bee_->get_depth_buffer(idepth);
   
-  ::fwrite(&elapsed     , elapsed_sz, 1, binstream_.get());
-  ::fwrite(ieye.get()   , eye_sz    , 1, binstream_.get());
-  ::fwrite(iscene.get() , scene_sz  , 1, binstream_.get());
-  ::fwrite(idepth.get() , depth_sz  , 1, binstream_.get());
-  ::fwrite(&ihead       , head_sz   , 1, binstream_.get());
+  //::fwrite(&elapsed     , elapsed_sz, 1, binstream_.get());
+  //::fwrite(ieye.get()   , eye_sz    , 1, binstream_.get());
+  //::fwrite(iscene.get() , scene_sz  , 1, binstream_.get());
+  //::fwrite(idepth.get() , depth_sz  , 1, binstream_.get());
+  //::fwrite(&ihead       , head_sz   , 1, binstream_.get());
+  gazelog_ << elapsed;
+  gazelog_.write((char*)ieye.get()  ,   eye_sz);
+  gazelog_.write((char*)iscene.get(),   scene_sz);
+  gazelog_.write((char*)idepth.get(),   depth_sz);
+  gazelog_.write((char*)&ihead,         head_sz);
 }
 //-------------------------------------------------------------------------++
 int gaze_machine_t::nsamples() const

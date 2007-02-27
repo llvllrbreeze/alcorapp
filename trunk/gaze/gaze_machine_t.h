@@ -3,9 +3,6 @@
 //-------------------------------------------------------------------------++
 #include "gaze_machine_inc.h"
 //-------------------------------------------------------------------------++
-#include <boost/shared_ptr.hpp>
-#include <boost/shared_array.hpp>
-//-------------------------------------------------------------------------++
 namespace all { namespace gaze{
 //-------------------------------------------------------------------------++
 ///
@@ -44,7 +41,8 @@ private:
   void write_header_();
 
   ///Binary Data Stream
-  boost::shared_ptr<FILE> binstream_;
+  //boost::shared_ptr<FILE> binstream_;
+  std::fstream gazelog_;
 
   ///eye buffer
   all::core::uint8_sarr   ieye;
