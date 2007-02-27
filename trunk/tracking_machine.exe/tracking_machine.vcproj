@@ -129,7 +129,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies=" client_server_t.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="client_server_t.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib"
+				ShowProgress="2"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -194,11 +196,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\alcor\core\depth_image_utils.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\image_utils.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\act\p3_odometry_adapter_t.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\alcor\act\pantilt_control_loop_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\pixel_traits.h"
 				>
 			</File>
 			<File
