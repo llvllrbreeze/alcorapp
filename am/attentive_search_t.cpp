@@ -1,5 +1,5 @@
 #include "attentive_search_t.h"
-#include "alcor\core\config_parser_t.h"
+//#include "alcor\core\config_parser_t.h"
 #include "alcor\sense\slam2d_adpater.h"
 //-----------------------------------------------------------------------++
 #include <boost/thread/thread.hpp>

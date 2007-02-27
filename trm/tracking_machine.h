@@ -174,7 +174,7 @@ private:
 
   //EVENTS
   boost::shared_ptr<all::trm::task_listener> tasklistener;
-  ///Pihole util
+  ///Pinhole util
   math::pinhole_t pinhole;
   //---------------------------------------------------------------------------
 };
