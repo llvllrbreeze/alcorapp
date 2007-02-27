@@ -1,7 +1,7 @@
 #include "..\gaze_machine_t.h"
 #include "..\gaze_machine_inc.h"
 //-------------------------------------------------------------------------++
-#include "alcor/core/iniWrapper.h"
+#include "alcor/core/config_parser_t.hpp"
 //-------------------------------------------------------------------------++
 #include <cstdio>
 #include <boost/shared_array.hpp>
@@ -95,29 +95,36 @@ std::cout << std::endl
 
     std::cout << "<<STARTING MACHINE>>" << std::endl;
     //
-    iniWrapper gazeini;
-    gazeini.Load("config/gaze_machine.ini");
+    //iniWrapper gazeini;
+    //gazeini.Load("config/gaze_machine.ini");
 
-    char* mticonf = gazeini.GetStringAsChar("config:mti","config/mti_config.ini");
-    char* eyeconf = gazeini.GetStringAsChar("config:reye","config/cmoscam.ini");
-    char* beeconf = gazeini.GetStringAsChar("config:bee","config/bumblebeeB.ini");
+    //char* mticonf = gazeini.GetStringAsChar("config:mti","config/mti_config.ini");
+    //char* eyeconf = gazeini.GetStringAsChar("config:reye","config/cmoscam.ini");
+    //char* beeconf = gazeini.GetStringAsChar("config:bee","config/bumblebeeB.ini");
+
+    all::core::config_parser_t config;
+    config.load(core::tags::ini,"config/gaze_machine.ini");
+
+    std::string mticonf   = config.get<std::string>("config.mti","config/mti_config.ini");
+    std::string eyeconf   = config.get<std::string>("config.reye","config/cmoscam.ini");
+    std::string beeconf   = config.get<std::string>("config.bee","config/bumblebeeB.ini");
 
     ////
     std::cout << "<Eye Camera ...>"; 
     eye_.reset(new sense::opencv_grabber_t);
-    if( !eye_->open(std::string(eyeconf) )) return false;
+    if( !eye_->open(eyeconf) ) return false;
     std::cout << "<Done>"<< std::endl << std::endl;
 
     //
     std::cout << "<MTi......>"; 
     mti_.reset(new sense::MTi_driver_t());
-    if( !mti_->open(std::string(mticonf) ) ) return false;    
+    if( !mti_->open("ddd") ) return false;    
     std::cout << "<Done>"<< std::endl << std::endl;
 
     //
     std::cout << "<Bumblebee ...>";
     bee_.reset(new sense::bumblebee_driver_t);
-    if( !bee_->open(std::string(beeconf)) ) return false;
+    if( !bee_->open(beeconf) ) return false;
     std::cout << "<Done>" << std::endl<< std::endl;
 
     allocate_();

@@ -137,9 +137,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
 				AdditionalDependencies="MTi_driver_t.lib opencv_grabber_t.lib bumblebee_driver_t.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
-				LinkIncremental="1"
+				LinkIncremental="0"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
 				GenerateDebugInformation="false"
