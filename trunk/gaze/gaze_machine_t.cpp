@@ -1,78 +1,10 @@
-#include "..\gaze_machine_t.h"
-#include "..\gaze_machine_inc.h"
-//-------------------------------------------------------------------------++
+#include "gaze_machine_t.h"
 #include "alcor/core/config_parser_t.hpp"
 //-------------------------------------------------------------------------++
-#include <cstdio>
-#include <boost/shared_array.hpp>
-#include <boost/timer.hpp>
-//-------------------------------------------------------------------------++
-namespace all { namespace gaze { namespace detail {
-//-------------------------------------------------------------------------++
-class gaze_machine_impl: public gaze_machine_t
-{
-private:
-  //ctor -- not copy constructible
-  gaze_machine_impl(gaze_machine_impl const &);
-  //not copyable
-  gaze_machine_impl& operator=(gaze_machine_impl const &);
-
-public:
-  ///
-  gaze_machine_impl();
-  ///
-  ~gaze_machine_impl();
-  ///
-  bool start_machine();
-  ///
-  void print_welcome();
-  ///
-  void sample_gaze();
-  ///
-  int nsamples() const;
-  ///
-  void  start_timing(){timer_.restart();};
-  ///
-  double elapsed(){return timer_.elapsed();}
-
-private:
-  ///
-  boost::timer timer_;
-    ///Eye Camera
-  all::sense::opencv_grabber_ptr    eye_;
-  ///
-  all::sense::MTi_driver_ptr        mti_;
-  ///Scene Camera
-  all::sense::bumblebee_sptr        bee_; 
-
-  ///allocate enough space .. 
-  void allocate_();
-  void write_header_();
-
-  ///Binary Data Stream
-  boost::shared_ptr<FILE> binstream_;
-
-  ///eye buffer
-  all::core::uint8_sarr   ieye;
-  ///rgb scene buffer
-  all::core::uint8_sarr   iscene;
-  ///xyz depth
-  all::core::single_sarr  idepth;
-  ///Orientation
-  all::math::rpy_angle_t  ihead;
-  ///Size ...
-  size_t  elapsed_sz  ;
-  size_t eye_sz       ;
-  size_t scene_sz     ;
-  size_t depth_sz     ;
-  size_t head_sz     ; 
-
-  ///Samples tag
-  int nsamples_;
-};
+namespace all { namespace gaze { 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-inline gaze_machine_impl::gaze_machine_impl():nsamples_(0)
+gaze_machine_t::gaze_machine_t():nsamples_(0)
 {
     //using namespace boost::posix_time;
     ////get the current time from the clock -- one second resolution
@@ -80,11 +12,11 @@ inline gaze_machine_impl::gaze_machine_impl():nsamples_(0)
     binstream_.reset(::fopen("gaze_log.bin","wb"));
 }
 /////////////////////////////////////////////////////////////////////////////
-gaze_machine_impl::~gaze_machine_impl()
+gaze_machine_t::~gaze_machine_t()
 {
 }
 /////////////////////////////////////////////////////////////////////////////
-bool gaze_machine_impl::start_machine()
+bool gaze_machine_t::start_machine()
 {
 
 std::cout << std::endl
@@ -135,14 +67,14 @@ std::cout << std::endl
     return true;
 }
 /////////////////////////////////////////////////////////////////////////////
-void gaze_machine_impl::allocate_()
+void gaze_machine_t::allocate_()
 {
   ieye.reset  ( new core::uint8_t  [eye_->size()]              );
   iscene.reset( new core::uint8_t  [bee_->color_buffer_size()] );
   idepth.reset( new core::single_t [bee_->depth_buffer_size()] );
 }
 /////////////////////////////////////////////////////////////////////////////
-void gaze_machine_impl::write_header_()
+void gaze_machine_t::write_header_()
 {
   elapsed_sz = sizeof(double);
   eye_sz     = eye_->size();
@@ -158,7 +90,7 @@ void gaze_machine_impl::write_header_()
 }
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-void gaze_machine_impl::print_welcome()
+void gaze_machine_t::print_welcome()
 {
 std::cout << "Library Ver: " <<  core::VERSION_INFORMATION << std::endl;
 std::cout << "Author: " <<  core::AUTHOR_INFORMATION << std::endl;
@@ -190,7 +122,7 @@ std::cout << std::endl
 
 }
 /////////////////////////////////////////////////////////////////////////////
-void gaze_machine_impl::sample_gaze()
+void gaze_machine_t::sample_gaze()
 {  
   ++nsamples_;
 
@@ -211,24 +143,10 @@ void gaze_machine_impl::sample_gaze()
   ::fwrite(&ihead       , head_sz   , 1, binstream_.get());
 }
 //-------------------------------------------------------------------------++
-int gaze_machine_impl::nsamples() const
+int gaze_machine_t::nsamples() const
 {
 return nsamples_;
 }
-
 //-------------------------------------------------------------------------++
 /////////////////////////////////////////////////////////////////////////////
-}}}///all::sense::detail
-//-------------------------------------------------------------------------++
-namespace all { namespace gaze {
-//-------------------------------------------------------------------------++
-gaze_machine_ptr create_gaze_machine()
-{
-    boost::shared_ptr<all::gaze::gaze_machine_t> gaze_ptr 
-        (reinterpret_cast<all::gaze::gaze_machine_t*>
-        ( new all::gaze::detail::gaze_machine_impl) );
-    return gaze_ptr;
-}
-//-------------------------------------------------------------------------++
-}}
-//-------------------------------------------------------------------------++
+}}///all::sense::detail

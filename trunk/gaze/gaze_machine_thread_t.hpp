@@ -11,8 +11,8 @@ class gaze_machine_thread_t
 public:
     gaze_machine_thread_t():running_(true),elapsed_(0)
     {
-        gaze_ = all::gaze::create_gaze_machine();
-        gaze_->print_welcome();
+      gaze_.reset(new gaze_machine_t);
+      gaze_->print_welcome();
     }
 
     void run_thread()
