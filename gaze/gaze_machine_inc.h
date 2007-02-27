@@ -8,10 +8,10 @@
 #include "alcor/sense/bumblebee_driver_t.h"
 #include "alcor/sense/MTi_driver_t.h"
 //-------------------------------------------------------------------------++
-#include <boost/shared_array.hpp>
 #include <boost/timer.hpp>
 //-------------------------------------------------------------------------++
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <cstdio>
 //-------------------------------------------------------------------------++
