@@ -2,6 +2,7 @@
 #include "alcor/sense/bumblebee_driver_t.h"
 
 #include "alcor.extern/CImg/CImg.h"
+
 using namespace all;
 using namespace cimg_library;
 
@@ -9,6 +10,7 @@ using namespace cimg_library;
 int main()
 {
   sense::bumblebee_driver_t bee;
+
   if (bee.open("config/bumblebeeA.ini"))
   {
     CImgDisplay view(bee.ncols(), bee.nrows(), "depth");
@@ -18,12 +20,13 @@ int main()
           && !view.is_closed ) 
 
     {
+      //
       bee.grab();
       //get
       core::single_sarr depth = 
         bee.get_depth_buffer();
       //fill dimg
-	  dimg.assign(depth.get() + bee.nrows()*bee.ncols()*2,  
+	    dimg.assign(depth.get() + bee.nrows()*bee.ncols()*2,  
                   bee.ncols(), bee.nrows(),1,1); 
    //   //show
       dimg.display(view);
@@ -45,10 +48,10 @@ int main()
       //raggio dell'intorno
       size_t  hsize =  9;
 
-      float vmean  
+      core::mystat vstat  
         = core::estimate_depth(depthim, center, hsize);
 
-      printf("**mean: %f\n", vmean);
+      //printf("**mean: %f\n", vmean);
     }
 
     cimg::wait(50);
