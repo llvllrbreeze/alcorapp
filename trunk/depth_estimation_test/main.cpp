@@ -24,7 +24,7 @@ int main()
       bee.grab();
       //get
       core::single_sarr depth = 
-        bee.get_depth_buffer();
+            bee.get_depth_buffer();
       //fill dimg
 	    dimg.assign(depth.get() + bee.nrows()*bee.ncols()*2,  
                   bee.ncols(), bee.nrows(),1,1); 
