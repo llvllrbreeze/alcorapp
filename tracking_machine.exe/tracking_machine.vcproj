@@ -131,7 +131,7 @@
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
 				AdditionalDependencies="client_server_t.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib"
-				ShowProgress="2"
+				ShowProgress="0"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\core\distance_accumulator.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\core\image_utils.h"
 				>
 			</File>
@@ -213,6 +217,10 @@
 			</File>
 			<File
 				RelativePath="..\..\alcor\core\pixel_traits.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\math\point2d.h"
 				>
 			</File>
 			<File
