@@ -9,9 +9,9 @@ using namespace cimg_library;
 int main()
 {
   sense::bumblebee_driver_t bee;
-  if (bee.open("config\bumblebeeA.ini"))
+  if (bee.open("config/bumblebeeA.ini"))
   {
-    CImgDisplay view(bee.nrows(), bee.ncols(), "depth");
+    CImgDisplay view(bee.ncols(), bee.nrows(), "depth");
     CImg<core::single_t> dimg;
 
     while(    view.key != cimg::keyESC 
@@ -23,9 +23,9 @@ int main()
       core::single_sarr depth = 
         bee.get_depth_buffer();
       //fill dimg
-      dimg.assign(depth.get() + bee.nrows()*bee.ncols()*2,  
-                  bee.nrows(), bee.ncols(),1,3); 
-      //show
+	  dimg.assign(depth.get() + bee.nrows()*bee.ncols()*2,  
+                  bee.ncols(), bee.nrows(),1,1); 
+   //   //show
       dimg.display(view);
 
     if( view.button&1  && view.mouse_y >= 0)
