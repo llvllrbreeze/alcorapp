@@ -46,12 +46,11 @@ int main()
       center.row = view.mouse_y;
       center.col = view.mouse_x;
       //raggio dell'intorno
-      size_t  hsize =  9;
+      size_t  hsize =  5;
 
       core::mystat vstat  
         = core::estimate_depth(depthim, center, hsize);
 
-      //printf("**mean: %f\n", vmean);
     }
 
     cimg::wait(50);
