@@ -196,6 +196,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\alcor\act\detail\ArActionFollowTarget.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\core\depth_image_utils.hpp"
 				>
 			</File>
