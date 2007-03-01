@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="shrimp"
-	ProjectGUID="{004D5855-E6BE-4453-9AFA-3E37A010F162}"
+	Name="shrimp_server"
+	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
@@ -57,7 +57,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				GenerateDebugInformation="true"
+				GenerateManifest="false"
+				GenerateDebugInformation="false"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -89,7 +90,7 @@
 			Name="Release|Win32"
 			OutputDirectory="..\..\obj\$(ProjectName)"
 			IntermediateDirectory="$(OutDir)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -110,8 +111,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\.."
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNING"
+				AdditionalIncludeDirectories="../.."
+				PreprocessorDefinitions="NDEBUG;WIN32"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -127,23 +128,39 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				LinkLibraryDependencies="true"
-				AdditionalDependencies="client_server_t.lib wxctb.lib"
-				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="shrimp.lib"
+				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
+				GenerateManifest="false"
+				GenerateDebugInformation="false"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
 			/>
 			<Tool
+				Name="VCManifestTool"
+				EmbedManifest="true"
+			/>
+			<Tool
 				Name="VCXDCMakeTool"
+				OutputDocumentFile="$(IntDir)\$(TargetName).xml"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -159,23 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\alcor\act\shrimp_client_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\detail\shrimp_command_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\shrimp_gateway_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\shrimp_server_data_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\shrimp_server_t.cpp"
+				RelativePath=".\server_launcher.cpp"
 				>
 			</File>
 		</Filter>
@@ -184,26 +185,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\alcor\act\shrimp_client_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\detail\shrimp_command_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\shrimp_gateway_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\shrimp_server_data_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\shrimp_server_t.hpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
