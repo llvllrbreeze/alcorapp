@@ -1,5 +1,4 @@
 #include "tracking_machine.h"
-
 //---------------------------------------------------------------------------
 namespace all { namespace trm {
 //---------------------------------------------------------------------------
@@ -196,8 +195,6 @@ bool tracking_machine::start_tracking   (track_event const&)
   //
   ptu_control->enable(true);
 
-  //tracking_loop::Instance().centro_r = 240;
-  //tracking_loop::Instance().centro_c = 320;
   ///
   fire_callback = boost::bind
     (&tracking_machine::tracking_cb, this);
