@@ -18,7 +18,7 @@ tracking_machine::tracking_machine():running_(true)
     );  
 
   //Task Listener
-  tasklistener.reset(new task_listener("config\trm_service.ini"));
+  tasklistener.reset(new task_listener("config/trm_service.ini"));
   tasklistener->notify = boost::bind(&tracking_machine::taskreceived, this, ::_1);
   tasklistener->run_async();
 
@@ -48,7 +48,7 @@ void tracking_machine::threadloop()
   {
   ///
   workspace.reset( new matlab::matlab_engine_t);
-  workspace->command_line("init_attention");
+  workspace->command_line("init_tracking");
 
     while (running_)
     {
@@ -105,6 +105,17 @@ void tracking_machine::setup_cb()
 //---------------------------------------------------------------------------
 void tracking_machine::tracking_cb()
 {
+  if (bee->grab())
+  {
+  core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
+
+  mxArray* mx_rimage = 
+    matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
+                                                        ,matlab::row_major
+                                                        ,bee->nrows()
+                                                        ,bee->ncols());
+  //Push into Workspace
+  workspace->put_array("rgb", mx_rimage);
 ///acquisire
   ///passare i dati
   ///ottenere un centro
@@ -113,7 +124,9 @@ void tracking_machine::tracking_cb()
   ///se near stop
   ///snnò calcola velocità giusta
   ///passare setpoint al robot
-  ///
+
+  ///se va storto..
+  process_event(fail_event());
 }
 //---------------------------------------------------------------------------
 void tracking_machine::idle_tracking_cb()
