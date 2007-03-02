@@ -105,7 +105,15 @@ void tracking_machine::setup_cb()
 //---------------------------------------------------------------------------
 void tracking_machine::tracking_cb()
 {
-
+///acquisire
+  ///passare i dati
+  ///ottenere un centro
+  ///stimare profondità e direzione
+  ///valutare setpoin:
+  ///se near stop
+  ///snnò calcola velocità giusta
+  ///passare setpoint al robot
+  ///
 }
 //---------------------------------------------------------------------------
 void tracking_machine::idle_tracking_cb()
