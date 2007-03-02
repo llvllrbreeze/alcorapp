@@ -38,16 +38,16 @@ public:
 
   boost::mutex process_guard;
 
-struct setup_event : event<setup_event> {};
-struct reset_event : event<reset_event> {};
+  struct setup_event : event<setup_event> {};
+  struct reset_event : event<reset_event> {};
 
-struct track_event : event<track_event> {};
-struct idle_track_event : event<idle_track_event> {};
+  struct track_event : event<track_event> {};
+  struct idle_track_event : event<idle_track_event> {};
 
-struct resume_event : event<resume_event> {};
+  struct resume_event : event<resume_event> {};
 
-struct fail_event : event<fail_event> {};
-struct recover_event : event<recover_event> {};
+  struct fail_event : event<fail_event> {};
+  struct recover_event : event<recover_event> {};
 
 
   typedef tracking_machine self_t;
