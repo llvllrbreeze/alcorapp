@@ -196,38 +196,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\alcor\act\detail\ArActionFollowTarget.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\depth_image_utils.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\distance_accumulator.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\image_utils.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\p3_odometry_adapter_t.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\pantilt_control_loop_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\pixel_traits.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\math\point2d.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\alcor.extern\statemachine\state_machine.hpp"
 				>
 			</File>
@@ -247,6 +215,30 @@
 				RelativePath="..\trm\trm_tags_inc.h"
 				>
 			</File>
+			<Filter
+				Name="utils"
+				>
+				<File
+					RelativePath="..\..\alcor\core\depth_image_utils.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\alcor\core\image_utils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\alcor\act\p3_odometry_adapter_t.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\alcor\act\pantilt_control_loop_t.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\alcor\core\pixel_traits.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
