@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
-				AdditionalDependencies="client_server_t.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib"
+				AdditionalDependencies="client_server_t.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib p3_gateway.lib"
 				ShowProgress="0"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
@@ -182,14 +182,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\act\p3dx_gateway.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\act\p3dx_server_data_t.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\trm\task_listener.cpp"
 				>
 			</File>
@@ -203,6 +195,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\alcor\act\p3_gateway.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\alcor.extern\statemachine\state_machine.hpp"
 				>
