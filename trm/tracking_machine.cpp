@@ -33,7 +33,8 @@ tracking_machine::tracking_machine():running_(true)
   pinhole.nrows = bee->nrows();
 
    //P3DX
-  p3dx = act::create_p3dx_client(); 
+  p3dx.reset(new act::p3dx_gateway()); 
+
 
   p3_adapter.reset(new act::p3_odometry_adapter_t(p3dx) );
 
@@ -115,15 +116,35 @@ void tracking_machine::tracking_cb()
                                                         ,bee->ncols());
   //Push into Workspace
   workspace->put_array("rgb", mx_rimage);
-///acquisire
-  ///passare i dati
   ///ottenere un centro
+   workspace->command_line("[centro_r centro_c]= fh_track_and_show(rgb, [240, 320])");
+  //***GATHER***
+  int centro_r = static_cast<int> (hsm.workspace->get_scalar_double("centro_r") );
+  int centro_c = static_cast<int> (hsm.workspace->get_scalar_double("centro_c") );
+  if(centro_c > 0)//che non sia nullo ....
+  {
   ///stimare profondità e direzione
-  ///valutare setpoin:
+    double pan_delta = hsm.pinhole.delta_pan_from_pixel(centro_c);
+  ///valutare setpoin:   
   ///se near stop
   ///snnò calcola velocità giusta
   ///passare setpoint al robot
+  //***ROBOT SET POINT***
+    //Desired Heading
+  theta_rob             =   hsm.p3dx->get_odometry().getTh().deg();  
+  theta_target          =   theta_rob + current_pan + pan_delta;
+  double delta_heading  =   theta_target - theta_rob;
 
+  if(fabs(delta_heading) > 5)//ops .. una soglia :D
+    hsm.p3dx->set_delta_heading(math::angle(delta_heading, math::deg_tag));
+
+  }//centro_c>0
+  else
+  {
+    //TODO: skip??
+    centro_c = 320;
+    centro_r = 240;
+  }
   ///se va storto..
   process_event(fail_event());
 }
@@ -174,8 +195,6 @@ bool tracking_machine::go_idle_tracking (idle_track_event const&)
   ///START TRACKING
 bool tracking_machine::start_tracking   (track_event const&)
 {
-  //skip
-  //machine.pre_tracking_ini();
   double  centro_r = workspace->get_scalar_double("centro_r");
   double  centro_c = workspace->get_scalar_double("centro_c");
   //
@@ -194,7 +213,6 @@ bool tracking_machine::start_tracking   (track_event const&)
   ptu_control->set_polar_reference(math::deg_tag,theta_rob + pan);
   //
   ptu_control->enable(true);
-
   ///
   fire_callback = boost::bind
     (&tracking_machine::tracking_cb, this);

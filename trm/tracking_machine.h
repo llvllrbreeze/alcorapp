@@ -15,7 +15,6 @@
 #include <boost\thread\thread.hpp>
 #include <boost\shared_ptr.hpp>
 #include <boost\thread\mutex.hpp> 
-//#include <boost\enable_shared_from_this.hpp>
 //---------------------------------------------------------------------------
 #include "trm_tags_inc.h"
 #include "trm_app_inc.h" 
@@ -160,7 +159,8 @@ private:
   ///MATLAB
   boost::shared_ptr<matlab::matlab_engine_t> workspace;
   ///DORO CLIENT
-  act::p3dx_client_sptr p3dx;
+  act::p3dx_gateway_sptr p3dx;
+
   ///Bumblebee
   sense::bumblebee_sptr bee;
   ///PTU
