@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="tracking_control"
-	ProjectGUID="{004D5855-E6BE-4453-9AFA-3E37A010F162}"
+	ProjectGUID="{DED908E3-C31E-4325-8D6E-D0FB0305C615}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
@@ -57,7 +57,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				GenerateDebugInformation="true"
+				GenerateManifest="false"
+				GenerateDebugInformation="false"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -89,7 +90,7 @@
 			Name="Release|Win32"
 			OutputDirectory="..\..\obj\$(ProjectName)"
 			IntermediateDirectory="$(OutDir)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -110,8 +111,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\.."
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;_WIN32_WINDOWS"
+				AdditionalIncludeDirectories="../.."
+				PreprocessorDefinitions="NDEBUG;WIN32;_WIN32_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -127,22 +128,39 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				LinkLibraryDependencies="true"
-				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="client_server_t.lib wxmsw28.lib wxpng.lib wxjpeg.lib wxzlib.lib comctl32.lib"
+				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
+				GenerateManifest="false"
+				GenerateDebugInformation="false"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
 			/>
 			<Tool
+				Name="VCManifestTool"
+				EmbedManifest="true"
+			/>
+			<Tool
 				Name="VCXDCMakeTool"
+				OutputDocumentFile="$(IntDir)\$(TargetName).xml"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -161,6 +179,14 @@
 				RelativePath="..\trm\task_dispatcher.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\tracking_control.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\tracking_control_frame.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -169,6 +195,14 @@
 			>
 			<File
 				RelativePath="..\trm\task_dispatcher.h"
+				>
+			</File>
+			<File
+				RelativePath=".\tracking_control.h"
+				>
+			</File>
+			<File
+				RelativePath=".\tracking_control_frame.h"
 				>
 			</File>
 			<File
@@ -181,6 +215,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\tracking_control.rc"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
