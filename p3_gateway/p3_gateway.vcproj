@@ -129,7 +129,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="false"
-				AdditionalDependencies="AriaStatic.lib ArNetWorkingStatic.lib winmm.lib"
+				AdditionalDependencies="winmm.lib"
 				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
