@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="PLEASE_CHANGE_ME_LIB"
+	Name="p3_client_server"
 	ProjectGUID="{004D5855-E6BE-4453-9AFA-3E37A010F162}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
@@ -158,7 +158,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\empty.cpp"
+				RelativePath="..\..\alcor\act\p3dx_server_data_t.cpp"
 				>
 			</File>
 		</Filter>
@@ -167,6 +167,18 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\alcor\act\p3_server_data_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\act\p3_server_t.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\act\p3dx_server_data_t.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
