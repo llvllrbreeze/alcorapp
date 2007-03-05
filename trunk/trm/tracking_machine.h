@@ -82,7 +82,7 @@ private:
   ///RESUME TRACKING
   bool resume_tracking (resume_event const&) { return true;};
   ///FAIL
-  bool go_fail (fail_event const&) { return true;};
+  bool go_fail (fail_event const&);
   ///RECOVER
   bool go_recover (recover_event const&) { return true;};
 
@@ -145,7 +145,7 @@ private:
   ///calls setup script
   void setup_cb();
   ///
-  void failed_cb() {};
+  void failed_cb();
   ///
   void recovering_cb() {};
 
@@ -159,7 +159,7 @@ private:
   ///MATLAB
   boost::shared_ptr<matlab::matlab_engine_t> workspace;
   ///DORO CLIENT
-  act::p3dx_gateway_sptr p3dx;
+  act::p3_gateway_sptr p3dx;
 
   ///Bumblebee
   sense::bumblebee_sptr bee;

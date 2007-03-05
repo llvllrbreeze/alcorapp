@@ -33,8 +33,9 @@ tracking_machine::tracking_machine():running_(true)
   pinhole.nrows = bee->nrows();
 
    //P3DX
-  p3dx.reset(new act::p3dx_gateway()); 
-
+  p3dx.reset(new act::p3_gateway()); 
+  if (p3dx->open("config/p3_conf.ini"))
+    printf("Robot connected!\n");
 
   p3_adapter.reset(new act::p3_odometry_adapter_t(p3dx) );
 
@@ -73,8 +74,10 @@ void tracking_machine::setup_cb()
 {
   if (bee->grab())
   {
+    printf("Image Grabbed\n");
     core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
 
+    printf("buffer2array %d %d\n", bee->nrows(), bee->ncols());
     mxArray* mx_rimage = 
       matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
                                                           ,matlab::row_major
@@ -82,6 +85,7 @@ void tracking_machine::setup_cb()
                                                           ,bee->ncols());
     
   //Push into Workspace
+    printf("put_array \n");
     workspace->put_array("rgb", mx_rimage);
     printf("SETUP\n");
     ////
@@ -90,6 +94,7 @@ void tracking_machine::setup_cb()
 
     printf("Done Setup\n\n");
     int coerente = workspace->get_scalar_int("coerente");
+
     if(coerente)
       //Se tutto a posto vai in idled_tracking
       process_event(idle_track_event());
@@ -107,49 +112,88 @@ void tracking_machine::tracking_cb()
 {
   if (bee->grab())
   {
-  core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
+    ptu_control->enable(false);
 
-  mxArray* mx_rimage = 
-    matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
-                                                        ,matlab::row_major
-                                                        ,bee->nrows()
-                                                        ,bee->ncols());
+    double current_pan  = ptu->get_pan();
+    double current_tilt = ptu->get_tilt();
+
+    core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
+
+    mxArray* mx_rimage = 
+      matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
+                                                          ,matlab::row_major
+                                                          ,bee->nrows()
+                                                          ,bee->ncols());
   //Push into Workspace
   workspace->put_array("rgb", mx_rimage);
-  ///ottenere un centro
+
+  ///MEAN SHIFT : ottenere un centro
    workspace->command_line("[centro_r centro_c]= fh_track_and_show(rgb, [240, 320])");
+
   //***GATHER***
-  int centro_r = static_cast<int> (hsm.workspace->get_scalar_double("centro_r") );
-  int centro_c = static_cast<int> (hsm.workspace->get_scalar_double("centro_c") );
+  int centro_r = static_cast<int> (workspace->get_scalar_double("centro_r") );
+  int centro_c = static_cast<int> (workspace->get_scalar_double("centro_c") );
+
   if(centro_c > 0)//che non sia nullo ....
   {
-  ///stimare profondità e direzione
-    double pan_delta = hsm.pinhole.delta_pan_from_pixel(centro_c);
-  ///valutare setpoin:   
-  ///se near stop
-  ///snnò calcola velocità giusta
-  ///passare setpoint al robot
-  //***ROBOT SET POINT***
-    //Desired Heading
-  theta_rob             =   hsm.p3dx->get_odometry().getTh().deg();  
-  theta_target          =   theta_rob + current_pan + pan_delta;
-  double delta_heading  =   theta_target - theta_rob;
+    ///Profondità 3D
+    core::depth_image_t depthim;
+    core::single_sarr depth = bee->get_depth_buffer();
 
-  if(fabs(delta_heading) > 5)//ops .. una soglia :D
-    hsm.p3dx->set_delta_heading(math::angle(delta_heading, math::deg_tag));
+    depthim.assign(bee->nrows(), bee->ncols(), depth.get());
+
+    //centro dell'intorno
+    core::pixelcoord_t center;
+    center.row = centro_r;
+    center.col = centro_c;
+    //raggio dell'intorno
+    size_t  hsize =  7;
+    //
+    core::mystat vstat  
+      = core::estimate_depth(depthim, center, hsize);
+
+    //***Target Angular SET POINT***
+    double pan_delta       = pinhole.delta_pan_from_pixel(centro_c);
+    double theta_target    =   current_pan + pan_delta;
+
+    double distanza = vstat.mean;
+    double speed  = 100;//??
+
+    if(distanza < 1.0)
+    {
+      speed = 0;
+    }
+
+    //relative goal
+    math::point2d 
+      target(distanza, math::angle(theta_target, math::deg_tag));
+
+    //
+    p3dx->set_target_to_follow 
+      (target, speed );
+
+    //
+    ptu_control->set_polar_reference(math::deg_tag,theta_target);
+    ptu_control->enable(true);
 
   }//centro_c>0
   else
   {
     //TODO: skip??
-    centro_c = 320;
-    centro_r = 240;
+
   }
   ///se va storto..
   process_event(fail_event());
+  }
+
 }
 //---------------------------------------------------------------------------
 void tracking_machine::idle_tracking_cb()
+{
+
+}
+//---------------------------------------------------------------------------
+void tracking_machine::failed_cb()
 {
 
 }
@@ -159,6 +203,7 @@ void tracking_machine::idle_tracking_cb()
   ///START_SETUP
 bool tracking_machine::start_setup(setup_event const&)
 {
+  printf("start_setup\n");
     boost::mutex::scoped_lock lock(process_guard);
   ////
   fire_callback = boost::bind
@@ -173,6 +218,8 @@ bool tracking_machine::go_reset (reset_event const&)
   printf("\nReset\n");
     //
   ptu_control->enable(false);
+  p3dx->enable_stop_mode();
+  //
   boost::mutex::scoped_lock lock(process_guard);
   ////
   fire_callback = boost::bind
@@ -185,11 +232,25 @@ bool tracking_machine::go_reset (reset_event const&)
 bool tracking_machine::go_idle_tracking (idle_track_event const&)
 {
   ptu_control->enable(false);
+  p3dx->enable_stop_mode();
+
   boost::mutex::scoped_lock lock(process_guard);
   ////
   fire_callback = boost::bind
     (&tracking_machine::idle_tracking_cb, this);
   return true;
+}
+//---------------------------------------------------------------------------
+  ///FAIL
+bool tracking_machine::go_fail (fail_event const&)
+{
+  ptu_control->enable(false);
+  p3dx->enable_stop_mode();
+  //
+  boost::mutex::scoped_lock lock(process_guard);
+    ////
+  fire_callback = boost::bind
+    (&tracking_machine::failed_cb, this);
 }
 //---------------------------------------------------------------------------
   ///START TRACKING
@@ -213,6 +274,10 @@ bool tracking_machine::start_tracking   (track_event const&)
   ptu_control->set_polar_reference(math::deg_tag,theta_rob + pan);
   //
   ptu_control->enable(true);
+
+  //
+  p3dx->enable_follow_mode();
+
   ///
   fire_callback = boost::bind
     (&tracking_machine::tracking_cb, this);
