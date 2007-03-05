@@ -182,6 +182,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\act\p3dx_gateway.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\act\p3dx_server_data_t.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\trm\task_listener.cpp"
 				>
 			</File>
