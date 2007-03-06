@@ -159,7 +159,7 @@ private:
   ///MATLAB
   boost::shared_ptr<matlab::matlab_engine_t> workspace;
   ///DORO CLIENT
-  act::p3_gateway_sptr p3dx;
+  act::p3_gateway_ptr_t p3dx;
 
   ///Bumblebee
   sense::bumblebee_sptr bee;
