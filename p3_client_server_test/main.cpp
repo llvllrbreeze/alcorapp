@@ -49,6 +49,7 @@ struct p3_listener
   void update_pose(const math::pose2d& pose)
   {
     printf("pose update!\n");
+    p3data.pose = pose;
   }
 
   act::p3_client_ptr_t  p3;
@@ -67,9 +68,19 @@ int main ()
   getchar();  
   p3_client.p3->enable_stop_mode();
 
-  printf("Distance Traveled: %f\n",p3_client.p3data.pose.getP().magnitude());
-  printf("Pose: x1: %f x2: %f theta: %f\n", p3_client.p3data.pose.get_x1(),
-    p3_client.p3data.pose.get_x2(), p3_client.p3data.pose.getTh().deg());
+  printf("Distance Traveled so far: %f\n",p3_client.p3data.pose.getP().magnitude());
+  printf("Pose: x1: %f x2: %f theta: %f\n", 
+    p3_client.p3data.pose.get_x1(),
+    p3_client.p3data.pose.get_x2(), 
+    p3_client.p3data.pose.getTh().deg());
+
+  //oppure
+  math::pose2d pose = p3_client.p3->get_odometry();
+
+  printf("\nPose: x1: %f x2: %f theta: %f\n", 
+    pose.get_x1(),
+    pose.get_x2(), 
+    pose.getTh().deg());
 
   getchar();
   return 0;
