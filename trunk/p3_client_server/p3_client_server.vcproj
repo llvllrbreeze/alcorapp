@@ -187,10 +187,6 @@
 				RelativePath="..\..\alcor\act\p3_server_t.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\alcor\act\p3dx_server_data_t.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
