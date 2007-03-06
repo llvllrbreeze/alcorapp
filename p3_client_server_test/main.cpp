@@ -54,5 +54,11 @@ int main ()
   p3_user       p3_server;
   p3_listener   p3_client;
   getchar();
+  p3_client.p3->enable_stop_mode();
+  getchar();
+  p3_client.p3->set_vel(150);
+  getchar();
+  p3_client.p3->enable_stop_mode();
+  getchar();
   return 0;
 }
