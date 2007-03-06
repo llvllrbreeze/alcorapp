@@ -64,8 +64,13 @@ int main ()
   p3_client.p3->enable_stop_mode();
   getchar();
   p3_client.p3->set_vel(150);
-  getchar();
+  getchar();  
   p3_client.p3->enable_stop_mode();
+
+  printf("Distance Traveled: %f\n",p3_client.p3data.pose.getP().magnitude());
+  printf("Pose: x1: %f x2: %f theta: %f\n", p3_client.p3data.pose.get_x1(),
+    p3_client.p3data.pose.get_x2(), p3_client.p3data.pose.getTh().deg());
+
   getchar();
   return 0;
 }
