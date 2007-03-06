@@ -165,10 +165,6 @@
 				RelativePath="..\..\alcor\act\p3_server_t.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\alcor\act\p3dx_server_data_t.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
