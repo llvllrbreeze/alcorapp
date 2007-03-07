@@ -227,7 +227,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\trm\gil_wrap_utils.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\alcor\core\image_utils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\alcor\matlab\matlab_mx_utils.hpp"
 					>
 				</File>
 				<File

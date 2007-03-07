@@ -1,6 +1,11 @@
 #ifndef tracking_machine_H_INCLUDED
 #define tracking_machine_H_INCLUDED 
 //---------------------------------------------------------------------------
+//#define WIN_LEAN_AND_MEAN
+//---------------------------------------------------------------------------
+#include "trm_tags_inc.h"
+#include "trm_app_inc.h" 
+//---------------------------------------------------------------------------
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */ 
 //---------------------------------------------------------------------------
 #include "alcor.extern/statemachine/state_machine.hpp" 
@@ -15,9 +20,6 @@
 #include <boost\thread\thread.hpp>
 #include <boost\shared_ptr.hpp>
 #include <boost\thread\mutex.hpp> 
-//---------------------------------------------------------------------------
-#include "trm_tags_inc.h"
-#include "trm_app_inc.h" 
 //---------------------------------------------------------------------------
 namespace mpl = boost::mpl;
 //---------------------------------------------------------------------------
@@ -151,7 +153,7 @@ private:
 
 private: //routines
   ///
-  void move_ptu_to_screen_rc(float row, float col, double waitsec);
+  void move_ptu_to_screen_rc(float row, float col, double waitsec = -1);
   ///
   void taskreceived(int);
 
@@ -176,6 +178,11 @@ private:
   boost::shared_ptr<all::trm::task_listener> tasklistener;
   ///Pinhole util
   math::pinhole_t pinhole;
+
+  //VIEW
+  boost::shared_ptr<cimglib::CImgDisplay>          rgb_win;
+  boost::shared_ptr<cimglib::CImg<core::uint8_t> > rgb_cimg;
+
   //---------------------------------------------------------------------------
 };
 //---------------------------------------------------------------------------
