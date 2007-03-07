@@ -44,6 +44,7 @@
 #define ID_BUTTON_SETUP 10001
 #define ID_BUTTON_IDLE 10003
 #define ID_BUTTON_RESET 10002
+#define ID_BUTTON_TRACK 10004
 #define SYMBOL_TRACKING_CONTROL_FRAME_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxCLOSE_BOX|wxTAB_TRAVERSAL
 #define SYMBOL_TRACKING_CONTROL_FRAME_TITLE _("Tracking Control")
 #define SYMBOL_TRACKING_CONTROL_FRAME_IDNAME ID_TRACKING_CONTROL_FRAME
@@ -94,6 +95,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RESET
     void OnButtonResetClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TRACK
+    void OnButtonTrackClick( wxCommandEvent& event );
 
 ////@end tracking_control_frame event handler declarations
 
