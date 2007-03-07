@@ -1,4 +1,7 @@
+#define WIN32_LEAN_AND_MEAN
+
 #include "tracking_machine.h"
+#include "alcor.apps/trm/gil_wrap_utils.hpp"
 //---------------------------------------------------------------------------
 namespace all { namespace trm {
 //---------------------------------------------------------------------------
@@ -42,7 +45,10 @@ tracking_machine::tracking_machine():running_(true)
   ptu_control.reset(new act::pantilt_control_loop_t );
   ptu_control->set_ptu(ptu);
   ptu_control->set_slam(p3_adapter);
-
+  
+  ////open views
+  rgb_win.reset(new cimglib::CImgDisplay(bee->ncols(), bee->nrows(), "rgb"));
+  rgb_cimg.reset(new cimglib::CImg<core::uint8_t>());
 }
 //---------------------------------------------------------------------------
 void tracking_machine::threadloop()
@@ -61,7 +67,7 @@ void tracking_machine::threadloop()
               fire_callback();    
       }
     boost::thread::yield();    
-    core::BOOST_SLEEP(100);
+    core::BOOST_SLEEP(50);
     }
   }
 //###########################################################################
@@ -76,10 +82,10 @@ void tracking_machine::setup_cb()
 {
   if (bee->grab())
   {
-    printf("Image Grabbed\n");
+    //printf("Image Grabbed\n");
     core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
 
-    printf("buffer2array %d %d\n", bee->nrows(), bee->ncols());
+    //printf("buffer2array %d %d\n", bee->nrows(), bee->ncols());
     mxArray* mx_rimage = 
       matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
                                                           ,matlab::row_major
@@ -87,7 +93,7 @@ void tracking_machine::setup_cb()
                                                           ,bee->ncols());
     
   //Push into Workspace
-    printf("put_array \n");
+    //printf("put_array \n");
     workspace->put_array("rgb", mx_rimage);
     printf("SETUP\n");
     ////
@@ -117,11 +123,12 @@ void tracking_machine::setup_cb()
 }
 //---------------------------------------------------------------------------
 void tracking_machine::tracking_cb()
-{
+{    
+  
+  //ptu_control->enable(false);
+
   if (bee->grab())
   {
-    ptu_control->enable(false);
-
     //
     core::pantilt_angle_t current_pt = 
       ptu->get_fast_pantilt();
@@ -133,6 +140,8 @@ void tracking_machine::tracking_cb()
                                                           ,matlab::row_major
                                                           ,bee->nrows()
                                                           ,bee->ncols());
+
+    
     //Push into Workspace
     workspace->put_array("rgb", mx_rimage);
 
@@ -145,6 +154,20 @@ void tracking_machine::tracking_cb()
 
   if(centro_c > 0)//che non sia nullo ....
   {
+    //
+    move_ptu_to_screen_rc(centro_r, centro_c);
+
+    //***Target Angular SET POINT***    
+    //double theta_target= current_pan + pan_delta;
+    double pan_delta     = pinhole.delta_pan_from_pixel(centro_c);
+    double th_robot      = p3dx->get_odometry().getTh().deg();
+    //theta globale
+    double loc_theta_target = current_pt.pan +pan_delta;
+    double glo_theta_target = loc_theta_target + th_robot;
+    //
+    //ptu_control->set_polar_reference(math::deg_tag, glo_theta_target);
+    //ptu_control->enable(true);
+
     ///Profondità 3D
     core::depth_image_t depthim;
     core::single_sarr depth = bee->get_depth_buffer();
@@ -160,15 +183,7 @@ void tracking_machine::tracking_cb()
     //
     core::mystat vstat  
       = core::estimate_depth(depthim, center, hsize);
-
-    //***Target Angular SET POINT***    
-    //double theta_target= current_pan + pan_delta;
-    double pan_delta     = pinhole.delta_pan_from_pixel(centro_c);
-    double th_robot      = p3dx->get_odometry().getTh().deg();
-    //theta globale
-    double loc_theta_target = current_pt.pan +pan_delta;
-    double glo_theta_target = loc_theta_target + th_robot;
-
+    //
     double distanza = vstat.mean;
     double speed  = 100;//??
 
@@ -184,9 +199,12 @@ void tracking_machine::tracking_cb()
     p3dx->set_target_to_follow 
       (target, speed );
 
-    //
-    ptu_control->set_polar_reference(math::deg_tag, glo_theta_target);
-    ptu_control->enable(true);
+    //Display Image
+    const unsigned char red  [3] = {255,  0,  0};
+    rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
+    rgb_cimg->draw_circle(centro_c, centro_r, 10.0,red);
+    rgb_cimg->display(*(rgb_win.get()));
+    printf("Distanza %.2f\n", distanza);
 
   }//centro_c>0
   else
@@ -263,6 +281,8 @@ bool tracking_machine::go_fail (fail_event const&)
     ////
   fire_callback = boost::bind
     (&tracking_machine::failed_cb, this);
+
+  return true;
 }
 //---------------------------------------------------------------------------
   ///START TRACKING
@@ -278,9 +298,9 @@ bool tracking_machine::start_tracking   (track_event const&)
   double theta_rob = p3dx->get_odometry().getTh().deg();
 
   //
-  ptu_control->set_polar_reference(math::deg_tag, theta_rob + pan);
+  //ptu_control->set_polar_reference(math::deg_tag, theta_rob + pan);
   //
-  ptu_control->enable(true);
+  //ptu_control->enable(true);
 
   //
   math::point2d target(1.0, math::angle(pan,math::deg_tag));
@@ -312,7 +332,7 @@ void tracking_machine::move_ptu_to_screen_rc(float row, float col, double waitse
 
   ptu->set_pantilt(nupan, nutilt, waitsec);
       //printf("\nCentro %d : %d\n", (int)row, (int)col);
-  printf("PTU COM %f : %f\n", nupan, nutilt);
+  //printf("PTU COM %f : %f\n", nupan, nutilt);
   }
 }
 //###########################################################################

@@ -1,3 +1,4 @@
+#define WIN32_LEAN_AND_MEAN
 #include "alcor.apps\trm\tracking_machine.h"
 
 using namespace all;

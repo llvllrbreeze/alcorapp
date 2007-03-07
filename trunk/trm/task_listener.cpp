@@ -1,3 +1,5 @@
+#define WIN32_LEAN_AND_MEAN
+
 #include "task_listener.h"
 #include "alcor/core/config_parser_t.hpp"
 //---------------------------------------------------------------------------
