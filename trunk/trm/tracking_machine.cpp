@@ -49,7 +49,9 @@ void tracking_machine::threadloop()
   {
   ///
   workspace.reset( new matlab::matlab_engine_t);
+  workspace->command_line("cd tracking");
   workspace->command_line("init_tracking");
+
 
     while (running_)
     {
@@ -96,8 +98,14 @@ void tracking_machine::setup_cb()
     int coerente = workspace->get_scalar_int("coerente");
 
     if(coerente)
+    {
+      double  centro_r = workspace->get_scalar_double("centro_r");
+      double  centro_c = workspace->get_scalar_double("centro_c");
+      //
+      move_ptu_to_screen_rc(centro_r, centro_c, 1.5);
       //Se tutto a posto vai in idled_tracking
       process_event(idle_track_event());
+    }
     else
       process_event(reset_event());
   }
@@ -114,8 +122,9 @@ void tracking_machine::tracking_cb()
   {
     ptu_control->enable(false);
 
-    double current_pan  = ptu->get_pan();
-    double current_tilt = ptu->get_tilt();
+    //
+    core::pantilt_angle_t current_pt = 
+      ptu->get_fast_pantilt();
 
     core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
 
@@ -124,11 +133,11 @@ void tracking_machine::tracking_cb()
                                                           ,matlab::row_major
                                                           ,bee->nrows()
                                                           ,bee->ncols());
-  //Push into Workspace
-  workspace->put_array("rgb", mx_rimage);
+    //Push into Workspace
+    workspace->put_array("rgb", mx_rimage);
 
   ///MEAN SHIFT : ottenere un centro
-   workspace->command_line("[centro_r centro_c]= fh_track_and_show(rgb, [240, 320])");
+   workspace->command_line("[centro_r centro_c]= fh_track_and_show(rgb, [120, 160])");
 
   //***GATHER***
   int centro_r = static_cast<int> (workspace->get_scalar_double("centro_r") );
@@ -152,38 +161,41 @@ void tracking_machine::tracking_cb()
     core::mystat vstat  
       = core::estimate_depth(depthim, center, hsize);
 
-    //***Target Angular SET POINT***
-    double pan_delta       = pinhole.delta_pan_from_pixel(centro_c);
-    double theta_target    =   current_pan + pan_delta;
+    //***Target Angular SET POINT***    
+    //double theta_target= current_pan + pan_delta;
+    double pan_delta     = pinhole.delta_pan_from_pixel(centro_c);
+    double th_robot      = p3dx->get_odometry().getTh().deg();
+    //theta globale
+    double loc_theta_target = current_pt.pan +pan_delta;
+    double glo_theta_target = loc_theta_target + th_robot;
 
     double distanza = vstat.mean;
     double speed  = 100;//??
 
-    if(distanza < 1.0)
+    if(distanza < 1.2)
     {
       speed = 0;
     }
 
     //relative goal
     math::point2d 
-      target(distanza, math::angle(theta_target, math::deg_tag));
-
+      target(distanza, math::angle(loc_theta_target, math::deg_tag));
     //
     p3dx->set_target_to_follow 
       (target, speed );
 
     //
-    ptu_control->set_polar_reference(math::deg_tag,theta_target);
+    ptu_control->set_polar_reference(math::deg_tag, glo_theta_target);
     ptu_control->enable(true);
 
   }//centro_c>0
   else
   {
     //TODO: skip??
-
+    process_event(fail_event());
   }
   ///se va storto..
-  process_event(fail_event());
+  //
   }
 
 }
@@ -256,26 +268,23 @@ bool tracking_machine::go_fail (fail_event const&)
   ///START TRACKING
 bool tracking_machine::start_tracking   (track_event const&)
 {
-  double  centro_r = workspace->get_scalar_double("centro_r");
-  double  centro_c = workspace->get_scalar_double("centro_c");
-  //
-  move_ptu_to_screen_rc(centro_r, centro_c, 1.5);
-
   //INIT TRACKING ...
   //TODO:Aggiorna i setpoint
   float pan, tilt;
   ptu->get_current_pantilt(pan,tilt);
   //
-  double pan_error = pinhole.delta_pan_from_pixel(centro_c) ;
+  //double pan_error = pinhole.delta_pan_from_pixel(centro_c) ;
   //Desired Heading
   double theta_rob = p3dx->get_odometry().getTh().deg();
 
   //
-  ptu_control->set_polar_reference(math::deg_tag,theta_rob + pan);
+  ptu_control->set_polar_reference(math::deg_tag, theta_rob + pan);
   //
   ptu_control->enable(true);
 
   //
+  math::point2d target(1.0, math::angle(pan,math::deg_tag));
+  p3dx->set_target_to_follow(target, 0);
   p3dx->enable_follow_mode();
 
   ///

@@ -54,6 +54,8 @@ BEGIN_EVENT_TABLE( tracking_control_frame, wxFrame )
 
     EVT_BUTTON( ID_BUTTON_RESET, tracking_control_frame::OnButtonResetClick )
 
+    EVT_BUTTON( ID_BUTTON_TRACK, tracking_control_frame::OnButtonTrackClick )
+
 ////@end tracking_control_frame event table entries
 
 END_EVENT_TABLE()
@@ -118,6 +120,7 @@ void tracking_control_frame::CreateControls()
     itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     wxButton* itemButton4 = new wxButton( itemFrame1, ID_BUTTON_SETUP, _("Setup"), wxDefaultPosition, wxSize(80, 40), 0 );
+    itemButton4->SetDefault();
     itemStaticBoxSizer3->Add(itemButton4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     itemStaticBoxSizer3->Add(5, 5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -129,6 +132,12 @@ void tracking_control_frame::CreateControls()
 
     wxButton* itemButton8 = new wxButton( itemFrame1, ID_BUTTON_RESET, _("Reset"), wxDefaultPosition, wxSize(80, 40), 0 );
     itemStaticBoxSizer3->Add(itemButton8, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxBoxSizer* itemBoxSizer9 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer2->Add(itemBoxSizer9, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    wxButton* itemButton10 = new wxButton( itemFrame1, ID_BUTTON_TRACK, _("Track"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer9->Add(itemButton10, 0, wxGROW|wxALL, 5);
 
 ////@end tracking_control_frame content construction
 
@@ -207,6 +216,16 @@ void tracking_control_frame::OnButtonIdleClick( wxCommandEvent& WXUNUSED(event) 
 void tracking_control_frame::OnCloseWindow( wxCloseEvent& WXUNUSED(event) )
 {
    Destroy(); 
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TRACK
+ */
+
+void tracking_control_frame::OnButtonTrackClick( wxCommandEvent& event )
+{
+  dispatcher->send_event(all::trm::etag::TRACK);
 }
 
 
