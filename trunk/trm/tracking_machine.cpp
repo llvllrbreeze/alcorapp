@@ -141,16 +141,17 @@ void tracking_machine::tracking_cb()
                                                           ,bee->nrows()
                                                           ,bee->ncols());
 
-    
     //Push into Workspace
     workspace->put_array("rgb", mx_rimage);
 
-  ///MEAN SHIFT : ottenere un centro
-   workspace->command_line("[centro_r centro_c]= fh_track_and_show(rgb, [120, 160])");
+    ///MEAN SHIFT : ottenere un centro
+    workspace->command_line("[centro_r centro_c]= fh_track_and_show(rgb, [120, 160])");
 
-  //***GATHER***
-  int centro_r = static_cast<int> (workspace->get_scalar_double("centro_r") );
-  int centro_c = static_cast<int> (workspace->get_scalar_double("centro_c") );
+    //***GATHER***
+    int centro_r = 
+      static_cast<int> (workspace->get_scalar_double("centro_r") );
+    int centro_c = 
+      static_cast<int> (workspace->get_scalar_double("centro_c") );
 
   if(centro_c > 0)//che non sia nullo ....
   {
