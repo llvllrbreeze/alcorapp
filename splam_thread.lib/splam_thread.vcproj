@@ -153,11 +153,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\alcor\splam\detail\splam_thread.cpp"
+			RelativePath="..\..\alcor\splam\detail\pmap_wrap.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\alcor\splam\splam_thread.h"
+			RelativePath="..\..\alcor\splam\splam_thread.cpp"
 			>
 		</File>
 	</Files>
