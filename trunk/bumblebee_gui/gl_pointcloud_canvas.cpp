@@ -103,7 +103,7 @@ void point_cloud_canvas::Init()
     trackball(quat, 0.0f, 0.0f, 0.0f, 0.0f);
 
     m_timer = new wxTimer(this, ID_TIMER_EVENT);
-    m_timer->Start(20);
+    m_timer->Start(50);
 }
 /*!
  * Control creation for point_cloud_canvas
@@ -175,14 +175,29 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     build_rotmatrix( m, quat );
     glMultMatrixf( &m[0][0] );
 
+    ///X
     glBegin(GL_LINES);
-    glColor3f(1.0f,0.1f,0.1f);
+    glColor3f(0.0f,1.0f,0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(100.0f, 0.0f, 0.0f);
+    glEnd();
+
+    ///Y
+    glBegin(GL_LINES);
+    glColor3f(1.0f,0.0f,0.1f);
     glVertex3f(0.0f, 0.0f, 0.0f);
     glVertex3f(0.0f, 100.0f, 0.0f);
     glEnd();
 
+    ///Z
+    glBegin(GL_LINES);
+    glColor3f(0.0f,0.0f,1.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 100.0f);
+    glEnd();
+
     glBegin(GL_POINTS);   
-    for(int i = 0; i < 50000 ; ++i)
+    for(int i = 0; i < 60000 ; ++i)
     {
       glColor3f(unic(), unic(), unic());
       glVertex3f(unip(), unip(), unip());
@@ -255,6 +270,10 @@ void point_cloud_canvas::initGL()
     glShadeModel(GL_SMOOTH);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
+
+  	    // Point Size
+    float pointSize = 2.0;
+    glPointSize(pointSize);
 }
 
 /*!
@@ -275,8 +294,10 @@ void point_cloud_canvas::reset_projection_mode()
 
 void point_cloud_canvas::on_timer(wxTimerEvent&)
 {
-  wxPaintEvent dummyevent;
-  OnPaint(dummyevent);
+  Refresh(false);
+  //wxPaintEvent dummyevent;
+
+  //OnPaint(dummyevent);
 }
 
 
@@ -286,6 +307,20 @@ void point_cloud_canvas::on_timer(wxTimerEvent&)
 
 void point_cloud_canvas::OnMouse( wxMouseEvent& event )
 {
+  int mwheel = event.GetWheelRotation();
+
+  if(mwheel>0)
+  {
+    zoom -= 2.0;
+    (zoom > 10.0)? (zoom) : (10.0);
+    reset_projection_mode();
+  }
+  else if (mwheel < 0)
+  {
+    zoom += 2.0;
+    reset_projection_mode();
+  }
+
     if (event.Dragging())
     {
         wxSize sz(GetClientSize());
@@ -307,5 +342,7 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
     beginx = event.GetX();
     beginy = event.GetY();
 }
+
+
 
 
