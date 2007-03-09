@@ -25,6 +25,13 @@
 ////@end includes
 
 #include "trackball.h"
+#include <fstream>
+
+#include <boost/timer.hpp>
+#include <boost/random/linear_congruential.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/uniform_real.hpp>
+#include <boost/random/variate_generator.hpp>
 
 /*!
  * Forward declarations
@@ -123,10 +130,17 @@ private:
 ////@end point_cloud_canvas member variables
 
     /// reset_projection_mode
-    void reset_projection_mode();
+    void  reset_projection_mode();
     float beginx, beginy;       // position of mouse
     float quat[4];              // orientation of object
     float zoom;
+    float fov;
+    float xcam;
+    float ycam;
+    float zcam;
+    std::ofstream logfile;
+    boost::timer  extimer;
+    boost::minstd_rand generator;
 };
 
 #endif

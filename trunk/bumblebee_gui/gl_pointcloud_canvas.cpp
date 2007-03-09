@@ -27,11 +27,9 @@
 #include <GL/glu.h>
 
 
-#include <boost/random/linear_congruential.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/uniform_real.hpp>
-#include <boost/random/variate_generator.hpp>
+
 #include <ctime> 
+
 
 ////@begin includes
 ////@end includes
@@ -100,10 +98,16 @@ void point_cloud_canvas::Init()
     beginx = 0.0f;
     beginy = 0.0f;
     zoom   = 80.0f;
+    fov    = 65.f;
+    xcam = 0.0f;
+    ycam = 0.0f;
+    zcam = -20.0f;
     trackball(quat, 0.0f, 0.0f, 0.0f, 0.0f);
 
     m_timer = new wxTimer(this, ID_TIMER_EVENT);
-    m_timer->Start(50);
+    m_timer->Start(100);
+    generator.seed(static_cast<unsigned int>(std::time(0)));
+    logfile.open("gl_log.txt", std::ios::out);
 }
 /*!
  * Control creation for point_cloud_canvas
@@ -113,12 +117,7 @@ void point_cloud_canvas::CreateControls()
 {    
 ////@begin point_cloud_canvas content construction
     point_cloud_canvas* itemGLCanvas1 = this;
-
-
-
 ////@end point_cloud_canvas content construction
-
-
 }
 
 /*!
@@ -128,7 +127,7 @@ void point_cloud_canvas::CreateControls()
 void point_cloud_canvas::OnSize( wxSizeEvent& event )
 {
     // this is also necessary to update the context on some platforms
-    wxGLCanvas::OnSize(event);
+    //wxGLCanvas::OnSize(event);
     // Reset the OpenGL view aspect
     reset_projection_mode();
 }
@@ -139,12 +138,14 @@ void point_cloud_canvas::OnSize( wxSizeEvent& event )
 
 void point_cloud_canvas::OnPaint( wxPaintEvent& event )
 {
+  //boost::timer timer;
+
 ////@begin wxEVT_PAINT event handler for ID_POINTCLOUD_CANVAS in point_cloud_canvas.
     // Before editing this code, remove the block markers.
     wxPaintDC dc(this);
 ////@end wxEVT_PAINT event handler for ID_POINTCLOUD_CANVAS in point_cloud_canvas. 
     SetCurrent();
-
+    //logfile << "SETCURRENT  elapsed: " <<  timer.elapsed() << std::endl;
     // Initialize OpenGL
     if (!m_initialized)
     {
@@ -154,8 +155,6 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     }
     
     //Generate Random funcitons
-    boost::minstd_rand generator;
-    generator.seed(static_cast<unsigned int>(std::time(0)));
 
     boost::uniform_real<> uni_dist_color(0,1);
     boost::variate_generator<boost::minstd_rand&, boost::uniform_real<> > unic(generator, uni_dist_color);
@@ -163,13 +162,15 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     boost::uniform_real<> uni_dist_coords(-10.0,10.0);
     boost::variate_generator<boost::minstd_rand&, boost::uniform_real<> > unip(generator, uni_dist_coords);
 
+    //logfile << "RANDOM GEN  elapsed: " <<  timer.elapsed() << std::endl;
+
     glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Transformations
     glLoadIdentity();
 
-    glTranslatef( 0.0f, 0.0f, -20.0f );
+    glTranslatef( 0.0f, 0.0f, zcam);
 
     GLfloat m[4][4];
     build_rotmatrix( m, quat );
@@ -197,18 +198,22 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     glEnd();
 
     glBegin(GL_POINTS);   
-    for(int i = 0; i < 60000 ; ++i)
+    for(int i = 0; i < 75000 ; ++i)
     {
       glColor3f(unic(), unic(), unic());
       glVertex3f(unip(), unip(), unip());
     }
     glEnd();
+    //logfile << "GL_POINTS  elapsed: " <<  timer.elapsed() << std::endl;
 
     // Flush
-    glFlush();
+    //glFlush();
 
     // Swap
     SwapBuffers();
+    //logfile << "SWAP  elapsed: " <<  timer.elapsed() << std::endl;
+
+    //logfile << "TOTAL: " <<  extimer.elapsed()<< std::endl << std::endl;
 }
 
 /*!
@@ -287,7 +292,7 @@ void point_cloud_canvas::reset_projection_mode()
     glViewport(0, 0, (GLint) w, (GLint) h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(zoom, (GLfloat)w/h, 1.0, 100.0);
+    gluPerspective(fov, (GLfloat)w/h, 1.0, +100.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -296,7 +301,6 @@ void point_cloud_canvas::on_timer(wxTimerEvent&)
 {
   Refresh(false);
   //wxPaintEvent dummyevent;
-
   //OnPaint(dummyevent);
 }
 
@@ -311,13 +315,13 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
 
   if(mwheel>0)
   {
-    zoom -= 2.0;
-    (zoom > 10.0)? (zoom) : (10.0);
+    zcam -= 2.0;
+    (zcam > 10.0)? (zcam) : (10.0);
     reset_projection_mode();
   }
   else if (mwheel < 0)
   {
-    zoom += 2.0;
+    zcam += 2.0;
     reset_projection_mode();
   }
 
@@ -341,6 +345,7 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
 
     beginx = event.GetX();
     beginy = event.GetY();
+
 }
 
 
