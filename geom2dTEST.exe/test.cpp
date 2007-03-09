@@ -47,6 +47,10 @@ int main()
 	//line2d
 
 	//size2d
+	size2d asd = size2d_max;
+	size2d rofl(5,-4);
+	cout << asd << "   " <<rofl << "i due  size2d sono: " << ((asd==rofl) ? "uguali" : "diversi") <<endl;
+
 
 	//rect2d
 
