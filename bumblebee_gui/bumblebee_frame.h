@@ -24,6 +24,11 @@
 #include "wx/frame.h"
 ////@end includes
 
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
+//
+//#include "alcor/sense/bumblebee_driver_t.h"
+
 /*!
  * Forward declarations
  */
@@ -73,6 +78,14 @@ public:
     /// Initialises member variables
     void Init();
 
+    /////grabcallback
+    //void grab();
+
+    /////callback
+    //all::core::single_sarr update_3d_data();
+    /////callback
+    //all::core::uint8_sarr update_rgb_data();
+
     /// Creates the controls and sizers
     void CreateControls();
 
@@ -95,6 +108,8 @@ public:
 ////@begin bumblebee_frame member variables
     point_cloud_canvas* point_cloud_view;
 ////@end bumblebee_frame member variables
+
+    //all::sense::bumblebee_driver_ptr_t bee;
 };
 
 #endif

@@ -92,6 +92,8 @@ void bumblebee_frame::Init()
 {
 ////@begin bumblebee_frame member initialisation
 ////@end bumblebee_frame member initialisation
+  //bee.reset(new all::sense::bumblebee_driver_t);
+  //bee->open("config/bumblebeeB.ini");
 }
 /*!
  * Control creation for bumblebee_frame
@@ -115,6 +117,16 @@ void bumblebee_frame::CreateControls()
     itemBoxSizer3->Add(itemButton6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end bumblebee_frame content construction
+
+    /////BIND!!!
+    //point_cloud_view->grab = 
+    //  boost::bind(&bumblebee_frame::grab, itemFrame1);
+
+    //point_cloud_view->update_rgb_data = 
+    //  boost::bind(&bumblebee_frame::update_rgb_data, itemFrame1);
+
+    //point_cloud_view->update_3d_data = 
+    //  boost::bind(&bumblebee_frame::update_3d_data, itemFrame1);
 }
 
 /*!
@@ -151,3 +163,23 @@ wxIcon bumblebee_frame::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end bumblebee_frame icon retrieval
 }
+
+/////grabcallback
+//void bumblebee_frame::grab()
+//{
+//  bee->grab();
+//}
+//
+/////callback
+//all::core::single_sarr bumblebee_frame::update_3d_data()
+//{
+//  //bee->grab();
+//  return bee->get_depth_buffer();
+//}
+//
+/////callback
+//all::core::uint8_sarr bumblebee_frame::update_rgb_data()
+//{
+//  //bee->grab();
+//  return bee->get_color_buffer(all::core::right_img);
+//}

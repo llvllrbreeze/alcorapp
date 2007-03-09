@@ -26,12 +26,16 @@
 
 #include "trackball.h"
 #include <fstream>
-
+#include <boost/function.hpp>
 #include <boost/timer.hpp>
 #include <boost/random/linear_congruential.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
+
+
+#include "alcor/sense/bumblebee_driver_t.h"
+#include "alcor/core/core.h"
 
 /*!
  * Forward declarations
@@ -87,6 +91,10 @@ public:
     void initGL();
 
     ///
+    boost::function< void (void)> grab;
+    boost::function< all::core::single_sarr (void)> update_3d_data;
+    boost::function< all::core::uint8_sarr  (void)> update_rgb_data;
+    ///
     enum 
     {
       ID_TIMER_EVENT = 7117182
@@ -141,6 +149,10 @@ private:
     std::ofstream logfile;
     boost::timer  extimer;
     boost::minstd_rand generator;
+
+    all::sense::bumblebee_driver_ptr_t bee;
+    all::core::single_sarr depthmap;
+    all::core::uint8_sarr  rgbmap;
 };
 
 #endif
