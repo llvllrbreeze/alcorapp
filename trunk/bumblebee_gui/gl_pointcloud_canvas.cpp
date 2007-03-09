@@ -25,7 +25,7 @@
 #endif
 
 #include <GL/glu.h>
-
+#include <alcor/core/image_utils.h>
 
 
 #include <ctime> 
@@ -98,7 +98,7 @@ void point_cloud_canvas::Init()
     beginx = 0.0f;
     beginy = 0.0f;
     zoom   = 80.0f;
-    fov    = 65.f;
+    fov    = 80.0f;
     xcam = 0.0f;
     ycam = 0.0f;
     zcam = -20.0f;
@@ -108,6 +108,13 @@ void point_cloud_canvas::Init()
     m_timer->Start(100);
     generator.seed(static_cast<unsigned int>(std::time(0)));
     logfile.open("gl_log.txt", std::ios::out);
+
+    bee.reset(new all::sense::bumblebee_driver_t);
+    bee->open("config/bumblebeeB.ini");
+    rgbmap.reset(new all::core::uint8_t[bee->color_buffer_size()]); 
+    depthmap.reset(new all::core::single_t[bee->depth_buffer_size()]);   
+
+    logfile << "Bumblebee Opened" << std::endl;
 }
 /*!
  * Control creation for point_cloud_canvas
@@ -197,17 +204,51 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     glVertex3f(0.0f, 0.0f, 100.0f);
     glEnd();
 
-    glBegin(GL_POINTS);   
-    for(int i = 0; i < 75000 ; ++i)
-    {
-      glColor3f(unic(), unic(), unic());
-      glVertex3f(unip(), unip(), unip());
-    }
-    glEnd();
+    /////
+    //if (grab && update_3d_data && update_rgb_data)
+    //{
+      //
+      bee->grab();
+      depthmap = bee->get_depth_buffer();
+      rgbmap   = bee->get_color_buffer(all::core::right_img);
+
+      //
+      logfile << "Change Ordering uint8" << std::endl;
+      all::core::change_ordering::to_interleaved(rgbmap,  bee->nrows(),bee->ncols(), 3);
+      //
+      logfile << "Change Ordering Single" << std::endl;
+      all::core::change_ordering::to_interleaved(depthmap, bee->nrows(),bee->ncols(),3);      
+        //
+      //
+      logfile << "POINTS ITER" << std::endl;
+      glBegin(GL_POINTS);   
+      for(int i = 0; i < bee->nrows()*bee->ncols(); i++)
+      {
+        if(depthmap[i+2] > 0.0)
+        {
+          glColor3f(rgbmap[i]/255.0, rgbmap[i+1]/255.0, rgbmap[i+2]/255.0);
+          glVertex3f(depthmap[i], -depthmap[i+1], -depthmap[i+2]);
+        }
+
+      }
+      glEnd();
+
+    //}
+    //else
+    //{
+    //glBegin(GL_POINTS);   
+    //for(int i = 0; i < 75000 ; ++i)
+    //{
+    //  glColor3f(unic(), unic(), unic());
+    //  glVertex3f(unip(), unip(), unip());
+    //}
+    //glEnd();
+    //}
+
     //logfile << "GL_POINTS  elapsed: " <<  timer.elapsed() << std::endl;
 
     // Flush
-    //glFlush();
+    glFlush();
 
     // Swap
     SwapBuffers();
@@ -292,7 +333,7 @@ void point_cloud_canvas::reset_projection_mode()
     glViewport(0, 0, (GLint) w, (GLint) h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(fov, (GLfloat)w/h, 1.0, +100.0);
+    gluPerspective(fov, (GLfloat)w/h, 0.2, +100.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -315,13 +356,13 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
 
   if(mwheel>0)
   {
-    zcam -= 2.0;
-    (zcam > 10.0)? (zcam) : (10.0);
+    zcam -= 0.25;
+    //(zcam > 10.0)? (zcam) : (10.0);
     reset_projection_mode();
   }
   else if (mwheel < 0)
   {
-    zcam += 2.0;
+    zcam += 0.25;
     reset_projection_mode();
   }
 

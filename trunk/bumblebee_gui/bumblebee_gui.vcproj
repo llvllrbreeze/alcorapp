@@ -206,6 +206,14 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\alcor\sense\bumblebee_driver_t.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\sense\bumblebee_driver_t.h"
+				>
+			</File>
+			<File
 				RelativePath=".\bumblebee_frame.h"
 				>
 			</File>
@@ -215,6 +223,10 @@
 			</File>
 			<File
 				RelativePath=".\gl_point_cloud_canvas.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\image_utils.h"
 				>
 			</File>
 			<File
