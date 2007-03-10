@@ -172,7 +172,7 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
 
     //logfile << "RANDOM GEN  elapsed: " <<  timer.elapsed() << std::endl;
 
-    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+    glClearColor( 0.88f, 0.88f, 0.9f, 1.0f );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Transformations
@@ -358,15 +358,14 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
     int mwheel = event.GetWheelRotation();
     if(mwheel>0)
     {
-      zcam += 0.2;
+      zcam += 0.1;
       //(zcam > 10.0)? (zcam) : (10.0);
-      reset_projection_mode();
     }
     else if (mwheel < 0)
     {
-      zcam -= 0.2;
-      reset_projection_mode();
+      zcam -= 0.1;
     }
+    reset_projection_mode();
   }
 
   if (event.Dragging())
@@ -393,11 +392,11 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
         //Refresh(false);
       if (beginx - event.GetX() > 0)
       {
-        xcam+=0.1;
+        xcam-=0.1;
       }
       else if (beginx - event.GetX() < 0)
       {
-        xcam-=0.1;
+        xcam+=0.1;
       }
 
       //if (beginy - event.GetY() > 0)
