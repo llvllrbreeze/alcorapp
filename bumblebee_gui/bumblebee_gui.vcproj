@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\tgasave.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\trackball.c"
 				>
 				<FileConfiguration
@@ -227,6 +231,10 @@
 			</File>
 			<File
 				RelativePath="..\..\alcor\core\image_utils.h"
+				>
+			</File>
+			<File
+				RelativePath=".\tgasave.h"
 				>
 			</File>
 			<File

@@ -26,7 +26,7 @@
 
 #include <GL/glu.h>
 #include <alcor/core/image_utils.h>
-
+//#include "tgasave.h"
 
 #include <ctime> 
 
@@ -107,14 +107,25 @@ void point_cloud_canvas::Init()
     m_timer = new wxTimer(this, ID_TIMER_EVENT);
     m_timer->Start(120);
     generator.seed(static_cast<unsigned int>(std::time(0)));
-    logfile.open("gl_log.txt", std::ios::out);
+    //logfile.open("gl_log.txt", std::ios::out);
 
     bee.reset(new all::sense::bumblebee_driver_t);
     bee->open("config/bumblebeeB.ini");
     rgbmap.reset(new all::core::uint8_t[bee->color_buffer_size()]); 
     depthmap.reset(new all::core::single_t[bee->depth_buffer_size()]);   
 
-    logfile << "Bumblebee Opened" << std::endl;
+
+    //logfile << "Bumblebee Opened" << std::endl;
+
+    ////open views
+    int w, h;
+    GetClientSize(&w, &h);
+    //logfile << "w: " << w << "h: " << h << std::endl;
+    framebuffer.reset(new all::core::uint8_t[(w)*h*4]);
+    rgb_win.reset(new cimglib::CImgDisplay(w, h, "Frame Buffer"));
+    rgb_cimg.reset(new cimglib::CImg<all::core::uint8_t>());
+    //
+    myimage.reset(new all::core::uint8_t[w*h*3]);
 }
 /*!
  * Control creation for point_cloud_canvas
@@ -252,10 +263,36 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     //logfile << "GL_POINTS  elapsed: " <<  timer.elapsed() << std::endl;
 
     // Flush
-    glFlush();
-
+    glFlush();    
+    //draw BACK
+    draw_cimg();
     // Swap
     SwapBuffers();
+
+}
+
+/*
+ *!
+ */
+void point_cloud_canvas::draw_cimg()
+{
+    glReadBuffer(GL_BACK);
+    //
+    int w, h;
+    GetClientSize(&w, &h);
+    //logfile << "w: " << w << " h: " << h << std::endl;
+
+    //
+    glReadPixels( 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE,(void*) framebuffer.get() );
+    //
+    //WriteTga("framebuffer.tga",w,h,32,framebuffer.get());
+    //
+    all::core::change_ordering::from_rgba_opengl(framebuffer,myimage, h, w);
+    //
+    all::core::change_ordering::to_topleft(myimage, h, w, 3);
+    ////
+    rgb_cimg->assign(myimage.get(),  w, h, 1,3);
+    rgb_cimg->display(*(rgb_win.get()));
 }
 
 /*!
@@ -313,8 +350,8 @@ void point_cloud_canvas::initGL()
     glEnable(GL_DEPTH_TEST);
 
     /* speedups */
-    glEnable(GL_DITHER);
-    glShadeModel(GL_SMOOTH);
+    //glEnable(GL_DITHER);
+    //glShadeModel(GL_SMOOTH);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
 
@@ -342,8 +379,6 @@ void point_cloud_canvas::reset_projection_mode()
 void point_cloud_canvas::on_timer(wxTimerEvent&)
 {
   Refresh(false);
-  //wxPaintEvent dummyevent;
-  //OnPaint(dummyevent);
 }
 
 
