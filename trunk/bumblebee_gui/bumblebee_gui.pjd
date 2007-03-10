@@ -419,8 +419,8 @@
                 <bool name="proxy-Hidden">0</bool>
                 <bool name="proxy-Enabled">1</bool>
                 <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
-                <bool name="proxy-wxNO_BORDER">0</bool>
-                <bool name="proxy-wxSIMPLE_BORDER">1</bool>
+                <bool name="proxy-wxNO_BORDER">1</bool>
+                <bool name="proxy-wxSIMPLE_BORDER">0</bool>
                 <bool name="proxy-wxDOUBLE_BORDER">0</bool>
                 <bool name="proxy-wxSUNKEN_BORDER">0</bool>
                 <bool name="proxy-wxRAISED_BORDER">0</bool>

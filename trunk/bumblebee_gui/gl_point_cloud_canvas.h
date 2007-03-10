@@ -33,6 +33,8 @@
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
 
+#include "alcor.extern/CImg/CImg.h"
+namespace cimglib=cimg_library;
 
 #include "alcor/sense/bumblebee_driver_t.h"
 #include "alcor/core/core.h"
@@ -51,7 +53,7 @@ class point_cloud_canvas;
 
 ////@begin control identifiers
 #define ID_POINTCLOUD_CANVAS 10001
-#define SYMBOL_POINT_CLOUD_CANVAS_STYLE wxSIMPLE_BORDER
+#define SYMBOL_POINT_CLOUD_CANVAS_STYLE wxNO_BORDER
 #define SYMBOL_POINT_CLOUD_CANVAS_IDNAME ID_POINTCLOUD_CANVAS
 #define SYMBOL_POINT_CLOUD_CANVAS_SIZE wxSize(800, 600)
 #define SYMBOL_POINT_CLOUD_CANVAS_POSITION wxDefaultPosition
@@ -91,9 +93,8 @@ public:
     void initGL();
 
     ///
-    boost::function< void (void)> grab;
-    boost::function< all::core::single_sarr (void)> update_3d_data;
-    boost::function< all::core::uint8_sarr  (void)> update_rgb_data;
+    void draw_cimg();
+
     ///
     enum 
     {
@@ -153,6 +154,12 @@ private:
     all::sense::bumblebee_driver_ptr_t bee;
     all::core::single_sarr depthmap;
     all::core::uint8_sarr  rgbmap;
+
+  //VIEW
+  boost::shared_ptr<cimglib::CImgDisplay>          rgb_win;
+  boost::shared_ptr<cimglib::CImg<all::core::uint8_t> > rgb_cimg;
+  all::core::uint8_sarr   framebuffer;
+  all::core::uint8_sarr   myimage;
 };
 
 #endif
