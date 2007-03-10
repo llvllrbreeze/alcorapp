@@ -93,7 +93,7 @@ public:
     void initGL();
 
     ///
-    void draw_cimg();
+    void draw_cimg(GLenum ebuf);
 
     ///
     enum 

@@ -264,19 +264,20 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
 
     // Flush
     glFlush();    
-    //draw BACK
-    draw_cimg();
+
     // Swap
     SwapBuffers();
 
+    //draw FRONT
+    draw_cimg(GL_FRONT);
 }
 
 /*
  *!
  */
-void point_cloud_canvas::draw_cimg()
+void point_cloud_canvas::draw_cimg(GLenum ebuf)
 {
-    glReadBuffer(GL_BACK);
+    glReadBuffer(ebuf);
     //
     int w, h;
     GetClientSize(&w, &h);
