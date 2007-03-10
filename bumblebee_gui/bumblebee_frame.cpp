@@ -46,6 +46,8 @@ IMPLEMENT_CLASS( bumblebee_frame, wxFrame )
 BEGIN_EVENT_TABLE( bumblebee_frame, wxFrame )
 
 ////@begin bumblebee_frame event table entries
+    EVT_CLOSE( bumblebee_frame::OnCloseWindow )
+
 ////@end bumblebee_frame event table entries
 
 END_EVENT_TABLE()
@@ -92,8 +94,6 @@ void bumblebee_frame::Init()
 {
 ////@begin bumblebee_frame member initialisation
 ////@end bumblebee_frame member initialisation
-  //bee.reset(new all::sense::bumblebee_driver_t);
-  //bee->open("config/bumblebeeB.ini");
 }
 /*!
  * Control creation for bumblebee_frame
@@ -108,25 +108,13 @@ void bumblebee_frame::CreateControls()
     itemFrame1->SetSizer(itemBoxSizer2);
 
     wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer3, 0, 0, 0);
+    itemBoxSizer2->Add(itemBoxSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    point_cloud_view = new point_cloud_canvas( itemFrame1, ID_POINTCLOUD_CANVAS, wxDefaultPosition, wxSize(640, 480), wxSIMPLE_BORDER );
+    point_cloud_view = new point_cloud_canvas( itemFrame1, ID_POINTCLOUD_CANVAS, wxDefaultPosition, wxSize(800, 600), wxSIMPLE_BORDER );
     itemBoxSizer3->Add(point_cloud_view, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    wxButton* itemButton6 = new wxButton( itemFrame1, ID_BUTTON1, _("Button"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer3->Add(itemButton6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end bumblebee_frame content construction
 
-    /////BIND!!!
-    //point_cloud_view->grab = 
-    //  boost::bind(&bumblebee_frame::grab, itemFrame1);
-
-    //point_cloud_view->update_rgb_data = 
-    //  boost::bind(&bumblebee_frame::update_rgb_data, itemFrame1);
-
-    //point_cloud_view->update_3d_data = 
-    //  boost::bind(&bumblebee_frame::update_3d_data, itemFrame1);
 }
 
 /*!
@@ -164,22 +152,16 @@ wxIcon bumblebee_frame::GetIconResource( const wxString& name )
 ////@end bumblebee_frame icon retrieval
 }
 
-/////grabcallback
-//void bumblebee_frame::grab()
-//{
-//  bee->grab();
+
 //}
-//
-/////callback
-//all::core::single_sarr bumblebee_frame::update_3d_data()
-//{
-//  //bee->grab();
-//  return bee->get_depth_buffer();
-//}
-//
-/////callback
-//all::core::uint8_sarr bumblebee_frame::update_rgb_data()
-//{
-//  //bee->grab();
-//  return bee->get_color_buffer(all::core::right_img);
-//}
+/*!
+ * wxEVT_CLOSE_WINDOW event handler for ID_BUMBLEBEE_FRAME
+ */
+
+void bumblebee_frame::OnCloseWindow( wxCloseEvent& event )
+{
+  point_cloud_view->Destroy();
+   Destroy(); 
+}
+
+

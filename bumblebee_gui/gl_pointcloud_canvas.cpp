@@ -98,14 +98,14 @@ void point_cloud_canvas::Init()
     beginx = 0.0f;
     beginy = 0.0f;
     zoom   = 80.0f;
-    fov    = 80.0f;
+    fov    = 85.0f;
     xcam = 0.0f;
     ycam = 0.0f;
-    zcam = -20.0f;
+    zcam = -3.0f;
     trackball(quat, 0.0f, 0.0f, 0.0f, 0.0f);
 
     m_timer = new wxTimer(this, ID_TIMER_EVENT);
-    m_timer->Start(100);
+    m_timer->Start(120);
     generator.seed(static_cast<unsigned int>(std::time(0)));
     logfile.open("gl_log.txt", std::ios::out);
 
@@ -124,6 +124,7 @@ void point_cloud_canvas::CreateControls()
 {    
 ////@begin point_cloud_canvas content construction
     point_cloud_canvas* itemGLCanvas1 = this;
+
 ////@end point_cloud_canvas content construction
 }
 
@@ -177,7 +178,7 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     // Transformations
     glLoadIdentity();
 
-    glTranslatef( 0.0f, 0.0f, zcam);
+    glTranslatef( xcam, ycam, zcam);
 
     GLfloat m[4][4];
     build_rotmatrix( m, quat );
@@ -208,30 +209,33 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     //if (grab && update_3d_data && update_rgb_data)
     //{
       //
-      bee->grab();
-      depthmap = bee->get_depth_buffer();
-      rgbmap   = bee->get_color_buffer(all::core::right_img);
+    bee->grab();
+    depthmap = bee->get_depth_buffer();
+    rgbmap   = bee->get_color_buffer(all::core::right_img);
 
+    //
+    //logfile << "Change Ordering uint8" << std::endl;
+    all::core::change_ordering::to_interleaved(rgbmap,  bee->nrows(),bee->ncols(), 3);
+    //
+    //logfile << "Change Ordering Single" << std::endl;
+    all::core::change_ordering::to_interleaved(depthmap, bee->nrows(),bee->ncols(),3);      
       //
-      logfile << "Change Ordering uint8" << std::endl;
-      all::core::change_ordering::to_interleaved(rgbmap,  bee->nrows(),bee->ncols(), 3);
-      //
-      logfile << "Change Ordering Single" << std::endl;
-      all::core::change_ordering::to_interleaved(depthmap, bee->nrows(),bee->ncols(),3);      
-        //
-      //
-      logfile << "POINTS ITER" << std::endl;
-      glBegin(GL_POINTS);   
-      for(int i = 0; i < bee->nrows()*bee->ncols(); i++)
+    //
+    //logfile << "POINTS ITER" << std::endl;
+    int ind = 0;
+    glBegin(GL_POINTS);   
+    for(int i = 0; i < bee->nrows()*bee->ncols(); i++)
+    {
+      //if Z > 0.0
+      if(depthmap[i+2] > 0.0)
       {
-        if(depthmap[i+2] > 0.0)
-        {
-          glColor3f(rgbmap[i]/255.0, rgbmap[i+1]/255.0, rgbmap[i+2]/255.0);
-          glVertex3f(depthmap[i], -depthmap[i+1], -depthmap[i+2]);
-        }
-
+        ind = i*3;
+        glColor3f(rgbmap[ind]/255.0, rgbmap[ind+1]/255.0, rgbmap[ind+2]/255.0);
+        glVertex3f(depthmap[ind], -depthmap[ind+1], -depthmap[ind+2]);
       }
-      glEnd();
+
+    }
+    glEnd();
 
     //}
     //else
@@ -252,9 +256,6 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
 
     // Swap
     SwapBuffers();
-    //logfile << "SWAP  elapsed: " <<  timer.elapsed() << std::endl;
-
-    //logfile << "TOTAL: " <<  extimer.elapsed()<< std::endl << std::endl;
 }
 
 /*!
@@ -352,42 +353,76 @@ void point_cloud_canvas::on_timer(wxTimerEvent&)
 
 void point_cloud_canvas::OnMouse( wxMouseEvent& event )
 {
-  int mwheel = event.GetWheelRotation();
-
-  if(mwheel>0)
+  if(event.GetEventType() == wxEVT_MOUSEWHEEL)
   {
-    zcam -= 0.25;
-    //(zcam > 10.0)? (zcam) : (10.0);
-    reset_projection_mode();
-  }
-  else if (mwheel < 0)
-  {
-    zcam += 0.25;
-    reset_projection_mode();
-  }
-
-    if (event.Dragging())
+    int mwheel = event.GetWheelRotation();
+    if(mwheel>0)
     {
-        wxSize sz(GetClientSize());
+      zcam += 0.2;
+      //(zcam > 10.0)? (zcam) : (10.0);
+      reset_projection_mode();
+    }
+    else if (mwheel < 0)
+    {
+      zcam -= 0.2;
+      reset_projection_mode();
+    }
+  }
 
-        /* drag in progress, simulate trackball */
-        float spin_quat[4];
-        trackball(spin_quat,
-            (2.0*beginx - sz.x) / sz.x,
-            (sz.y - 2.0*beginy) / sz.y,
-            (2.0*event.GetX() - sz.x)    / sz.x,
-            (sz.y - 2.0*event.GetY())    / sz.y);
+  if (event.Dragging())
+  {
+    if(event.LeftIsDown())
+    {
+      wxSize sz(GetClientSize());
+
+      /* drag in progress, simulate trackball */
+      float spin_quat[4];
+      trackball(spin_quat,
+          (2.0*beginx - sz.x) / sz.x,
+          (sz.y - 2.0*beginy) / sz.y,
+          (2.0*event.GetX() - sz.x)    / sz.x,
+          (sz.y - 2.0*event.GetY())    / sz.y);
 
         add_quats(spin_quat, quat, quat);
-
-        /* orientation has changed, redraw mesh */
-        Refresh(false);
     }
 
-    beginx = event.GetX();
-    beginy = event.GetY();
+    if(event.RightIsDown())
+    {
+      wxSize sz(GetClientSize());
+        /* orientation has changed, redraw mesh */
+        //Refresh(false);
+      if (beginx - event.GetX() > 0)
+      {
+        xcam+=0.1;
+      }
+      else if (beginx - event.GetX() < 0)
+      {
+        xcam-=0.1;
+      }
+
+      //if (beginy - event.GetY() > 0)
+      //{
+      //  ycam-=0.1;
+      //}
+      //else if (beginy - event.GetY() < 0)
+      //{
+      //  ycam+=0.1;
+      //}
+    }
+
+  }
+
+  beginx = event.GetX();
+  beginy = event.GetY();
 
 }
+
+
+
+
+
+
+
 
 
 
