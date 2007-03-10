@@ -43,7 +43,8 @@ class point_cloud_canvas;
 
 ////@begin control identifiers
 #define ID_BUMBLEBEE_FRAME 10000
-#define SYMBOL_BUMBLEBEE_FRAME_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxCLOSE_BOX|wxFRAME_TOOL_WINDOW
+#define ID_BUTTON_CLOSE_GUI 10002
+#define SYMBOL_BUMBLEBEE_FRAME_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxCLOSE_BOX
 #define SYMBOL_BUMBLEBEE_FRAME_TITLE _("bumblebee_frame")
 #define SYMBOL_BUMBLEBEE_FRAME_IDNAME ID_BUMBLEBEE_FRAME
 #define SYMBOL_BUMBLEBEE_FRAME_SIZE wxSize(400, 300)
@@ -77,13 +78,6 @@ public:
     /// Initialises member variables
     void Init();
 
-    /////grabcallback
-    //void grab();
-
-    /////callback
-    //all::core::single_sarr update_3d_data();
-    /////callback
-    //all::core::uint8_sarr update_rgb_data();
 
     /// Creates the controls and sizers
     void CreateControls();
@@ -92,6 +86,9 @@ public:
 
     /// wxEVT_CLOSE_WINDOW event handler for ID_BUMBLEBEE_FRAME
     void OnCloseWindow( wxCloseEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_CLOSE_GUI
+    void OnButtonCloseGuiClick( wxCommandEvent& event );
 
 ////@end bumblebee_frame event handler declarations
 
