@@ -38,6 +38,8 @@ namespace cimglib=cimg_library;
 
 #include "alcor/sense/bumblebee_driver_t.h"
 #include "alcor/core/core.h"
+#include "alcor/core/stream_server_t.hpp"
+#include "opengl_source_t.hpp"
 
 /*!
  * Forward declarations
@@ -160,6 +162,11 @@ private:
   boost::shared_ptr<cimglib::CImg<all::core::uint8_t> > rgb_cimg;
   all::core::uint8_sarr   framebuffer;
   all::core::uint8_sarr   myimage;
+
+  //Server
+  //all::core::opengl_source_t m_source;
+  boost::shared_ptr <all::core::stream_server_t > server_ptr;
+  boost::shared_ptr <all::core::opengl_source_t > source_ptr; 
 };
 
 #endif

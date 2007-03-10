@@ -8,6 +8,7 @@
 // Copyright:   Alcor
 // Licence:     
 /////////////////////////////////////////////////////////////////////////////
+#define WIN32_LEAN_AND_MEAN
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "gl_point_cloud_canvas.h"
@@ -66,6 +67,7 @@ END_EVENT_TABLE()
 
 point_cloud_canvas::point_cloud_canvas( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name, int* attribs ):
   wxGLCanvas(parent, id, pos, size, style, name, attribs)
+    //,m_source(size.y, size.x)
 {
     Init();
     Create(parent, id, pos, size, style, name, attribs);
@@ -122,10 +124,15 @@ void point_cloud_canvas::Init()
     GetClientSize(&w, &h);
     //logfile << "w: " << w << "h: " << h << std::endl;
     framebuffer.reset(new all::core::uint8_t[(w)*h*4]);
-    rgb_win.reset(new cimglib::CImgDisplay(w, h, "Frame Buffer"));
-    rgb_cimg.reset(new cimglib::CImg<all::core::uint8_t>());
-    //
+    //rgb_win.reset(new cimglib::CImgDisplay(w, h, "Frame Buffer"));
+    //rgb_cimg.reset(new cimglib::CImg<all::core::uint8_t>());
+    //MY IMAGE
     myimage.reset(new all::core::uint8_t[w*h*3]);
+    //SERVER
+    source_ptr.reset( new all::core::opengl_source_t(h,w) );
+    source_ptr->set_quality(80);
+    server_ptr.reset( new all::core::stream_server_t(*source_ptr));
+    server_ptr->run_async();
 }
 /*!
  * Control creation for point_cloud_canvas
@@ -286,14 +293,16 @@ void point_cloud_canvas::draw_cimg(GLenum ebuf)
     //
     glReadPixels( 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE,(void*) framebuffer.get() );
     //
-    //WriteTga("framebuffer.tga",w,h,32,framebuffer.get());
     //
-    all::core::change_ordering::from_rgba_opengl(framebuffer,myimage, h, w);
+    all::core::change_ordering::from_rgba_opengl_to_planar(framebuffer,myimage, h, w);
+    //all::core::change_ordering::from_rgba_opengl_to_interleaved(framebuffer, myimage,h,w);
     //
     all::core::change_ordering::to_topleft(myimage, h, w, 3);
+    //
+    source_ptr->update_image_buffer(myimage);
     ////
-    rgb_cimg->assign(myimage.get(),  w, h, 1,3);
-    rgb_cimg->display(*(rgb_win.get()));
+    //rgb_cimg->assign(myimage.get(),  w, h, 1,3);
+    //rgb_cimg->display(*rgb_win);
 }
 
 /*!

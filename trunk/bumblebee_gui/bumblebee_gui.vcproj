@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28_gl.lib wxzlib.lib wxpng.lib wxjpeg.lib wxmsw28.lib comctl32.lib"
+				AdditionalDependencies="wxmsw28_gl.lib wxzlib.lib wxpng.lib wxjpeg.lib wxmsw28.lib comctl32.lib data_streaming.lib jpeg_codec.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -231,6 +231,14 @@
 			</File>
 			<File
 				RelativePath="..\..\alcor\core\image_utils.h"
+				>
+			</File>
+			<File
+				RelativePath=".\opengl_source_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\stream_server_t.hpp"
 				>
 			</File>
 			<File
