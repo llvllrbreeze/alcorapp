@@ -108,29 +108,33 @@ void point_cloud_canvas::Init()
 
     m_timer = new wxTimer(this, ID_TIMER_EVENT);
     m_timer->Start(120);
+
+#ifdef SIMPCLOUD
     generator.seed(static_cast<unsigned int>(std::time(0)));
     //logfile.open("gl_log.txt", std::ios::out);
-
+#else
     bee.reset(new all::sense::bumblebee_driver_t);
     bee->open("config/bumblebeeB.ini");
     rgbmap.reset(new all::core::uint8_t[bee->color_buffer_size()]); 
     depthmap.reset(new all::core::single_t[bee->depth_buffer_size()]);   
-
+#endif
 
     //logfile << "Bumblebee Opened" << std::endl;
 
     ////open views
     int w, h;
     GetClientSize(&w, &h);
-    //logfile << "w: " << w << "h: " << h << std::endl;
+
     framebuffer.reset(new all::core::uint8_t[(w)*h*4]);
+
     //rgb_win.reset(new cimglib::CImgDisplay(w, h, "Frame Buffer"));
     //rgb_cimg.reset(new cimglib::CImg<all::core::uint8_t>());
+
     //MY IMAGE
     myimage.reset(new all::core::uint8_t[w*h*3]);
     //SERVER
     source_ptr.reset( new all::core::opengl_source_t(h,w) );
-    source_ptr->set_quality(80);
+    source_ptr->set_quality(70);
     server_ptr.reset( new all::core::stream_server_t(*source_ptr));
     server_ptr->run_async();
 }
@@ -181,12 +185,13 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     }
     
     //Generate Random funcitons
-
+#ifdef SIMPCLOUD
     boost::uniform_real<> uni_dist_color(0,1);
     boost::variate_generator<boost::minstd_rand&, boost::uniform_real<> > unic(generator, uni_dist_color);
 
-    boost::uniform_real<> uni_dist_coords(-10.0,10.0);
+    boost::uniform_real<> uni_dist_coords(-1.0,1.0);
     boost::variate_generator<boost::minstd_rand&, boost::uniform_real<> > unip(generator, uni_dist_coords);
+#endif
 
     //logfile << "RANDOM GEN  elapsed: " <<  timer.elapsed() << std::endl;
 
@@ -223,10 +228,8 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     glVertex3f(0.0f, 0.0f, 100.0f);
     glEnd();
 
-    /////
-    //if (grab && update_3d_data && update_rgb_data)
-    //{
-      //
+
+#ifndef SIMPCLOUD
     bee->grab();
     depthmap = bee->get_depth_buffer();
     rgbmap   = bee->get_color_buffer(all::core::right_img);
@@ -237,9 +240,8 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     //
     //logfile << "Change Ordering Single" << std::endl;
     all::core::change_ordering::to_interleaved(depthmap, bee->nrows(),bee->ncols(),3);      
-      //
-    //
-    //logfile << "POINTS ITER" << std::endl;
+
+
     int ind = 0;
     glBegin(GL_POINTS);   
     for(int i = 0; i < bee->nrows()*bee->ncols(); i++)
@@ -254,20 +256,15 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
 
     }
     glEnd();
-
-    //}
-    //else
-    //{
-    //glBegin(GL_POINTS);   
-    //for(int i = 0; i < 75000 ; ++i)
-    //{
-    //  glColor3f(unic(), unic(), unic());
-    //  glVertex3f(unip(), unip(), unip());
-    //}
-    //glEnd();
-    //}
-
-    //logfile << "GL_POINTS  elapsed: " <<  timer.elapsed() << std::endl;
+#else
+    glBegin(GL_POINTS);   
+    for(int i = 0; i < 50000 ; ++i)
+    {
+      glColor3f(unic(), unic(), unic());
+      glVertex3f(unip(), unip(), unip());
+    }
+    glEnd();
+#endif
 
     // Flush
     glFlush();    
@@ -292,7 +289,10 @@ void point_cloud_canvas::draw_cimg(GLenum ebuf)
 
     //
     glReadPixels( 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE,(void*) framebuffer.get() );
+
+    {
     //
+    boost::mutex::scoped_lock lock (source_ptr->mutex);
     //
     all::core::change_ordering::from_rgba_opengl_to_planar(framebuffer,myimage, h, w);
     //all::core::change_ordering::from_rgba_opengl_to_interleaved(framebuffer, myimage,h,w);
@@ -300,6 +300,8 @@ void point_cloud_canvas::draw_cimg(GLenum ebuf)
     all::core::change_ordering::to_topleft(myimage, h, w, 3);
     //
     source_ptr->update_image_buffer(myimage);
+    }
+
     ////
     //rgb_cimg->assign(myimage.get(),  w, h, 1,3);
     //rgb_cimg->display(*rgb_win);

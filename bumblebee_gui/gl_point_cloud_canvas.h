@@ -24,19 +24,28 @@
 #include "wx/glcanvas.h"
 ////@end includes
 
+#define SIMPCLOUD
+
+
 #include "trackball.h"
 #include <fstream>
 #include <boost/function.hpp>
 #include <boost/timer.hpp>
+
+#ifdef SIMPCLOUD
 #include <boost/random/linear_congruential.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
+#endif
 
 #include "alcor.extern/CImg/CImg.h"
 namespace cimglib=cimg_library;
 
+#ifndef SIMPCLOUD
 #include "alcor/sense/bumblebee_driver_t.h"
+#endif
+
 #include "alcor/core/core.h"
 #include "alcor/core/stream_server_t.hpp"
 #include "opengl_source_t.hpp"
@@ -68,6 +77,7 @@ class point_cloud_canvas;
 #ifndef wxCLOSE_BOX
 #define wxCLOSE_BOX 0x1000
 #endif
+
 
 /*!
  * point_cloud_canvas class declaration
@@ -151,11 +161,15 @@ private:
     float zcam;
     std::ofstream logfile;
     boost::timer  extimer;
-    boost::minstd_rand generator;
 
+#ifdef SIMPCLOUD
+    boost::minstd_rand generator;
+#else
     all::sense::bumblebee_driver_ptr_t bee;
     all::core::single_sarr depthmap;
     all::core::uint8_sarr  rgbmap;
+
+#endif
 
   //VIEW
   boost::shared_ptr<cimglib::CImgDisplay>          rgb_win;
