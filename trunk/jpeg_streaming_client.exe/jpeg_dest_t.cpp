@@ -9,7 +9,7 @@ void jpeg_dest_t::process_data() {
 	boost::crc_32_type::value_type enc_crc;
 	int enc_data_size = m_data_size - sizeof(boost::crc_32_type::value_type);
 
-	printf("data size: %i\n", enc_data_size);
+	//printf("data size: %i\n", enc_data_size);
 
 	all::core::uint8_sarr enc_data(new all::core::uint8_t[enc_data_size]);
 	
