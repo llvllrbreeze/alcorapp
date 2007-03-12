@@ -24,7 +24,7 @@
 #include "wx/glcanvas.h"
 ////@end includes
 
-#define SIMPCLOUD
+//#define SIMPCLOUD
 
 
 #include "trackball.h"
@@ -118,6 +118,9 @@ public:
 
 ////@begin point_cloud_canvas event handler declarations
 
+    /// wxEVT_DESTROY event handler for ID_POINTCLOUD_CANVAS
+    void OnDestroy( wxWindowDestroyEvent& event );
+
     /// wxEVT_SIZE event handler for ID_POINTCLOUD_CANVAS
     void OnSize( wxSizeEvent& event );
 
@@ -178,7 +181,6 @@ private:
   all::core::uint8_sarr   myimage;
 
   //Server
-  //all::core::opengl_source_t m_source;
   boost::shared_ptr <all::core::stream_server_t > server_ptr;
   boost::shared_ptr <all::core::opengl_source_t > source_ptr; 
 };

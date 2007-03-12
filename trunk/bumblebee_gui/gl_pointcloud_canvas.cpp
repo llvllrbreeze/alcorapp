@@ -53,6 +53,7 @@ IMPLEMENT_CLASS( point_cloud_canvas, wxGLCanvas )
 BEGIN_EVENT_TABLE( point_cloud_canvas, wxGLCanvas )
 
 ////@begin point_cloud_canvas event table entries
+    EVT_WINDOW_DESTROY( point_cloud_canvas::OnDestroy )
     EVT_SIZE( point_cloud_canvas::OnSize )
     EVT_PAINT( point_cloud_canvas::OnPaint )
     EVT_MOUSE_EVENTS( point_cloud_canvas::OnMouse )
@@ -106,9 +107,6 @@ void point_cloud_canvas::Init()
     zcam = -3.0f;
     trackball(quat, 0.0f, 0.0f, 0.0f, 0.0f);
 
-    m_timer = new wxTimer(this, ID_TIMER_EVENT);
-    m_timer->Start(120);
-
 #ifdef SIMPCLOUD
     generator.seed(static_cast<unsigned int>(std::time(0)));
     //logfile.open("gl_log.txt", std::ios::out);
@@ -136,7 +134,13 @@ void point_cloud_canvas::Init()
     source_ptr.reset( new all::core::opengl_source_t(h,w) );
     source_ptr->set_quality(70);
     server_ptr.reset( new all::core::stream_server_t(*source_ptr));
+
     server_ptr->run_async();
+    //server_ptr->start_streaming();
+    
+    m_timer = new wxTimer(this, ID_TIMER_EVENT);
+    m_timer->Start(200);
+
 }
 /*!
  * Control creation for point_cloud_canvas
@@ -145,8 +149,10 @@ void point_cloud_canvas::Init()
 void point_cloud_canvas::CreateControls()
 {    
 ////@begin point_cloud_canvas content construction
-    point_cloud_canvas* itemGLCanvas1 = this;
+    point_cloud_canvas* point_cloud_view = this;
 
+    // Connect events and objects
+    point_cloud_view->Connect(ID_POINTCLOUD_CANVAS, wxEVT_DESTROY, wxWindowDestroyEventHandler(point_cloud_canvas::OnDestroy), NULL, this);
 ////@end point_cloud_canvas content construction
 }
 
@@ -464,12 +470,15 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
 }
 
 
+/*!
+ * wxEVT_DESTROY event handler for ID_POINTCLOUD_CANVAS
+ */
 
-
-
-
-
-
-
+void point_cloud_canvas::OnDestroy( wxWindowDestroyEvent& event )
+{
+  m_timer->Stop();
+  server_ptr->stop();
+  //server_ptr->stop_streaming();
+}
 
 
