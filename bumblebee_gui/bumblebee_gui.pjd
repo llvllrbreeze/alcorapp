@@ -398,9 +398,10 @@
                 <string name="proxy-type">"wbGLCanvasProxy"</string>
                 <string name="variable-0">"m_initialized|bool|Initiialized|false|2"</string>
                 <string name="variable-1">"m_timer|wxTimer*||0|2"</string>
-                <string name="event-handler-0">"wxEVT_SIZE|OnSize"</string>
-                <string name="event-handler-1">"wxEVT_PAINT|OnPaint"</string>
-                <string name="event-handler-2">"All mouse events|OnMouse"</string>
+                <string name="event-handler-0">"wxEVT_DESTROY|OnDestroy"</string>
+                <string name="event-handler-1">"wxEVT_SIZE|OnSize"</string>
+                <string name="event-handler-2">"wxEVT_PAINT|OnPaint"</string>
+                <string name="event-handler-3">"All mouse events|OnMouse"</string>
                 <string name="proxy-Id name">"ID_POINTCLOUD_CANVAS"</string>
                 <long name="proxy-Id value">10001</long>
                 <string name="proxy-Class">"point_cloud_canvas"</string>

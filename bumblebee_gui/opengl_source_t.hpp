@@ -15,7 +15,7 @@ public:
 	///
 	void set_quality(int);
   ///
-  void update_image_buffer(all::core::uint8_sarr&);
+  void update_image_buffer(const all::core::uint8_sarr&);
   ///
   void process_command(net_packet_ptr_t) {};
   ///
@@ -48,7 +48,7 @@ inline opengl_source_t::opengl_source_t (size_t h, size_t w)
 }
 
 ///
-inline void opengl_source_t::update_image_buffer(all::core::uint8_sarr& image)
+inline void opengl_source_t::update_image_buffer(const all::core::uint8_sarr& image)
 {
   m_image = image;
 }
