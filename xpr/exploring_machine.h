@@ -39,6 +39,61 @@ public:
   typedef exploring_machine self_t;
 
 private:
+   
+ //IDLED     
+ //EXPLORING 
+ //OBSERVING 
+ //VISITING  
+ //FAILED    
+
+  // state invariants
+  void idled_state_invariant() const {}
+  void exploring_state_invariant() const {}
+  void observing_state_invariant() const {}
+  void visting_state_invariant() const {}
+  void failed_state_invariant() const {}
+
+  // states (invariants are passed as non-type template arguments)
+  typedef state<stag::IDLED, &self_t::idled_state_invariant> 
+      idled;
+
+  typedef state<stag::EXPLORING, &self_t::exploring_state_invariant> 
+      exploring;
+
+  typedef state<stag::OBSERVING, &self_t::observing_state_invariant> 
+      observing;
+
+  typedef state<stag::VISITING, &self_t::visting_state_invariant> 
+      visiting;
+
+  typedef state<stag::FAILED, &self_t::fail_state_invariant> 
+      failed;
+
+  friend class fsm::state_machine<exploring_machine>;
+
+  ///Transitions
+  //IDLE   
+  //EXPLORE
+  //RESUME 
+  //VISIT  
+  //FAIL   
+
+  ///Transitions
+  typedef mpl::list <
+  //...
+    transition  <idled , explore_evt  , observing ,  &self_t::go_explre>
+
+  , transition  <exploring , idle_evt     , idled     ,  &self_t::go_idle>
+  , transition  <observing , idle_evt     , idled     ,  &self_t::go_idle>
+
+  > ::type transition_table;
+
+  ///Initial State.
+  typedef idled initial_state;
+
+  bool go_explore (explore_evt const&);
+  bool go_idle    (idle_evt const&);
+
 
 };
 //---------------------------------------------------------------------------
