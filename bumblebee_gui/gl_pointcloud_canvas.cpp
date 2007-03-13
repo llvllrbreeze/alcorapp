@@ -133,11 +133,13 @@ void point_cloud_canvas::Init()
     //SERVER
     source_ptr.reset( new all::core::opengl_source_t(h,w) );
     source_ptr->set_quality(70);
-    server_ptr.reset( new all::core::stream_server_t(*source_ptr));
+    server_ptr.reset( new all::core::stream_server_t(source_ptr));
 
     server_ptr->run_async();
     //server_ptr->start_streaming();
     
+    logfile.open("gl_log.txt", std::ios::out);
+
     m_timer = new wxTimer(this, ID_TIMER_EVENT);
     m_timer->Start(200);
 
@@ -374,7 +376,7 @@ void point_cloud_canvas::initGL()
     glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
 
   	    // Point Size
-    float pointSize = 2.0;
+    float pointSize = 2.2;
     glPointSize(pointSize);
 }
 
@@ -474,11 +476,19 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
  * wxEVT_DESTROY event handler for ID_POINTCLOUD_CANVAS
  */
 
-void point_cloud_canvas::OnDestroy( wxWindowDestroyEvent& event )
-{
-  m_timer->Stop();
+void point_cloud_canvas::OnDestroy( wxWindowDestroyEvent& WXUNUSED(event) )
+{ 
+  
+  //logfile << "IN : : point_cloud_canvas::OnDestroy" << std::endl;
+
   server_ptr->stop();
-  //server_ptr->stop_streaming();
+
+  m_timer->Stop();
+
+  ////logfile << "OUT : : point_cloud_canvas::OnDestroy" << std::endl;
+  //server_ptr->stop_streaming(); 
+  
+  wxMessageBox(_T("point_cloud_canvas::OnDestroy .. OUT"));
 }
 
 

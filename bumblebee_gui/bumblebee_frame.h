@@ -43,7 +43,6 @@ class point_cloud_canvas;
 
 ////@begin control identifiers
 #define ID_BUMBLEBEE_FRAME 10000
-#define ID_BUTTON_CLOSE_GUI 10002
 #define SYMBOL_BUMBLEBEE_FRAME_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxCLOSE_BOX
 #define SYMBOL_BUMBLEBEE_FRAME_TITLE _("bumblebee_frame")
 #define SYMBOL_BUMBLEBEE_FRAME_IDNAME ID_BUMBLEBEE_FRAME
@@ -87,8 +86,8 @@ public:
     /// wxEVT_CLOSE_WINDOW event handler for ID_BUMBLEBEE_FRAME
     void OnCloseWindow( wxCloseEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_CLOSE_GUI
-    void OnButtonCloseGuiClick( wxCommandEvent& event );
+    /// wxEVT_DESTROY event handler for ID_BUMBLEBEE_FRAME
+    void OnDestroy( wxWindowDestroyEvent& event );
 
 ////@end bumblebee_frame event handler declarations
 
