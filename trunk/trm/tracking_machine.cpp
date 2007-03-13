@@ -250,6 +250,9 @@ bool tracking_machine::go_reset (reset_event const&)
     //
   ptu_control->enable(false);
   p3dx->enable_stop_mode();
+
+  //
+  ptu->set_pantilt(0,0);
   //
   boost::mutex::scoped_lock lock(process_guard);
   ////
