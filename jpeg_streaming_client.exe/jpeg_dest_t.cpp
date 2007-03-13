@@ -1,6 +1,6 @@
 #include "jpeg_dest_t.hpp"
 
-jpeg_dest_t::jpeg_dest_t() : m_image(), m_image_disp(800, 600, "stream")
+jpeg_dest_t::jpeg_dest_t() : m_image(), m_image_disp(320, 240, "stream")
 {
 }
 

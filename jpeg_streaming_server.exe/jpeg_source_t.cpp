@@ -30,7 +30,7 @@
 //}
 
 jpeg_source_t::jpeg_source_t() {
-	m_bee.open("config/bumblebeeA.ini");
+	m_bee.open("config/bumblebeeB.ini");
 
 	m_encoder.reset(all::core::rgb_tag, all::core::planar_tag, m_bee.height(), m_bee.width());
 
