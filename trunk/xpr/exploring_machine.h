@@ -85,15 +85,49 @@ private:
 
   , transition  <exploring , idle_evt     , idled     ,  &self_t::go_idle>
   , transition  <observing , idle_evt     , idled     ,  &self_t::go_idle>
+  , transition  <exploring , visit_evt    , visiting  ,  &self_t::go_visit>
 
   > ::type transition_table;
 
   ///Initial State.
   typedef idled initial_state;
 
-  bool go_explore (explore_evt const&);
-  bool go_idle    (idle_evt const&);
+  //[GO_FUNCTIONS]
+  //
+  bool go_explore (explore_evt const&){};
+  bool go_idle    (idle_evt const&){};
+  bool go_visit   (go_visit const&){};
 
+    ///Loop Callback
+  typedef boost::function < void (void) > fire_callback_t;
+  fire_callback_t fire_callback;
+
+    ///
+  void cancel() {running_ = false;};
+  ///
+  boost::shared_ptr<boost::thread> thisthread;
+
+  ///
+private:
+  ///
+  volatile bool running_;
+
+private:
+  ///MATLAB
+  boost::shared_ptr<matlab::matlab_engine_t> workspace;
+
+  ///Mobile Robot
+  act::p3_gateway_ptr_t p3at;
+  ///The server
+  act::p3_server_ptr_t       p3at_server;
+
+  ///Bumblebee
+  sense::bumblebee_driver_ptr_t bee;
+
+  ///PTU
+  act::directed_perception_sptr ptu;
+  ///Pinhole util
+  math::pinhole_t pinhole;
 
 };
 //---------------------------------------------------------------------------

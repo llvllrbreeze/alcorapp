@@ -7,9 +7,10 @@
 #include <boost\thread\mutex.hpp> 
 //-----------------------------------------------------------------------++
 #include "alcor/act/p3_gateway.h"
-#include "alcor/act/p3_odometry_adapter_t.h"
+#include "alcor/act/p3_server_t.h"
+//#include "alcor/act/p3_odometry_adapter_t.h"
 #include "alcor/act/directed_perception_ptu_t.h"
-#include "alcor/act/pantilt_control_loop_t.hpp"
+//#include "alcor/act/pantilt_control_loop_t.hpp"
 #include "alcor/sense/bumblebee_driver_t.h"
 //-----------------------------------------------------------------------++
 ///experimental
