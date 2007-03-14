@@ -26,14 +26,32 @@ int main()
   //
   cam->grab();
   printf("timetograb: %f\n", timer.elapsed());
-  //
-  core::single_sarr depth = 
-    cam->get_depth_buffer(core::interleaved_tag);
+  //  
+  core::single_sarr depth;
+  core::single_sarr depth2;
+  int nPts = 0;
+
+getchar();
+    timer.restart();
+  depth2 = 
+    cam->get_depth_buffer(core::interleaved_tag);  
+  printf("timetograb3d safe: %f\n", timer.elapsed());
     //
-  int nPts = 
+  nPts = 
     cam->valid_3d_points();
 
-  printf("timetograb3d: %f\n", timer.elapsed());
+  cam->grab();
+
+getchar();
+  timer.restart();
+   depth = 
+    cam->get_depth_buffer_sandbox_();  
+  printf("timetograb3d sandbox: %f\n", timer.elapsed());
+    //
+  nPts = 
+    cam->valid_3d_points();
+
+
 
   timer.restart();
   //
