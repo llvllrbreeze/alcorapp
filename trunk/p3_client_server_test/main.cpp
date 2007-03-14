@@ -60,27 +60,46 @@ int main ()
 {
   p3_user       p3_server;
   p3_listener   p3_client;
+  //getchar();
+  ////p3_client.p3->enable_wander_mode();
+  //getchar();
+  ////p3_client.p3->set_vel(150);
+  ////getchar();  
+  ////p3_client.p3->enable_stop_mode();
+  //getchar();
+
+  //printf("Distance Traveled so far: %f\n",p3_client.p3data.pose.getP().magnitude());
+  //printf("Pose: x1: %.3f x2: %.3f theta: %.2f\n", 
+  //  p3_client.p3data.pose.get_x1(),
+  //  p3_client.p3data.pose.get_x2(), 
+  //  p3_client.p3data.pose.getTh().deg());
+
+  ////oppure
+  //math::pose2d pose = p3_client.p3->get_odometry();
+
+  //printf("\nPose: x1: %.3f x2: %.3f theta: %.2f\n", 
+  //  pose.get_x1(),
+  //  pose.get_x2(), 
+  //  pose.getTh().deg());
+
   getchar();
-  p3_client.p3->enable_wander_mode();
+
+  printf("enabling\n");
+  p3_client.p3->enable_follow_mode();
+
   getchar();
-  p3_client.p3->set_vel(150);
-  getchar();  
+  all::math::angle  dir(45,all::math::deg_tag);
+
+  all::math::point2d target(10.0, dir);
+  p3_client.p3->set_target_to_follow(target, 0);
+
+  getchar();
+
+  p3_client.p3->set_target_to_follow(target, 100);
+
+  getchar();
+
   p3_client.p3->enable_stop_mode();
-  getchar();
-
-  printf("Distance Traveled so far: %f\n",p3_client.p3data.pose.getP().magnitude());
-  printf("Pose: x1: %.3f x2: %.3f theta: %.2f\n", 
-    p3_client.p3data.pose.get_x1(),
-    p3_client.p3data.pose.get_x2(), 
-    p3_client.p3data.pose.getTh().deg());
-
-  //oppure
-  math::pose2d pose = p3_client.p3->get_odometry();
-
-  printf("\nPose: x1: %.3f x2: %.3f theta: %.2f\n", 
-    pose.get_x1(),
-    pose.get_x2(), 
-    pose.getTh().deg());
 
   getchar();
   return 0;
