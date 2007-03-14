@@ -157,7 +157,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\alcor\splam\splam_data.h"
+			RelativePath="..\..\alcor\splam\detail\value_iteration.cpp"
 			>
 		</File>
 	</Files>
