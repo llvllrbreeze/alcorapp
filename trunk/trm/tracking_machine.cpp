@@ -160,6 +160,7 @@ void tracking_machine::tracking_cb()
     //double theta_target= current_pan + pan_delta;
     double pan_delta     = pinhole.delta_pan_from_pixel(centro_c);
     double th_robot      = p3dx->get_odometry().getTh().deg();
+
     //theta globale
     double loc_theta_target = current_pt.pan +pan_delta;
     double glo_theta_target = loc_theta_target + th_robot;
@@ -191,6 +192,7 @@ void tracking_machine::tracking_cb()
     //relative goal
     math::point2d 
       target(distanza, math::angle(loc_theta_target, math::deg_tag));
+    //
     printf("Set Target %f %f %f\n", target.get_x1(), target.get_x2(), target.orientation().deg());
     //
     p3dx->set_target_to_follow 
@@ -200,7 +202,7 @@ void tracking_machine::tracking_cb()
     const unsigned char red  [3] = {255,  0,  0};
     rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
     rgb_cimg->draw_circle(centro_c, centro_r, 10.0,red);
-    rgb_cimg->display(*(rgb_win.get()));
+    rgb_cimg->display(*rgb_win);
     printf("Distanza %.2f\n", distanza);
 
   }//centro_c>0
@@ -316,18 +318,17 @@ void tracking_machine::move_ptu_to_screen_rc(float row, float col, double waitse
 {
   if(ptu)
   {
-  //
-  core::pantilt_angle_t pt = ptu->get_fast_pantilt();
-  //
-  core::pantilt_angle_t delta;
-  pinhole.pantilt_from_pixel(row, col, delta);
-  //
-  float nupan  = static_cast<float>(delta.pan)  + pt.pan;
-  float nutilt = static_cast<float>(delta.tilt) + pt.tilt;
+    //
+    core::pantilt_angle_t pt = ptu->get_fast_pantilt();
+    //
+    core::pantilt_angle_t delta;
+    pinhole.pantilt_from_pixel(row, col, delta);
+    //
+    float nupan  = static_cast<float>(delta.pan)  + pt.pan;
+    float nutilt = static_cast<float>(delta.tilt) + pt.tilt;
 
-  ptu->set_pantilt(nupan, nutilt, waitsec);
-      //printf("\nCentro %d : %d\n", (int)row, (int)col);
-  //printf("PTU COM %f : %f\n", nupan, nutilt);
+    ptu->set_pantilt(nupan, nutilt, waitsec);
+
   }
 }
 //###########################################################################

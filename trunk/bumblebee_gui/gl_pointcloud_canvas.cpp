@@ -239,7 +239,11 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
 
 #ifndef SIMPCLOUD
     bee->grab();
-    depthmap = bee->get_depth_buffer();
+    //depthmap = bee->get_depth_buffer();
+    depthmap = bee->get_depth_buffer_sandbox_();
+
+    //depthmap  = bee->get_depth_buffer(all::core::interleaved_tag);
+
     rgbmap   = bee->get_color_buffer(all::core::right_img);
 
     //
@@ -247,7 +251,7 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     all::core::change_ordering::to_interleaved(rgbmap,  bee->nrows(),bee->ncols(), 3);
     //
     //logfile << "Change Ordering Single" << std::endl;
-    all::core::change_ordering::to_interleaved(depthmap, bee->nrows(),bee->ncols(),3);      
+    //all::core::change_ordering::to_interleaved(depthmap, bee->nrows(),bee->ncols(),3);      
 
 
     int ind = 0;
