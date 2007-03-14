@@ -124,8 +124,6 @@ void tracking_machine::setup_cb()
 //---------------------------------------------------------------------------
 void tracking_machine::tracking_cb()
 {    
-  
-  //ptu_control->enable(false);
 
   if (bee->grab())
   {
@@ -166,9 +164,6 @@ void tracking_machine::tracking_cb()
     double loc_theta_target = current_pt.pan +pan_delta;
     double glo_theta_target = loc_theta_target + th_robot;
     //
-    //ptu_control->set_polar_reference(math::deg_tag, glo_theta_target);
-    //ptu_control->enable(true);
-
     ///Profondità 3D
     core::depth_image_t depthim;
     core::single_sarr depth = bee->get_depth_buffer();
@@ -196,6 +191,7 @@ void tracking_machine::tracking_cb()
     //relative goal
     math::point2d 
       target(distanza, math::angle(loc_theta_target, math::deg_tag));
+    printf("Set Target %f %f %f\n", target.get_x1(), target.get_x2(), target.orientation().deg());
     //
     p3dx->set_target_to_follow 
       (target, speed );
@@ -302,11 +298,6 @@ bool tracking_machine::start_tracking   (track_event const&)
   double theta_rob = p3dx->get_odometry().getTh().deg();
 
   //
-  //ptu_control->set_polar_reference(math::deg_tag, theta_rob + pan);
-  //
-  //ptu_control->enable(true);
-
-  //
   math::point2d target(1.0, math::angle(pan,math::deg_tag));
   p3dx->set_target_to_follow(target, 0);
   p3dx->enable_follow_mode();
@@ -331,8 +322,8 @@ void tracking_machine::move_ptu_to_screen_rc(float row, float col, double waitse
   core::pantilt_angle_t delta;
   pinhole.pantilt_from_pixel(row, col, delta);
   //
-  float nupan  = static_cast<float>(-delta.pan)  + pt.pan;
-  float nutilt = static_cast<float>(-delta.tilt) + pt.tilt;
+  float nupan  = static_cast<float>(delta.pan)  + pt.pan;
+  float nutilt = static_cast<float>(delta.tilt) + pt.tilt;
 
   ptu->set_pantilt(nupan, nutilt, waitsec);
       //printf("\nCentro %d : %d\n", (int)row, (int)col);

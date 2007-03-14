@@ -24,17 +24,17 @@ public:
   boost::mutex process_guard;
 
   ///
-  struct init_evt : event<init_evt> {};
+  struct init_evt     : event<init_evt> {};
   ///
-  struct reset_evt : event<reset_evt> {};
+  struct reset_evt    : event<reset_evt> {};
   ///
-  struct explore_evt : event<explore_evt> {};
+  struct explore_evt  : event<explore_evt> {};
   ///
-  struct idle_explore_evt : event<idle_explore_evt> {};
+  struct visit_evt    : event<visit_evt> {};
   ///
-  struct resume_evt : event<resume_evt> {};
+  struct resume_evt   : event<resume_evt> {};
   ///
-  struct fail_evt : event<fail_evt> {};
+  struct fail_evt     : event<fail_evt> {};
   ///
   typedef exploring_machine self_t;
 
@@ -96,7 +96,7 @@ private:
   //
   bool go_explore (explore_evt const&){};
   bool go_idle    (idle_evt const&){};
-  bool go_visit   (go_visit const&){};
+  bool go_visit   (visit_evt const&){};
 
     ///Loop Callback
   typedef boost::function < void (void) > fire_callback_t;
