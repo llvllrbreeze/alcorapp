@@ -153,10 +153,6 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\alcor\splam\scan_data.cpp"
-			>
-		</File>
-		<File
 			RelativePath="..\..\alcor\splam\splam_data.cpp"
 			>
 		</File>
