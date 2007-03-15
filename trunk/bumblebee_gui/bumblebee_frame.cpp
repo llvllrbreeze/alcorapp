@@ -716,7 +716,6 @@ BEGIN_EVENT_TABLE( bumblebee_frame, wxFrame )
 
 ////@begin bumblebee_frame event table entries
     EVT_CLOSE( bumblebee_frame::OnCloseWindow )
-    EVT_WINDOW_DESTROY( bumblebee_frame::OnDestroy )
 
 ////@end bumblebee_frame event table entries
 
@@ -784,8 +783,6 @@ void bumblebee_frame::CreateControls()
     point_cloud_view = new point_cloud_canvas( itemFrame1, ID_POINTCLOUD_CANVAS, wxDefaultPosition, wxSize(800, 600), wxNO_BORDER );
     itemBoxSizer3->Add(point_cloud_view, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    // Connect events and objects
-    itemFrame1->Connect(ID_BUMBLEBEE_FRAME, wxEVT_DESTROY, wxWindowDestroyEventHandler(bumblebee_frame::OnDestroy), NULL, this);
 ////@end bumblebee_frame content construction
 
 }
@@ -848,13 +845,5 @@ void bumblebee_frame::OnCloseWindow( wxCloseEvent& WXUNUSED(event) )
 
 
 
-/*!
- * wxEVT_DESTROY event handler for ID_BUMBLEBEE_FRAME
- */
-
-void bumblebee_frame::OnDestroy( wxWindowDestroyEvent& event )
-{
-  wxMessageBox(_T("bumblebee_frame::OnDestroy out"));
-}
 
 

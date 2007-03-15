@@ -86,9 +86,6 @@ public:
     /// wxEVT_CLOSE_WINDOW event handler for ID_BUMBLEBEE_FRAME
     void OnCloseWindow( wxCloseEvent& event );
 
-    /// wxEVT_DESTROY event handler for ID_BUMBLEBEE_FRAME
-    void OnDestroy( wxWindowDestroyEvent& event );
-
 ////@end bumblebee_frame event handler declarations
 
 ////@begin bumblebee_frame member function declarations

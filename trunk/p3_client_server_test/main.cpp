@@ -60,6 +60,16 @@ int main ()
 {
   p3_user       p3_server;
   p3_listener   p3_client;
+
+  getchar();
+  math::pose2d localized;
+
+  localized.set_x1(1.2);
+  localized.set_x2(0.2);
+  localized.set_th(34.3, math::deg_tag);
+
+  p3_client.p3->set_slam_localized(localized);
+
   //getchar();
   ////p3_client.p3->enable_wander_mode();
   //getchar();

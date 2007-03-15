@@ -289,7 +289,6 @@
           <string name="id-prefix">"BEE"</string>
           <long name="use-xrc">0</long>
           <string name="event-handler-0">"wxEVT_CLOSE_WINDOW|OnCloseWindow"</string>
-          <string name="event-handler-1">"wxEVT_DESTROY|OnDestroy"</string>
           <string name="proxy-Id name">"ID_BUMBLEBEE_FRAME"</string>
           <long name="proxy-Id value">10000</long>
           <string name="proxy-Class">"bumblebee_frame"</string>
