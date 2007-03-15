@@ -105,7 +105,7 @@ int main ()
 
   getchar();
 
-  p3_client.p3->set_target_to_follow(target, 100);
+  p3_client.p3->set_target_to_follow(target, 250);
 
   getchar();
 
