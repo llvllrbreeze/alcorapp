@@ -129,7 +129,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="true"
-				AdditionalDependencies="urg_laser.lib splam_data.lib"
+				AdditionalDependencies="ariastatic.lib arnetworkingstatic.lib urg_laser.lib splam_data.lib p3_client_server.lib"
 				OutputFile="..\..\alcor.lib\splam_thread.lib"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
