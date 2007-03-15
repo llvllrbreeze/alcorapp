@@ -129,7 +129,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="true"
-				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
+				OutputFile="..\..\alcor.lib\splam_data.lib"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
 			<Tool
@@ -153,7 +153,15 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\alcor\splam\scan_data.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\alcor\splam\splam_data.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\alcor\splam\splam_data.h"
 			>
 		</File>
 		<File
