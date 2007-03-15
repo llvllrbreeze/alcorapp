@@ -15,6 +15,7 @@ int main()
       sense::bumblebee_driver_t::create();
 
   cam->open("config/bumblebeeB.ini");
+  cam->set_interleaved();
   //
   int dim = 3;
 
@@ -24,35 +25,84 @@ int main()
   getchar();
   timer.restart();
   //
-  cam->grab();
+ cam->grab();
   printf("timetograb: %f\n", timer.elapsed());
-  //  
+
   core::single_sarr depth;
-  core::single_sarr depth2;
   int nPts = 0;
+
+  cam->grab();
+getchar();
+    timer.restart();
+    depth = cam->get_depth_buffer();
+  printf("timetograb3d: %f\n", timer.elapsed());
+    //
+  nPts = 
+    cam->valid_3d_points();
+  printf("nPts %d\n", nPts);
+
+  cam->grab();
+getchar();
+    timer.restart();
+    depth = cam->get_depth_buffer();
+  printf("timetograb3d: %f\n", timer.elapsed());
+    //
+  nPts = 
+    cam->valid_3d_points();
+  printf("nPts %d\n", nPts);
+
+  cam->grab();
+getchar();
+    timer.restart();
+    depth = cam->get_depth_buffer();
+  printf("timetograb3d: %f\n", timer.elapsed());
+    //
+  nPts = 
+    cam->valid_3d_points();
+  printf("nPts %d\n", nPts);
+
+    cam->grab();
+getchar();
+    timer.restart();
+    depth = cam->get_depth_buffer();
+  printf("timetograb3d: %f\n", timer.elapsed());
+    //
+  nPts = 
+    cam->valid_3d_points();
+  printf("nPts %d\n", nPts);
+
+    cam->grab();
 
 getchar();
     timer.restart();
-  depth2 = 
-    cam->get_depth_buffer(core::interleaved_tag);  
-  printf("timetograb3d safe: %f\n", timer.elapsed());
+    depth = cam->get_depth_buffer();
+  printf("timetograb3d: %f\n", timer.elapsed());
     //
   nPts = 
     cam->valid_3d_points();
+  printf("nPts %d\n", nPts);
 
-  cam->grab();
-
+  cam->set_planar();
 getchar();
-  timer.restart();
-   depth = 
-    cam->get_depth_buffer_sandbox_();  
-  printf("timetograb3d sandbox: %f\n", timer.elapsed());
+    timer.restart();
+    depth = cam->get_depth_buffer();
+  printf("timetograb3d 2nd time .. no grabbing planar: %f\n", timer.elapsed());
     //
   nPts = 
     cam->valid_3d_points();
+  printf("nPts %d\n", nPts);
 
+  cam->set_interleaved();
+getchar();
+    timer.restart();
+    depth = cam->get_depth_buffer();
+  printf("timetograb3d 2nd time .. no grabbing interleaved: %f\n", timer.elapsed());
+    //
+  nPts = 
+    cam->valid_3d_points();
+  printf("nPts %d\n", nPts);
 
-
+  //ANN STUFF
   timer.restart();
   //
   int maxPts = 

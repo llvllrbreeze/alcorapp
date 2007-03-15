@@ -113,6 +113,8 @@ void point_cloud_canvas::Init()
 #else
     bee.reset(new all::sense::bumblebee_driver_t);
     bee->open("config/bumblebeeB.ini");
+    bee->set_interleaved();
+
     rgbmap.reset(new all::core::uint8_t[bee->color_buffer_size()]); 
     depthmap.reset(new all::core::single_t[bee->depth_buffer_size()]);   
 #endif
@@ -239,20 +241,12 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
 
 #ifndef SIMPCLOUD
     bee->grab();
-    //depthmap = bee->get_depth_buffer();
-    depthmap = bee->get_depth_buffer_sandbox_();
-
-    //depthmap  = bee->get_depth_buffer(all::core::interleaved_tag);
+    depthmap = bee->get_depth_buffer();
 
     rgbmap   = bee->get_color_buffer(all::core::right_img);
-
     //
     //logfile << "Change Ordering uint8" << std::endl;
-    all::core::change_ordering::to_interleaved(rgbmap,  bee->nrows(),bee->ncols(), 3);
-    //
-    //logfile << "Change Ordering Single" << std::endl;
-    //all::core::change_ordering::to_interleaved(depthmap, bee->nrows(),bee->ncols(),3);      
-
+    all::core::change_ordering::to_interleaved(rgbmap,  bee->nrows(),bee->ncols(), 3); 
 
     int ind = 0;
     glBegin(GL_POINTS);   
@@ -482,13 +476,17 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
 
 void point_cloud_canvas::OnDestroy( wxWindowDestroyEvent& WXUNUSED(event) )
 { 
+ 
+  m_timer->Stop();   
   
+  wxMessageBox(_T("Timer Stopped"));
   //logfile << "IN : : point_cloud_canvas::OnDestroy" << std::endl;
+
+  all::core::BOOST_SLEEP(200);
 
   server_ptr->stop();
 
-  m_timer->Stop();
-
+  wxMessageBox(_T("  server_ptr->stop();"));
   ////logfile << "OUT : : point_cloud_canvas::OnDestroy" << std::endl;
   //server_ptr->stop_streaming(); 
   

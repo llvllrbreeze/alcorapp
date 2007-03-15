@@ -167,7 +167,7 @@ void tracking_machine::tracking_cb()
     //
     ///Profondità 3D
     core::depth_image_t depthim;
-    core::single_sarr depth = bee->get_depth_buffer();
+    core::single_sarr depth = bee->get_depth_buffer_sandbox_();
 
     depthim.assign(bee->nrows(), bee->ncols(), depth.get());
 
