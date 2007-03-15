@@ -129,7 +129,8 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="true"
-				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
+				AdditionalDependencies="urg_laser.lib splam_data.lib"
+				OutputFile="..\..\alcor.lib\splam_thread.lib"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
 			<Tool
@@ -158,6 +159,10 @@
 		</File>
 		<File
 			RelativePath="..\..\alcor\splam\splam_thread.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\alcor\splam\splam_thread.h"
 			>
 		</File>
 	</Files>
