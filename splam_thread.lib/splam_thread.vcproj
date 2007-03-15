@@ -161,10 +161,6 @@
 			RelativePath="..\..\alcor\splam\splam_thread.cpp"
 			>
 		</File>
-		<File
-			RelativePath="..\..\alcor\splam\splam_thread.h"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
