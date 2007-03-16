@@ -98,14 +98,20 @@ int main ()
   p3_client.p3->enable_follow_mode();
 
   getchar();
-  all::math::angle  dir(45,all::math::deg_tag);
+  all::math::angle  dir(0,all::math::deg_tag);
 
-  all::math::point2d target(10.0, dir);
-  p3_client.p3->set_target_to_follow(target, 0);
+  all::math::point2d target(5.0, dir);
+  p3_client.p3->set_target_to_follow(target, 100);
 
   getchar();
 
-  p3_client.p3->set_target_to_follow(target, 250);
+  target.set(1.5, math::angle(-20, math::deg_tag));
+
+  p3_client.p3->set_target_to_follow(target, 120);
+
+  getchar();
+
+  p3_client.p3->set_target_to_follow(target, 25);
 
   getchar();
 
