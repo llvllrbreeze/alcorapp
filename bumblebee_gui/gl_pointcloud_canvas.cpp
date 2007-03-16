@@ -299,7 +299,6 @@ void point_cloud_canvas::draw_cimg(GLenum ebuf)
     boost::mutex::scoped_lock lock (source_ptr->mutex);
     //
     all::core::change_ordering::from_rgba_opengl_to_planar(framebuffer,myimage, h, w);
-
     //
     all::core::change_ordering::to_topleft(myimage, h, w, 3);
     //
@@ -470,6 +469,7 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
 
 void point_cloud_canvas::OnDestroy( wxWindowDestroyEvent& WXUNUSED(event) )
 { 
+  wxMessageBox(_T("point_cloud_canvas::OnDestroy .. OUT"));
  
   //m_timer->Stop();   
   //
@@ -484,7 +484,6 @@ void point_cloud_canvas::OnDestroy( wxWindowDestroyEvent& WXUNUSED(event) )
   //////logfile << "OUT : : point_cloud_canvas::OnDestroy" << std::endl;
   ////server_ptr->stop_streaming(); 
   //
-  //wxMessageBox(_T("point_cloud_canvas::OnDestroy .. OUT"));
 }
 
 
