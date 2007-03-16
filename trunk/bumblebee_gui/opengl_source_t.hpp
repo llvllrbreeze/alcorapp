@@ -61,24 +61,25 @@ inline int opengl_source_t::get_data(all::core::uint8_ptr* data)
 {
 	all::core::jpeg_data_t jpeg_data;
 
-  {
+  //{
   boost::mutex::scoped_lock lock (mutex);
 	jpeg_data = m_encoder.encode(m_image, m_jpeg_quality);
-  }
+
 
 	size_t buffer_size = jpeg_data.size + sizeof(jpeg_data.crc);
 
-	all::core::uint8_ptr return_data = new all::core::uint8_t[buffer_size];
+	all::core::uint8_ptr start_of_return_data = new all::core::uint8_t[buffer_size];
 
-	all::core::uint8_ptr write_ptr = return_data;
+  all::core::uint8_ptr write_ptr = start_of_return_data;
 
 	memcpy(write_ptr, &(jpeg_data.crc), sizeof(jpeg_data.crc));
+
 	//
 	write_ptr+=sizeof(jpeg_data.crc);
 
 	memcpy(write_ptr, jpeg_data.data.get(), jpeg_data.size);
-
-	*data = return_data;
+  //}
+	*data = start_of_return_data;
 
 	return buffer_size;
 }
