@@ -94,28 +94,28 @@ int main ()
 
   //getchar();
 
-  //printf("enabling follow\n");
-  //p3_client.p3->enable_follow_mode();
+  printf("enabling follow\n");
+  p3_client.p3->enable_follow_mode();
 
-  //getchar();
-  //all::math::angle  dir(0,all::math::deg_tag);
+  getchar();
+  all::math::angle  dir(0,all::math::deg_tag);
 
-  //all::math::point2d target(5.0, dir);
-  //p3_client.p3->set_target_to_follow(target, 100);
+  target.set(5.0, dir);
+  p3_client.p3->set_target_to_follow(target, 100);
 
-  //getchar();
+  getchar();
 
-  //target.set(1.5, math::angle(-20, math::deg_tag));
+  target.set(1.5, math::angle(-20, math::deg_tag));
 
-  //p3_client.p3->set_target_to_follow(target, 120);
+  p3_client.p3->set_target_to_follow(target, 120);
 
-  //getchar();
+  getchar();
 
-  //p3_client.p3->set_target_to_follow(target, 25);
+  p3_client.p3->set_target_to_follow(target, 25);
 
-  //getchar();
+  getchar();
 
-  //p3_client.p3->enable_stop_mode();
+  p3_client.p3->enable_stop_mode();
   //getchar();
 
   //p3_client.p3->enable_wander_mode();
