@@ -1,7 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "tracking_machine.h"
-#include "alcor.apps/trm/gil_wrap_utils.hpp"
+//#include "alcor.apps/trm/gil_wrap_utils.hpp"
 //---------------------------------------------------------------------------
 namespace all { namespace trm {
 //---------------------------------------------------------------------------
@@ -97,7 +97,7 @@ void tracking_machine::setup_cb()
     workspace->put_array("rgb", mx_rimage);
     printf("SETUP\n");
     ////
-    workspace->command_line("[centro_r centro_c coerente] = fh_setup(rgb)");
+    workspace->command_line("[centro_r centro_c coerente] = trm_model_setup(rgb,1)");
     ///
 
     printf("Done Setup\n\n");
@@ -143,7 +143,7 @@ void tracking_machine::tracking_cb()
     workspace->put_array("rgb", mx_rimage);
 
     ///MEAN SHIFT : ottenere un centro
-    workspace->command_line("[centro_r centro_c]= fh_track_and_show(rgb, [120, 160])");
+    workspace->command_line("[centro_r centro_c]= trm_track(rgb, [120, 160])");
 
     //***GATHER***
     int centro_r = 
@@ -167,7 +167,7 @@ void tracking_machine::tracking_cb()
     //
     ///Profondità 3D
     core::depth_image_t depthim;
-    core::single_sarr depth = bee->get_depth_buffer_sandbox_();
+    core::single_sarr depth = bee->get_depth_buffer();
 
     depthim.assign(bee->nrows(), bee->ncols(), depth.get());
 
@@ -242,7 +242,7 @@ bool tracking_machine::start_setup(setup_event const&)
 }
 //---------------------------------------------------------------------------
   ///RESET
-bool tracking_machine::go_reset (reset_event const&)
+bool tracking_machine::go_reset(reset_event const&)
 {
   printf("\nReset\n");
     //
@@ -288,7 +288,7 @@ bool tracking_machine::go_fail (fail_event const&)
 }
 //---------------------------------------------------------------------------
   ///START TRACKING
-bool tracking_machine::start_tracking   (track_event const&)
+bool tracking_machine::start_tracking (track_event const&)
 {
   //INIT TRACKING ...
   //TODO:Aggiorna i setpoint
