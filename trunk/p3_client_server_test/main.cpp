@@ -60,15 +60,15 @@ int main ()
 {
   p3_user       p3_server;
   p3_listener   p3_client;
+  all::math::point2d target;
+  //getchar();
+  //math::pose2d localized;
 
-  getchar();
-  math::pose2d localized;
+  //localized.set_x1(1.2);
+  //localized.set_x2(0.2);
+  //localized.set_th(34.3, math::deg_tag);
 
-  localized.set_x1(1.2);
-  localized.set_x2(0.2);
-  localized.set_th(34.3, math::deg_tag);
-
-  p3_client.p3->set_slam_localized(localized);
+  //p3_client.p3->set_slam_localized(localized);
 
   //getchar();
   ////p3_client.p3->enable_wander_mode();
@@ -92,30 +92,57 @@ int main ()
   //  pose.get_x2(), 
   //  pose.getTh().deg());
 
+  //getchar();
+
+  //printf("enabling follow\n");
+  //p3_client.p3->enable_follow_mode();
+
+  //getchar();
+  //all::math::angle  dir(0,all::math::deg_tag);
+
+  //all::math::point2d target(5.0, dir);
+  //p3_client.p3->set_target_to_follow(target, 100);
+
+  //getchar();
+
+  //target.set(1.5, math::angle(-20, math::deg_tag));
+
+  //p3_client.p3->set_target_to_follow(target, 120);
+
+  //getchar();
+
+  //p3_client.p3->set_target_to_follow(target, 25);
+
+  //getchar();
+
+  //p3_client.p3->enable_stop_mode();
+  //getchar();
+
+  //p3_client.p3->enable_wander_mode();
+
   getchar();
 
-  printf("enabling\n");
-  p3_client.p3->enable_follow_mode();
+  printf("enabling goto\n");
+  p3_client.p3->enable_goto_mode();
 
   getchar();
-  all::math::angle  dir(0,all::math::deg_tag);
-
-  all::math::point2d target(5.0, dir);
-  p3_client.p3->set_target_to_follow(target, 100);
+  target.set(2.5, math::angle(0, math::deg_tag));
+  p3_client.p3->set_relative_goto(target, 200);
 
   getchar();
-
-  target.set(1.5, math::angle(-20, math::deg_tag));
-
-  p3_client.p3->set_target_to_follow(target, 120);
+  target.set(1.5, math::angle(+20, math::deg_tag));
+  p3_client.p3->set_relative_goto(target, 100);
 
   getchar();
-
-  p3_client.p3->set_target_to_follow(target, 25);
+  target.set(2.5, math::angle(0.0, math::deg_tag));
+  p3_client.p3->set_relative_goto(target, 100);
 
   getchar();
-
   p3_client.p3->enable_stop_mode();
+   getchar(); 
+
+   p3_client.p3->stop();
+   p3_server.p3_server->stop();
 
   getchar();
   return 0;
