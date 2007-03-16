@@ -153,10 +153,8 @@ void point_cloud_canvas::Init()
 void point_cloud_canvas::CreateControls()
 {    
 ////@begin point_cloud_canvas content construction
-    point_cloud_canvas* point_cloud_view = this;
-
     // Connect events and objects
-    point_cloud_view->Connect(ID_POINTCLOUD_CANVAS, wxEVT_DESTROY, wxWindowDestroyEventHandler(point_cloud_canvas::OnDestroy), NULL, this);
+    Connect(ID_POINTCLOUD_CANVAS, wxEVT_DESTROY, wxWindowDestroyEventHandler(point_cloud_canvas::OnDestroy), NULL, this);
 ////@end point_cloud_canvas content construction
 }
 
@@ -264,7 +262,7 @@ void point_cloud_canvas::OnPaint( wxPaintEvent& event )
     glEnd();
 #else
     glBegin(GL_POINTS);   
-    for(int i = 0; i < 50000 ; ++i)
+    for(int i = 0; i < 10000 ; ++i)
     {
       glColor3f(unic(), unic(), unic());
       glVertex3f(unip(), unip(), unip());
@@ -301,16 +299,12 @@ void point_cloud_canvas::draw_cimg(GLenum ebuf)
     boost::mutex::scoped_lock lock (source_ptr->mutex);
     //
     all::core::change_ordering::from_rgba_opengl_to_planar(framebuffer,myimage, h, w);
-    //all::core::change_ordering::from_rgba_opengl_to_interleaved(framebuffer, myimage,h,w);
+
     //
     all::core::change_ordering::to_topleft(myimage, h, w, 3);
     //
     source_ptr->update_image_buffer(myimage);
     }
-
-    ////
-    //rgb_cimg->assign(myimage.get(),  w, h, 1,3);
-    //rgb_cimg->display(*rgb_win);
 }
 
 /*!
@@ -368,7 +362,7 @@ void point_cloud_canvas::initGL()
     glEnable(GL_DEPTH_TEST);
 
     /* speedups */
-    //glEnable(GL_DITHER);
+    glEnable(GL_DITHER);
     //glShadeModel(GL_SMOOTH);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
@@ -477,20 +471,20 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
 void point_cloud_canvas::OnDestroy( wxWindowDestroyEvent& WXUNUSED(event) )
 { 
  
-  m_timer->Stop();   
-  
-  wxMessageBox(_T("Timer Stopped"));
-  //logfile << "IN : : point_cloud_canvas::OnDestroy" << std::endl;
+  //m_timer->Stop();   
+  //
+  //wxMessageBox(_T("Timer Stopped"));
+  ////logfile << "IN : : point_cloud_canvas::OnDestroy" << std::endl;
 
-  all::core::BOOST_SLEEP(200);
+  //all::core::BOOST_SLEEP(200);
 
-  server_ptr->stop();
+  //server_ptr->stop();
 
-  wxMessageBox(_T("  server_ptr->stop();"));
-  ////logfile << "OUT : : point_cloud_canvas::OnDestroy" << std::endl;
-  //server_ptr->stop_streaming(); 
-  
-  wxMessageBox(_T("point_cloud_canvas::OnDestroy .. OUT"));
+  //wxMessageBox(_T("  server_ptr->stop();"));
+  //////logfile << "OUT : : point_cloud_canvas::OnDestroy" << std::endl;
+  ////server_ptr->stop_streaming(); 
+  //
+  //wxMessageBox(_T("point_cloud_canvas::OnDestroy .. OUT"));
 }
 
 

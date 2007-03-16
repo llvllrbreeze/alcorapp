@@ -24,7 +24,7 @@
 #include "wx/glcanvas.h"
 ////@end includes
 
-//#define SIMPCLOUD
+#define SIMPCLOUD
 
 
 #include "trackball.h"
@@ -66,7 +66,7 @@ class point_cloud_canvas;
 #define ID_POINTCLOUD_CANVAS 10001
 #define SYMBOL_POINT_CLOUD_CANVAS_STYLE wxNO_BORDER
 #define SYMBOL_POINT_CLOUD_CANVAS_IDNAME ID_POINTCLOUD_CANVAS
-#define SYMBOL_POINT_CLOUD_CANVAS_SIZE wxSize(800, 600)
+#define SYMBOL_POINT_CLOUD_CANVAS_SIZE wxSize(480, 320)
 #define SYMBOL_POINT_CLOUD_CANVAS_POSITION wxDefaultPosition
 ////@end control identifiers
 
