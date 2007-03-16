@@ -153,6 +153,30 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="header"
+			>
+			<File
+				RelativePath="..\..\alcor\splam\detail\pmap_wrap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\splam\scan_data.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\splam\splam_data.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\splam\splam_thread.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\splam\typedefs.hpp"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\alcor\splam\detail\pmap_wrap.cpp"
 			>
