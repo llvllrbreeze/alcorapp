@@ -39,8 +39,8 @@
 #include <boost/random/variate_generator.hpp>
 #endif
 
-#include "alcor.extern/CImg/CImg.h"
-namespace cimglib=cimg_library;
+//#include "alcor.extern/CImg/CImg.h"
+//namespace cimglib=cimg_library;
 
 #ifndef SIMPCLOUD
 #include "alcor/sense/bumblebee_driver_t.h"
@@ -175,8 +175,8 @@ private:
 #endif
 
   //VIEW
-  boost::shared_ptr<cimglib::CImgDisplay>          rgb_win;
-  boost::shared_ptr<cimglib::CImg<all::core::uint8_t> > rgb_cimg;
+  //boost::shared_ptr<cimglib::CImgDisplay>          rgb_win;
+  //boost::shared_ptr<cimglib::CImg<all::core::uint8_t> > rgb_cimg;
   all::core::uint8_sarr   framebuffer;
   all::core::uint8_sarr   myimage;
 
