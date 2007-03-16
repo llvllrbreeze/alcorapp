@@ -135,7 +135,7 @@ void point_cloud_canvas::Init()
     //SERVER
     source_ptr.reset( new all::core::opengl_source_t(h,w) );
     source_ptr->set_quality(70);
-    server_ptr.reset( new all::core::stream_server_t(source_ptr));
+    server_ptr = new all::core::stream_server_t(source_ptr);
 
     server_ptr->run_async();
     //server_ptr->start_streaming();
@@ -469,16 +469,16 @@ void point_cloud_canvas::OnMouse( wxMouseEvent& event )
 
 void point_cloud_canvas::OnDestroy( wxWindowDestroyEvent& WXUNUSED(event) )
 { 
-  wxMessageBox(_T("point_cloud_canvas::OnDestroy .. OUT"));
+  //wxMessageBox(_T("point_cloud_canvas::OnDestroy .. OUT"));
  
-  //m_timer->Stop();   
+  m_timer->Stop();   
   //
   //wxMessageBox(_T("Timer Stopped"));
   ////logfile << "IN : : point_cloud_canvas::OnDestroy" << std::endl;
 
   //all::core::BOOST_SLEEP(200);
 
-  //server_ptr->stop();
+  server_ptr->stop();
 
   //wxMessageBox(_T("  server_ptr->stop();"));
   //////logfile << "OUT : : point_cloud_canvas::OnDestroy" << std::endl;
