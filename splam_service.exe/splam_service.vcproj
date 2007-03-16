@@ -170,6 +170,14 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="header"
+			>
+			<File
+				RelativePath="..\..\alcor\splam\splam_thread.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\main.cpp"
 			>

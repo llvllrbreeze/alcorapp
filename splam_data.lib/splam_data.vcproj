@@ -152,6 +152,22 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="header"
+			>
+			<File
+				RelativePath="..\..\alcor\splam\splam_data.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\splam\detail\splam_data_net.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\splam\detail\value_iteration.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\alcor\splam\splam_data.cpp"
 			>
