@@ -24,7 +24,7 @@
 #include "wx/glcanvas.h"
 ////@end includes
 
-//#define SIMPCLOUD
+#define SIMPCLOUD
 
 
 #include "trackball.h"
@@ -155,6 +155,7 @@ private:
 
     /// reset_projection_mode
     void  reset_projection_mode();
+    //
     float beginx, beginy;       // position of mouse
     float quat[4];              // orientation of object
     float zoom;
