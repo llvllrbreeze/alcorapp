@@ -129,7 +129,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="true"
-				AdditionalDependencies="client_server_t.lib"
+				AdditionalDependencies="client_server_t.lib iniWrapper.lib"
 				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
