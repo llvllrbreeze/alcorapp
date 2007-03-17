@@ -1,15 +1,32 @@
 #include "alcor/sense/opencv_grabber_t.h"
 #include "alcor.extern/CImg/CImg.h"
 
+
+#include "boost/date_time/posix_time/posix_time.hpp"
+#include "boost/date_time/gregorian/gregorian.hpp"
+#include <iostream>
+
 using namespace all;
 using namespace cimg_library;
 
+using namespace boost::gregorian;
+using namespace boost::posix_time;
+
 int main ()
 {
+  date today = day_clock::local_day();
+  ptime now = second_clock::local_time();
+
+  std::cout << "Today is: " << today  <<std::endl;
+  std::cout << "Time: "     << now.time_of_day().hours()  
+    << ":"
+                            << now.time_of_day().minutes()
+                            << ":"
+                            << now.time_of_day().seconds()
+                            <<std::endl;
+
   all::sense::opencv_grabber_t cam;
   cam.open("config/cmoscam.ini");
-
-  //getchar();
 
   CImgDisplay view ( cam.width(), cam.height(), "Camera");
   CImg<core::uint8_t> imag;
