@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tracking_control", "tracking_control.vcproj", "{DED908E3-C31E-4325-8D6E-D0FB0305C615}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jpeg_codec.lib", "..\jpeg_codec.lib\jpeg_codec.lib.vcproj", "{775E1E4B-D1F4-4520-9313-E0370240D1F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{DED908E3-C31E-4325-8D6E-D0FB0305C615}.Debug|Win32.Build.0 = Debug|Win32
 		{DED908E3-C31E-4325-8D6E-D0FB0305C615}.Release|Win32.ActiveCfg = Release|Win32
 		{DED908E3-C31E-4325-8D6E-D0FB0305C615}.Release|Win32.Build.0 = Release|Win32
+		{775E1E4B-D1F4-4520-9313-E0370240D1F5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{775E1E4B-D1F4-4520-9313-E0370240D1F5}.Debug|Win32.Build.0 = Debug|Win32
+		{775E1E4B-D1F4-4520-9313-E0370240D1F5}.Release|Win32.ActiveCfg = Release|Win32
+		{775E1E4B-D1F4-4520-9313-E0370240D1F5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

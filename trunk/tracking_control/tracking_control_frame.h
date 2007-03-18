@@ -116,6 +116,7 @@ public:
 
 ////@begin tracking_control_frame member variables
     wx_image_panel* m_image_panel;
+    wxButton* reset_button;
 ////@end tracking_control_frame member variables
 
     all::trm::task_dispatcher_sptr dispatcher;

@@ -102,6 +102,7 @@ bool tracking_control_frame::Create( wxWindow* parent, wxWindowID id, const wxSt
 void tracking_control_frame::Init()
 {
 ////@begin tracking_control_frame member initialisation
+    reset_button = NULL;
 ////@end tracking_control_frame member initialisation
 }
 /*!
@@ -128,6 +129,7 @@ void tracking_control_frame::CreateControls()
 
     wxStaticBox* itemStaticBoxSizer6Static = new wxStaticBox(itemFrame1, wxID_ANY, _("Control"));
     wxStaticBoxSizer* itemStaticBoxSizer6 = new wxStaticBoxSizer(itemStaticBoxSizer6Static, wxVERTICAL);
+    itemStaticBoxSizer6Static->SetForegroundColour(wxColour(227, 239, 240));
     itemBoxSizer2->Add(itemStaticBoxSizer6, 0, wxALIGN_TOP|wxALL, 5);
 
     wxButton* itemButton7 = new wxButton( itemFrame1, ID_BUTTON_SETUP, _("Setup"), wxDefaultPosition, wxSize(80, 40), 0 );
@@ -141,9 +143,8 @@ void tracking_control_frame::CreateControls()
 
     itemStaticBoxSizer6->Add(5, 25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxButton* itemButton11 = new wxButton( itemFrame1, ID_BUTTON_RESET, _("Reset"), wxDefaultPosition, wxSize(80, 40), 0 );
-    itemButton11->SetBackgroundColour(wxColour(255, 196, 196));
-    itemStaticBoxSizer6->Add(itemButton11, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    reset_button = new wxButton( itemFrame1, ID_BUTTON_RESET, _("Reset"), wxDefaultPosition, wxSize(80, 40), 0 );
+    itemStaticBoxSizer6->Add(reset_button, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 ////@end tracking_control_frame content construction
 

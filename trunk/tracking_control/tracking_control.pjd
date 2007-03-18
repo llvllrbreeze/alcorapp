@@ -396,7 +396,8 @@
                 <long name="locked">0</long>
                 <string name="created">"18/3/2007"</string>
                 <string name="proxy-type">"wbPanelProxy"</string>
-                <string name="event-handler-0">"wxEVT_PAINT|OnPaint|NONE||"</string>
+                <string name="event-handler-0">"wxEVT_DESTROY|OnDestroy|NONE||"</string>
+                <string name="event-handler-1">"wxEVT_PAINT|OnPaint|NONE||"</string>
                 <string name="proxy-Id name">"ID__IMAGE_PANEL"</string>
                 <long name="proxy-Id value">10004</long>
                 <string name="proxy-Class">"wx_image_panel"</string>
@@ -521,7 +522,7 @@
               <string name="proxy-Label">"Control"</string>
               <string name="proxy-Member variable name">""</string>
               <string name="proxy-Sizer member variable name">""</string>
-              <string name="proxy-Foreground colour">""</string>
+              <string name="proxy-Foreground colour">"E3EFF0"</string>
               <string name="proxy-Font">""</string>
               <bool name="proxy-Hidden">0</bool>
               <bool name="proxy-Enabled">1</bool>
@@ -714,12 +715,12 @@
                 <string name="proxy-Id name">"ID_BUTTON_RESET"</string>
                 <long name="proxy-Id value">10002</long>
                 <string name="proxy-Class">"wxButton"</string>
-                <string name="proxy-Member variable name">""</string>
+                <string name="proxy-Member variable name">"reset_button"</string>
                 <string name="proxy-Label">"Reset"</string>
                 <bool name="proxy-Default">0</bool>
                 <string name="proxy-Help text">""</string>
                 <string name="proxy-Tooltip text">""</string>
-                <string name="proxy-Background colour">"FFC4C4"</string>
+                <string name="proxy-Background colour">""</string>
                 <string name="proxy-Foreground colour">""</string>
                 <string name="proxy-Font">""</string>
                 <bool name="proxy-Hidden">0</bool>

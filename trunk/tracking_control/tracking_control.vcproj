@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="client_server_t.lib wxmsw28.lib wxpng.lib wxjpeg.lib wxzlib.lib comctl32.lib"
+				AdditionalDependencies="client_server_t.lib data_streaming.lib jpeg_codec.lib wxmsw28.lib wxpng.lib wxjpeg.lib wxzlib.lib comctl32.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -198,6 +198,14 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\alcor\core\stream_client_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\stream_dest_t.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\trm\task_dispatcher.h"
 				>
 			</File>
@@ -215,6 +223,10 @@
 			</File>
 			<File
 				RelativePath="..\..\alcor\core\wx_image_panel.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\wx_stream_dest_t.hpp"
 				>
 			</File>
 		</Filter>
