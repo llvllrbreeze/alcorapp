@@ -12,12 +12,6 @@ tracking_machine::tracking_machine():running_(true)
   fire_callback = boost::bind
     (&tracking_machine::idle_cb, this);
 
-  thisthread.reset( 
-      new boost::thread
-      (
-          boost::bind(&tracking_machine::threadloop, this) 
-      )
-    );  
 
   //Task Listener
   tasklistener.reset(new task_listener("config/trm_service.ini"));
@@ -40,15 +34,36 @@ tracking_machine::tracking_machine():running_(true)
   if (p3dx->open("config/p3_conf.ini"))
     printf("Robot connected!\n");
 
-  p3_adapter.reset(new act::p3_odometry_adapter_t(p3dx) );
-
-  ptu_control.reset(new act::pantilt_control_loop_t );
-  ptu_control->set_ptu(ptu);
-  ptu_control->set_slam(p3_adapter);
+  //p3_adapter.reset(new act::p3_odometry_adapter_t(p3dx) );
+  //ptu_control.reset(new act::pantilt_control_loop_t );
+  //ptu_control->set_ptu(ptu);
+  //ptu_control->set_slam(p3_adapter);
   
   ////open views
   rgb_win.reset(new cimglib::CImgDisplay(bee->ncols(), bee->nrows(), "rgb"));
   rgb_cimg.reset(new cimglib::CImg<core::uint8_t>());
+
+  //Streaming
+  stream_source_ptr.reset(new all::core::memory_stream_source_t( bee->nrows(), bee->ncols() ) );
+  stream_server_ptr = new all::core::stream_server_t(stream_source_ptr,"config/trm_stream_server.ini");
+  stream_server_ptr->run_async();
+
+  thisthread.reset( 
+      new boost::thread
+      (
+          boost::bind(&tracking_machine::threadloop, this) 
+      )
+    );  
+}
+//---------------------------------------------------------------------------
+tracking_machine::~tracking_machine()
+{
+  if (stream_server_ptr)
+  {
+    stream_server_ptr->stop();
+    core::BOOST_SLEEP(200);
+    delete stream_server_ptr;
+  }
 }
 //---------------------------------------------------------------------------
 void tracking_machine::threadloop()
@@ -162,7 +177,7 @@ void tracking_machine::tracking_cb()
     double th_robot      = p3dx->get_odometry().getTh().deg();
 
     //theta globale
-    double loc_theta_target = current_pt.pan +pan_delta;
+    double loc_theta_target = current_pt.get_pan(math::deg_tag) +pan_delta;
     double glo_theta_target = loc_theta_target + th_robot;
     //
     ///Profondità 3D
@@ -246,7 +261,7 @@ bool tracking_machine::go_reset(reset_event const&)
 {
   printf("\nReset\n");
     //
-  ptu_control->enable(false);
+  //ptu_control->enable(false);
   p3dx->enable_stop_mode();
 
   //
@@ -263,7 +278,7 @@ bool tracking_machine::go_reset(reset_event const&)
   ///IDLE TRACKING
 bool tracking_machine::go_idle_tracking (idle_track_event const&)
 {
-  ptu_control->enable(false);
+  //ptu_control->enable(false);
   p3dx->enable_stop_mode();
 
   boost::mutex::scoped_lock lock(process_guard);
@@ -276,7 +291,7 @@ bool tracking_machine::go_idle_tracking (idle_track_event const&)
   ///FAIL
 bool tracking_machine::go_fail (fail_event const&)
 {
-  ptu_control->enable(false);
+  //ptu_control->enable(false);
   p3dx->enable_stop_mode();
   //
   boost::mutex::scoped_lock lock(process_guard);
@@ -319,16 +334,21 @@ void tracking_machine::move_ptu_to_screen_rc(float row, float col, double waitse
   if(ptu)
   {
     //
-    core::pantilt_angle_t pt = ptu->get_fast_pantilt();
+    core::pantilt_angle_t current = 
+      ptu->get_fast_pantilt();
     //
     core::pantilt_angle_t delta;
+    //
     pinhole.pantilt_from_pixel(row, col, delta);
     //
-    float nupan  = static_cast<float>(delta.pan)  + pt.pan;
-    float nutilt = static_cast<float>(delta.tilt) + pt.tilt;
+    //float nupan  = static_cast<float>(delta.pan)  + current.pan;
+    //float nutilt = static_cast<float>(delta.tilt) + current.tilt;
+    
+    //core::pantilt_angle_t bearing =
+    //  delta + current;  
+    current+=delta;
 
-    ptu->set_pantilt(nupan, nutilt, waitsec);
-
+    ptu->set_pantilt(current, waitsec);
   }
 }
 //###########################################################################

@@ -187,6 +187,18 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<Filter
+			Name="detail"
+			>
+			<File
+				RelativePath="..\..\alcor\core\detail\jpeg_decoder_impl.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\detail\jpeg_encoder_impl.cpp"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

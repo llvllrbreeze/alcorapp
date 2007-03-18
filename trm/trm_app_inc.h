@@ -1,9 +1,9 @@
 #pragma once //trm_app_inc.h
 //-----------------------------------------------------------------------++
 #include "alcor/act/p3_gateway.h"
-#include "alcor/act/p3_odometry_adapter_t.h"
+//#include "alcor/act/p3_odometry_adapter_t.h"
 #include "alcor/act/directed_perception_ptu_t.h"
-#include "alcor/act/pantilt_control_loop_t.hpp"
+//#include "alcor/act/pantilt_control_loop_t.hpp"
 #include "alcor/sense/bumblebee_driver_t.h"
 //-----------------------------------------------------------------------++
 ///experimental
@@ -19,4 +19,6 @@ namespace cimglib=cimg_library;
 //-----------------------------------------------------------------------++
 #include "task_listener.h"
 //-----------------------------------------------------------------------++
+#include "alcor/core/memory_stream_source_t.hpp"
+#include <alcor/core/stream_server_t.hpp>
 //-----------------------------------------------------------------------++
