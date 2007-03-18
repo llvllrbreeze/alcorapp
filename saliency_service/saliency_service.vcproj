@@ -173,19 +173,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\alcor\core\attention_data_net_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\attention_data_t.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\alcor\core\pantilt_angle_t.hpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\alcor\core\saliency_client_t.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\saliency_data_net_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\saliency_data_t.hpp"
 				>
 			</File>
 			<File
