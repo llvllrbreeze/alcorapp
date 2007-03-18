@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
-				AdditionalDependencies="client_server_t.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib p3_gateway.lib"
+				AdditionalDependencies="client_server_t.lib data_streaming.lib jpeg_codec.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib p3_gateway.lib"
 				ShowProgress="0"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
@@ -227,10 +227,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\trm\gil_wrap_utils.hpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\alcor\core\image_utils.h"
 					>
 				</File>
@@ -239,11 +235,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\alcor\act\p3_odometry_adapter_t.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\alcor\act\pantilt_control_loop_t.hpp"
+					RelativePath="..\..\alcor\core\memory_stream_source_t.hpp"
 					>
 				</File>
 				<File

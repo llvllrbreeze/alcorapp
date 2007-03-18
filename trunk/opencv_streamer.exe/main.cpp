@@ -7,9 +7,10 @@ using namespace all;
 
 int main() {
 
-  boost::shared_ptr<sense::opencv_data_source_t> m_source_ptr(new sense::opencv_data_source_t);
+  boost::shared_ptr<sense::opencv_data_source_t> 
+    m_source_ptr(new sense::opencv_data_source_t);
 
-  m_source_ptr->set_quality(90);
+  m_source_ptr->set_quality(50);
 
 	all::core::stream_server_t server(m_source_ptr,"config/trm_stream_server.ini");
 

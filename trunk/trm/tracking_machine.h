@@ -31,6 +31,8 @@ class tracking_machine : public fsm::state_machine<tracking_machine>
 public:
   ///
   tracking_machine();
+  ///
+  ~tracking_machine();
 
   void threadloop();
 
@@ -168,9 +170,9 @@ private:
 
   //PANTITL CONTROL
 
-  act::p3_odometry_adapter_ptr p3_adapter;
-  ///
-  boost::shared_ptr<act::pantilt_control_loop_t> ptu_control;
+  //act::p3_odometry_adapter_ptr p3_adapter;
+  /////
+  //boost::shared_ptr<act::pantilt_control_loop_t> ptu_control;
 
   //EVENTS
   boost::shared_ptr<all::trm::task_listener> tasklistener;
@@ -181,6 +183,9 @@ private:
   boost::shared_ptr<cimglib::CImgDisplay>          rgb_win;
   boost::shared_ptr<cimglib::CImg<core::uint8_t> > rgb_cimg;
 
+  //IMAGE STREAM
+  all::core::memory_stream_source_sptr_t  stream_source_ptr;
+  all::core::stream_server_t*             stream_server_ptr; 
   //---------------------------------------------------------------------------
 };
 //---------------------------------------------------------------------------
