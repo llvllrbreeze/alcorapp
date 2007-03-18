@@ -26,6 +26,7 @@
 #endif
 
 ////@begin includes
+#include "../../alcor/core/wx_image_panel.h"
 ////@end includes
 
 #include "tracking_control_frame.h"
@@ -48,13 +49,13 @@ BEGIN_EVENT_TABLE( tracking_control_frame, wxFrame )
 ////@begin tracking_control_frame event table entries
     EVT_CLOSE( tracking_control_frame::OnCloseWindow )
 
+    EVT_BUTTON( ID_BUTTON_TRACK, tracking_control_frame::OnButtonTrackClick )
+
     EVT_BUTTON( ID_BUTTON_SETUP, tracking_control_frame::OnButtonSetupClick )
 
     EVT_BUTTON( ID_BUTTON_IDLE, tracking_control_frame::OnButtonIdleClick )
 
     EVT_BUTTON( ID_BUTTON_RESET, tracking_control_frame::OnButtonResetClick )
-
-    EVT_BUTTON( ID_BUTTON_TRACK, tracking_control_frame::OnButtonTrackClick )
 
 ////@end tracking_control_frame event table entries
 
@@ -112,32 +113,37 @@ void tracking_control_frame::CreateControls()
 ////@begin tracking_control_frame content construction
     tracking_control_frame* itemFrame1 = this;
 
-    wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
     itemFrame1->SetSizer(itemBoxSizer2);
 
-    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemFrame1, wxID_ANY, _("Control"));
-    wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxHORIZONTAL);
-    itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxVERTICAL);
+    itemBoxSizer2->Add(itemBoxSizer3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxButton* itemButton4 = new wxButton( itemFrame1, ID_BUTTON_SETUP, _("Setup"), wxDefaultPosition, wxSize(80, 40), 0 );
-    itemButton4->SetDefault();
-    itemStaticBoxSizer3->Add(itemButton4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_image_panel = new wx_image_panel( itemFrame1, ID__IMAGE_PANEL, wxDefaultPosition, wxSize(320, 240), wxNO_BORDER|wxTAB_TRAVERSAL );
+    itemBoxSizer3->Add(m_image_panel, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    itemStaticBoxSizer3->Add(5, 5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxButton* itemButton5 = new wxButton( itemFrame1, ID_BUTTON_TRACK, _("Track"), wxDefaultPosition, wxSize(-1, 35), 0 );
+    itemButton5->SetBackgroundColour(wxColour(219, 240, 213));
+    itemBoxSizer3->Add(itemButton5, 0, wxGROW|wxALL, 5);
 
-    wxButton* itemButton6 = new wxButton( itemFrame1, ID_BUTTON_IDLE, _("Idle"), wxDefaultPosition, wxSize(80, 40), 0 );
-    itemStaticBoxSizer3->Add(itemButton6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxStaticBox* itemStaticBoxSizer6Static = new wxStaticBox(itemFrame1, wxID_ANY, _("Control"));
+    wxStaticBoxSizer* itemStaticBoxSizer6 = new wxStaticBoxSizer(itemStaticBoxSizer6Static, wxVERTICAL);
+    itemBoxSizer2->Add(itemStaticBoxSizer6, 0, wxALIGN_TOP|wxALL, 5);
 
-    itemStaticBoxSizer3->Add(5, 5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxButton* itemButton7 = new wxButton( itemFrame1, ID_BUTTON_SETUP, _("Setup"), wxDefaultPosition, wxSize(80, 40), 0 );
+    itemButton7->SetDefault();
+    itemStaticBoxSizer6->Add(itemButton7, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxButton* itemButton8 = new wxButton( itemFrame1, ID_BUTTON_RESET, _("Reset"), wxDefaultPosition, wxSize(80, 40), 0 );
-    itemStaticBoxSizer3->Add(itemButton8, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer6->Add(5, 15, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxBoxSizer* itemBoxSizer9 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer9, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxButton* itemButton9 = new wxButton( itemFrame1, ID_BUTTON_IDLE, _("Idle"), wxDefaultPosition, wxSize(80, 40), 0 );
+    itemStaticBoxSizer6->Add(itemButton9, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxButton* itemButton10 = new wxButton( itemFrame1, ID_BUTTON_TRACK, _("Track"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer9->Add(itemButton10, 0, wxGROW|wxALL, 5);
+    itemStaticBoxSizer6->Add(5, 25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    wxButton* itemButton11 = new wxButton( itemFrame1, ID_BUTTON_RESET, _("Reset"), wxDefaultPosition, wxSize(80, 40), 0 );
+    itemButton11->SetBackgroundColour(wxColour(255, 196, 196));
+    itemStaticBoxSizer6->Add(itemButton11, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 ////@end tracking_control_frame content construction
 
@@ -215,17 +221,19 @@ void tracking_control_frame::OnButtonIdleClick( wxCommandEvent& WXUNUSED(event) 
 
 void tracking_control_frame::OnCloseWindow( wxCloseEvent& WXUNUSED(event) )
 {
+  dispatcher->stop();
    Destroy(); 
 }
 
 
 /*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_TRACK
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
  */
 
 void tracking_control_frame::OnButtonTrackClick( wxCommandEvent& event )
 {
-  dispatcher->send_event(all::trm::etag::TRACK);
+  dispatcher->send_event(all::trm::etag::TRACK);  
 }
+
 
 

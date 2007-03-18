@@ -187,6 +187,10 @@
 				RelativePath=".\tracking_control_frame.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\alcor\core\wx_image_panel.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -207,6 +211,10 @@
 			</File>
 			<File
 				RelativePath="..\trm\trm_tags_inc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\wx_image_panel.h"
 				>
 			</File>
 		</Filter>
