@@ -206,6 +206,8 @@ wxIcon tracking_control_frame::GetIconResource( const wxString& name )
 void tracking_control_frame::OnButtonSetupClick( wxCommandEvent& WXUNUSED(event) )
 {
   m_image_panel->clear_selection();
+  m_image_panel->SetEnableDragging(true);
+
   dispatcher->send_event(all::trm::etag::SETUP);
   setup_button->Enable(false);
   track_button->Enable(false);
@@ -268,8 +270,10 @@ void tracking_control_frame::OnButtonTrackClick( wxCommandEvent& event )
   track_button->Enable(false);
   idle_button->Enable(true);
   reset_button->Enable(true);
-  send_roi_button->Enable(false);  
+  send_roi_button->Enable(false); 
+
   m_image_panel->clear_selection();
+  m_image_panel->SetEnableDragging(false);
 }
 
 
@@ -284,7 +288,9 @@ void tracking_control_frame::OnSendRoiButtonClick( wxCommandEvent& event )
   idle_button->Enable(true);
   reset_button->Enable(true);
   send_roi_button->Enable(false);
+
   m_image_panel->clear_selection();
+  m_image_panel->SetEnableDragging(false);
 }
 
 

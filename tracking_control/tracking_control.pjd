@@ -406,6 +406,7 @@
                 <string name="variable-2">"is_dragging|bool||false|2"</string>
                 <string name="variable-3">"selection_h|size_t|get_roi_height|1|1"</string>
                 <string name="variable-4">"selection_w|size_t|get_roi_width|1|1"</string>
+                <string name="variable-5">"dragging_enabled|bool|EnableDragging|false|2"</string>
                 <string name="event-handler-0">"wxEVT_DESTROY|OnDestroy|NONE||"</string>
                 <string name="event-handler-1">"wxEVT_PAINT|OnPaint|NONE||"</string>
                 <string name="event-handler-2">"wxEVT_LEFT_UP|OnLeftUp|NONE||"</string>
