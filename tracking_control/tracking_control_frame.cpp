@@ -53,6 +53,8 @@ BEGIN_EVENT_TABLE( tracking_control_frame, wxFrame )
 
     EVT_BUTTON( ID_BUTTON_SETUP, tracking_control_frame::OnButtonSetupClick )
 
+    EVT_BUTTON( ID_SEND_ROI_BUTTON, tracking_control_frame::OnSendRoiButtonClick )
+
     EVT_BUTTON( ID_BUTTON_IDLE, tracking_control_frame::OnButtonIdleClick )
 
     EVT_BUTTON( ID_BUTTON_RESET, tracking_control_frame::OnButtonResetClick )
@@ -102,6 +104,10 @@ bool tracking_control_frame::Create( wxWindow* parent, wxWindowID id, const wxSt
 void tracking_control_frame::Init()
 {
 ////@begin tracking_control_frame member initialisation
+    track_button = NULL;
+    setup_button = NULL;
+    send_roi_button = NULL;
+    idle_button = NULL;
     reset_button = NULL;
 ////@end tracking_control_frame member initialisation
 }
@@ -123,27 +129,34 @@ void tracking_control_frame::CreateControls()
     m_image_panel = new wx_image_panel( itemFrame1, ID__IMAGE_PANEL, wxDefaultPosition, wxSize(320, 240), wxNO_BORDER|wxTAB_TRAVERSAL );
     itemBoxSizer3->Add(m_image_panel, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxButton* itemButton5 = new wxButton( itemFrame1, ID_BUTTON_TRACK, _("Track"), wxDefaultPosition, wxSize(-1, 35), 0 );
-    itemButton5->SetBackgroundColour(wxColour(219, 240, 213));
-    itemBoxSizer3->Add(itemButton5, 0, wxGROW|wxALL, 5);
+    track_button = new wxButton( itemFrame1, ID_BUTTON_TRACK, _("Track"), wxDefaultPosition, wxSize(-1, 35), 0 );
+    track_button->SetBackgroundColour(wxColour(219, 240, 213));
+    track_button->Enable(false);
+    itemBoxSizer3->Add(track_button, 0, wxGROW|wxALL, 5);
 
     wxStaticBox* itemStaticBoxSizer6Static = new wxStaticBox(itemFrame1, wxID_ANY, _("Control"));
     wxStaticBoxSizer* itemStaticBoxSizer6 = new wxStaticBoxSizer(itemStaticBoxSizer6Static, wxVERTICAL);
     itemStaticBoxSizer6Static->SetForegroundColour(wxColour(227, 239, 240));
     itemBoxSizer2->Add(itemStaticBoxSizer6, 0, wxALIGN_TOP|wxALL, 5);
 
-    wxButton* itemButton7 = new wxButton( itemFrame1, ID_BUTTON_SETUP, _("Setup"), wxDefaultPosition, wxSize(80, 40), 0 );
-    itemButton7->SetDefault();
-    itemStaticBoxSizer6->Add(itemButton7, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    setup_button = new wxButton( itemFrame1, ID_BUTTON_SETUP, _("Setup"), wxDefaultPosition, wxSize(80, 40), 0 );
+    setup_button->SetDefault();
+    itemStaticBoxSizer6->Add(setup_button, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    send_roi_button = new wxButton( itemFrame1, ID_SEND_ROI_BUTTON, _("Send ROI"), wxDefaultPosition, wxDefaultSize, 0 );
+    send_roi_button->Enable(false);
+    itemStaticBoxSizer6->Add(send_roi_button, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     itemStaticBoxSizer6->Add(5, 15, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxButton* itemButton9 = new wxButton( itemFrame1, ID_BUTTON_IDLE, _("Idle"), wxDefaultPosition, wxSize(80, 40), 0 );
-    itemStaticBoxSizer6->Add(itemButton9, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    idle_button = new wxButton( itemFrame1, ID_BUTTON_IDLE, _("Idle"), wxDefaultPosition, wxSize(80, 40), 0 );
+    idle_button->Enable(false);
+    itemStaticBoxSizer6->Add(idle_button, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     itemStaticBoxSizer6->Add(5, 25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     reset_button = new wxButton( itemFrame1, ID_BUTTON_RESET, _("Reset"), wxDefaultPosition, wxSize(80, 40), 0 );
+    reset_button->Enable(false);
     itemStaticBoxSizer6->Add(reset_button, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 ////@end tracking_control_frame content construction
@@ -192,7 +205,13 @@ wxIcon tracking_control_frame::GetIconResource( const wxString& name )
 
 void tracking_control_frame::OnButtonSetupClick( wxCommandEvent& WXUNUSED(event) )
 {
+  m_image_panel->clear_selection();
   dispatcher->send_event(all::trm::etag::SETUP);
+  setup_button->Enable(false);
+  track_button->Enable(false);
+  idle_button->Enable(false);
+  reset_button->Enable(true); 
+  send_roi_button->Enable(true);
 }
 
 
@@ -203,6 +222,13 @@ void tracking_control_frame::OnButtonSetupClick( wxCommandEvent& WXUNUSED(event)
 void tracking_control_frame::OnButtonResetClick( wxCommandEvent& WXUNUSED(event))
 {
   dispatcher->send_event(all::trm::etag::RESET);
+  setup_button->Enable(true);
+  track_button->Enable(false);
+  idle_button->Enable(false);
+  reset_button->Enable(false); 
+  send_roi_button->Enable(false);
+
+    m_image_panel->clear_selection();
 }
 
 
@@ -213,6 +239,11 @@ void tracking_control_frame::OnButtonResetClick( wxCommandEvent& WXUNUSED(event)
 void tracking_control_frame::OnButtonIdleClick( wxCommandEvent& WXUNUSED(event) )
 {
   dispatcher->send_event(all::trm::etag::IDLETRACK);
+  setup_button->Enable(false);
+  track_button->Enable(true);
+  idle_button->Enable(false);
+  reset_button->Enable(true); 
+  send_roi_button->Enable(false);
 }
 
 
@@ -233,8 +264,27 @@ void tracking_control_frame::OnCloseWindow( wxCloseEvent& WXUNUSED(event) )
 
 void tracking_control_frame::OnButtonTrackClick( wxCommandEvent& event )
 {
-  dispatcher->send_event(all::trm::etag::TRACK);  
+  dispatcher->send_event(all::trm::etag::TRACK);   
+  track_button->Enable(false);
+  idle_button->Enable(true);
+  reset_button->Enable(true);
+  send_roi_button->Enable(false);  
+  m_image_panel->clear_selection();
 }
 
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SEND_ROI_BUTTON
+ */
+
+void tracking_control_frame::OnSendRoiButtonClick( wxCommandEvent& event )
+{
+  track_button->Enable(true);
+  idle_button->Enable(true);
+  reset_button->Enable(true);
+  send_roi_button->Enable(false);
+  m_image_panel->clear_selection();
+}
 
 

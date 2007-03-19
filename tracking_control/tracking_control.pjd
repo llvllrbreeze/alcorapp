@@ -19,7 +19,7 @@
     <bool name="use_two_step_construction">0</bool>
     <bool name="use_enums">0</bool>
     <string name="current_platform">"&lt;All platforms&gt;"</string>
-    <string name="target_wx_version">"&lt;Any&gt;"</string>
+    <string name="target_wx_version">"2.8.0"</string>
     <string name="cpp_header_comment">"/////////////////////////////////////////////////////////////////////////////
 // Name:        %HEADER-FILENAME%
 // Purpose:     
@@ -91,7 +91,7 @@
     <string name="app_class_name">"Application"</string>
     <bool name="generate_app_class">0</bool>
     <string name="external_symbol_filenames">""</string>
-    <string name="configuration">"&lt;None&gt;"</string>
+    <string name="configuration">"VC++ Project Release"</string>
     <string name="source_encoding">"&lt;System&gt;"</string>
     <string name="project_encoding">"&lt;System&gt;"</string>
     <string name="resource_archive">""</string>
@@ -241,7 +241,7 @@
       <long name="is-transient">1</long>
       <long name="owns-file">1</long>
       <long name="title-mode">0</long>
-      <long name="locked">0</long>
+      <long name="locked">1</long>
       <document>
         <string name="title">"Windows"</string>
         <string name="type">"html-document"</string>
@@ -265,6 +265,8 @@
           <long name="base-id">10000</long>
           <bool name="use-id-prefix">0</bool>
           <string name="id-prefix">""</string>
+          <bool name="use-id-suffix">0</bool>
+          <string name="id-suffix">""</string>
           <long name="use-xrc">0</long>
           <string name="proxy-Class">"tracking_control_app"</string>
           <string name="proxy-Base class">"wxApp"</string>
@@ -287,6 +289,8 @@
           <long name="base-id">10000</long>
           <bool name="use-id-prefix">0</bool>
           <string name="id-prefix">""</string>
+          <bool name="use-id-suffix">0</bool>
+          <string name="id-suffix">""</string>
           <long name="use-xrc">0</long>
           <string name="event-handler-0">"wxEVT_CLOSE_WINDOW|OnCloseWindow|||"</string>
           <string name="proxy-Id name">"ID_TRACKING_CONTROL_FRAME"</string>
@@ -342,6 +346,7 @@
           <long name="proxy-Y">-1</long>
           <long name="proxy-Width">400</long>
           <long name="proxy-Height">300</long>
+          <bool name="proxy-AUI manager">0</bool>
           <string name="proxy-Event sources">""</string>
           <document>
             <string name="title">"wxBoxSizer H"</string>
@@ -396,17 +401,24 @@
                 <long name="locked">0</long>
                 <string name="created">"18/3/2007"</string>
                 <string name="proxy-type">"wbPanelProxy"</string>
+                <string name="variable-0">"beginx|float|get_topleft_x|0|1"</string>
+                <string name="variable-1">"beginy|float|get_topleft_y|0|1"</string>
+                <string name="variable-2">"is_dragging|bool||false|2"</string>
+                <string name="variable-3">"selection_h|size_t|get_roi_height|1|1"</string>
+                <string name="variable-4">"selection_w|size_t|get_roi_width|1|1"</string>
                 <string name="event-handler-0">"wxEVT_DESTROY|OnDestroy|NONE||"</string>
                 <string name="event-handler-1">"wxEVT_PAINT|OnPaint|NONE||"</string>
+                <string name="event-handler-2">"wxEVT_LEFT_UP|OnLeftUp|NONE||"</string>
+                <string name="event-handler-3">"All mouse events|OnMouse|NONE||"</string>
                 <string name="proxy-Id name">"ID__IMAGE_PANEL"</string>
                 <long name="proxy-Id value">10004</long>
                 <string name="proxy-Class">"wx_image_panel"</string>
                 <string name="proxy-Base class">"wxPanel"</string>
-                <string name="proxy-Member variable name">"m_image_panel"</string>
                 <bool name="proxy-External implementation">0</bool>
                 <bool name="proxy-Separate files">1</bool>
                 <string name="proxy-Implementation filename">"C:\Documents and Settings\ALCORLAB\Documenti\Visual Studio 2005\Projects\alcor\core\wx_image_panel.cpp"</string>
                 <string name="proxy-Header filename">"C:\Documents and Settings\ALCORLAB\Documenti\Visual Studio 2005\Projects\alcor\core\wx_image_panel.h"</string>
+                <string name="proxy-Member variable name">"m_image_panel"</string>
                 <string name="proxy-Help text">""</string>
                 <string name="proxy-Tooltip text">""</string>
                 <string name="proxy-Background colour">""</string>
@@ -449,6 +461,7 @@
                 <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                 <string name="proxy-Custom arguments">""</string>
                 <string name="proxy-Custom ctor arguments">""</string>
+                <bool name="proxy-AUI manager">0</bool>
                 <string name="proxy-Event sources">""</string>
               </document>
               <document>
@@ -466,7 +479,12 @@
                 <string name="proxy-Id name">"ID_BUTTON_TRACK"</string>
                 <long name="proxy-Id value">10005</long>
                 <string name="proxy-Class">"wxButton"</string>
-                <string name="proxy-Member variable name">""</string>
+                <string name="proxy-Base class">"wxButton"</string>
+                <bool name="proxy-External implementation">1</bool>
+                <bool name="proxy-Separate files">0</bool>
+                <string name="proxy-Implementation filename">""</string>
+                <string name="proxy-Header filename">""</string>
+                <string name="proxy-Member variable name">"track_button"</string>
                 <string name="proxy-Label">"Track"</string>
                 <bool name="proxy-Default">0</bool>
                 <string name="proxy-Help text">""</string>
@@ -475,7 +493,7 @@
                 <string name="proxy-Foreground colour">""</string>
                 <string name="proxy-Font">""</string>
                 <bool name="proxy-Hidden">0</bool>
-                <bool name="proxy-Enabled">1</bool>
+                <bool name="proxy-Enabled">0</bool>
                 <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                 <bool name="proxy-wxBU_LEFT">0</bool>
                 <bool name="proxy-wxBU_RIGHT">0</bool>
@@ -551,11 +569,16 @@
                 <long name="locked">0</long>
                 <string name="created">"5/3/2007"</string>
                 <string name="proxy-type">"wbButtonProxy"</string>
-                <string name="event-handler-0">"wxEVT_COMMAND_BUTTON_CLICKED|OnButtonSetupClick"</string>
+                <string name="event-handler-0">"wxEVT_COMMAND_BUTTON_CLICKED|OnButtonSetupClick|||"</string>
                 <string name="proxy-Id name">"ID_BUTTON_SETUP"</string>
                 <long name="proxy-Id value">10001</long>
                 <string name="proxy-Class">"wxButton"</string>
-                <string name="proxy-Member variable name">""</string>
+                <string name="proxy-Base class">"wxButton"</string>
+                <bool name="proxy-External implementation">1</bool>
+                <bool name="proxy-Separate files">0</bool>
+                <string name="proxy-Implementation filename">""</string>
+                <string name="proxy-Header filename">""</string>
+                <string name="proxy-Member variable name">"setup_button"</string>
                 <string name="proxy-Label">"Setup"</string>
                 <bool name="proxy-Default">1</bool>
                 <string name="proxy-Help text">""</string>
@@ -580,6 +603,65 @@
                 <long name="proxy-Y">-1</long>
                 <long name="proxy-Width">80</long>
                 <long name="proxy-Height">40</long>
+                <string name="proxy-AlignH">"Centre"</string>
+                <string name="proxy-AlignV">"Centre"</string>
+                <long name="proxy-Stretch factor">0</long>
+                <long name="proxy-Border">5</long>
+                <bool name="proxy-wxLEFT">1</bool>
+                <bool name="proxy-wxRIGHT">1</bool>
+                <bool name="proxy-wxTOP">1</bool>
+                <bool name="proxy-wxBOTTOM">1</bool>
+                <bool name="proxy-wxSHAPED">0</bool>
+                <bool name="proxy-wxADJUST_MINSIZE">0</bool>
+                <bool name="proxy-wxFIXED_MINSIZE">0</bool>
+                <string name="proxy-Custom arguments">""</string>
+                <string name="proxy-Custom ctor arguments">""</string>
+              </document>
+              <document>
+                <string name="title">"wxButton: ID_SEND_ROI_BUTTON"</string>
+                <string name="type">"dialog-control-document"</string>
+                <string name="filename">""</string>
+                <string name="icon-name">"dialogcontrol"</string>
+                <long name="is-transient">0</long>
+                <long name="owns-file">1</long>
+                <long name="title-mode">0</long>
+                <long name="locked">0</long>
+                <string name="created">"19/3/2007"</string>
+                <string name="proxy-type">"wbButtonProxy"</string>
+                <string name="event-handler-0">"wxEVT_COMMAND_BUTTON_CLICKED|OnSendRoiButtonClick|NONE||"</string>
+                <string name="proxy-Id name">"ID_SEND_ROI_BUTTON"</string>
+                <long name="proxy-Id value">10006</long>
+                <string name="proxy-Class">"wxButton"</string>
+                <string name="proxy-Base class">"wxButton"</string>
+                <bool name="proxy-External implementation">1</bool>
+                <bool name="proxy-Separate files">0</bool>
+                <string name="proxy-Implementation filename">""</string>
+                <string name="proxy-Header filename">""</string>
+                <string name="proxy-Member variable name">"send_roi_button"</string>
+                <string name="proxy-Label">"Send ROI"</string>
+                <bool name="proxy-Default">0</bool>
+                <string name="proxy-Help text">""</string>
+                <string name="proxy-Tooltip text">""</string>
+                <string name="proxy-Background colour">""</string>
+                <string name="proxy-Foreground colour">""</string>
+                <string name="proxy-Font">""</string>
+                <bool name="proxy-Hidden">0</bool>
+                <bool name="proxy-Enabled">0</bool>
+                <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                <bool name="proxy-wxBU_LEFT">0</bool>
+                <bool name="proxy-wxBU_RIGHT">0</bool>
+                <bool name="proxy-wxBU_TOP">0</bool>
+                <bool name="proxy-wxBU_BOTTOM">0</bool>
+                <bool name="proxy-wxBU_EXACTFIT">0</bool>
+                <bool name="proxy-wxNO_BORDER">0</bool>
+                <bool name="proxy-wxWANTS_CHARS">0</bool>
+                <bool name="proxy-wxNO_FULL_REPAINT_ON_RESIZE">0</bool>
+                <bool name="proxy-wxFULL_REPAINT_ON_RESIZE">0</bool>
+                <string name="proxy-Custom styles">""</string>
+                <long name="proxy-X">-1</long>
+                <long name="proxy-Y">-1</long>
+                <long name="proxy-Width">-1</long>
+                <long name="proxy-Height">-1</long>
                 <string name="proxy-AlignH">"Centre"</string>
                 <string name="proxy-AlignV">"Centre"</string>
                 <long name="proxy-Stretch factor">0</long>
@@ -635,7 +717,12 @@
                 <string name="proxy-Id name">"ID_BUTTON_IDLE"</string>
                 <long name="proxy-Id value">10003</long>
                 <string name="proxy-Class">"wxButton"</string>
-                <string name="proxy-Member variable name">""</string>
+                <string name="proxy-Base class">"wxButton"</string>
+                <bool name="proxy-External implementation">1</bool>
+                <bool name="proxy-Separate files">0</bool>
+                <string name="proxy-Implementation filename">""</string>
+                <string name="proxy-Header filename">""</string>
+                <string name="proxy-Member variable name">"idle_button"</string>
                 <string name="proxy-Label">"Idle"</string>
                 <bool name="proxy-Default">0</bool>
                 <string name="proxy-Help text">""</string>
@@ -644,7 +731,7 @@
                 <string name="proxy-Foreground colour">""</string>
                 <string name="proxy-Font">""</string>
                 <bool name="proxy-Hidden">0</bool>
-                <bool name="proxy-Enabled">1</bool>
+                <bool name="proxy-Enabled">0</bool>
                 <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                 <bool name="proxy-wxBU_LEFT">0</bool>
                 <bool name="proxy-wxBU_RIGHT">0</bool>
@@ -715,6 +802,11 @@
                 <string name="proxy-Id name">"ID_BUTTON_RESET"</string>
                 <long name="proxy-Id value">10002</long>
                 <string name="proxy-Class">"wxButton"</string>
+                <string name="proxy-Base class">"wxButton"</string>
+                <bool name="proxy-External implementation">1</bool>
+                <bool name="proxy-Separate files">0</bool>
+                <string name="proxy-Implementation filename">""</string>
+                <string name="proxy-Header filename">""</string>
                 <string name="proxy-Member variable name">"reset_button"</string>
                 <string name="proxy-Label">"Reset"</string>
                 <bool name="proxy-Default">0</bool>
@@ -724,7 +816,7 @@
                 <string name="proxy-Foreground colour">""</string>
                 <string name="proxy-Font">""</string>
                 <bool name="proxy-Hidden">0</bool>
-                <bool name="proxy-Enabled">1</bool>
+                <bool name="proxy-Enabled">0</bool>
                 <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
                 <bool name="proxy-wxBU_LEFT">0</bool>
                 <bool name="proxy-wxBU_RIGHT">0</bool>
