@@ -15,20 +15,36 @@ namespace all { namespace trm {
     }
 
     add_command_handler
-    ("taskset", boost::bind(&task_listener::taskset, this, _1, _2));
+      ("taskset", boost::bind(&task_listener::taskset, this, _1, _2));
+
+    add_command_handler
+      ("setuproi", boost::bind(&task_listener::setup_roi, this, _1, _2));
+
   }
   //---------------------------------------------------------------------------
   ///
   void task_listener::taskset(core::client_connection_ptr_t, core::net_packet_ptr_t packet)
   {
-      if(!notify.empty())
+      if(!notify_evt.empty())
       {
           int evt = packet->buf_to_int();
-          notify(evt);
+          notify_evt(evt);
       }
   }
   //---------------------------------------------------------------------------
+  ///
+  void task_listener::setup_roi(core::client_connection_ptr_t, core::net_packet_ptr_t packet)
+  {
+    int r = packet->buf_to_int();
+    int c = packet->buf_to_int();
+    int h = packet->buf_to_int();
+    int w = packet->buf_to_int();
 
+    if(!notify_roi.empty())
+    {
+      notify_roi(r,c,h,w);
+    }
+  }
   //---------------------------------------------------------------------------
 
     }}

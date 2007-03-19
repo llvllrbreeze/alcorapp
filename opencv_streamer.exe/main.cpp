@@ -16,11 +16,11 @@ int main() {
 
 	server.run_async();
 
-	server.start_streaming();
+	//server.start_streaming();
 
 	getchar();
 
-	server.stop_streaming();
+	//server.stop_streaming();
 
 	server.stop();
 

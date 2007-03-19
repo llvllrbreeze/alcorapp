@@ -10,8 +10,8 @@
 #include "alcor/core/pixel_traits.h"
 #include "alcor/core/depth_image_utils.hpp"
 //-----------------------------------------------------------------------++
-#include "alcor.extern/CImg/CImg.h"
-namespace cimglib=cimg_library;
+//#include "alcor.extern/CImg/CImg.h"
+//namespace cimglib=cimg_library;
 //-----------------------------------------------------------------------++
 #include "alcor/matlab/matlab_engine_t.h"
 //-----------------------------------------------------------------------++

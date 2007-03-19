@@ -14,6 +14,8 @@ namespace all { namespace trm {
             task_dispatcher(const std::string& ini);
             ///
             void send_event(int);
+            ///
+            void send_roi(int r, int c , int h , int w);
 
         private:
             ///

@@ -156,6 +156,8 @@ private: //routines
   void move_ptu_to_screen_rc(float row, float col, double waitsec = -1);
   ///
   void taskreceived(int);
+  ///
+  void setup_roi(int r, int c, int h, int w);
 
 private:
   ///MATLAB
@@ -180,12 +182,18 @@ private:
   math::pinhole_t pinhole;
 
   //VIEW
-  boost::shared_ptr<cimglib::CImgDisplay>          rgb_win;
-  boost::shared_ptr<cimglib::CImg<core::uint8_t> > rgb_cimg;
+  //boost::shared_ptr<cimglib::CImgDisplay>          rgb_win;
+  //boost::shared_ptr<cimglib::CImg<core::uint8_t> > rgb_cimg;
 
   //IMAGE STREAM
   all::core::memory_stream_source_sptr_t  stream_source_ptr;
   all::core::stream_server_t*             stream_server_ptr; 
+
+  ///
+  int r_roi;
+  int c_roi;
+  int h_roi;
+  int w_roi;
   //---------------------------------------------------------------------------
 };
 //---------------------------------------------------------------------------

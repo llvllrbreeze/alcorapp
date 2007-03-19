@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\core\pantilt_angle_t.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor.extern\statemachine\state_machine.hpp"
 				>
 			</File>
