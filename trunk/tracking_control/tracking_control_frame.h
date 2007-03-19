@@ -44,6 +44,7 @@ class wx_image_panel;
 #define ID_TRACKING_CONTROL_FRAME 10000
 #define ID_BUTTON_TRACK 10005
 #define ID_BUTTON_SETUP 10001
+#define ID_SEND_ROI_BUTTON 10006
 #define ID_BUTTON_IDLE 10003
 #define ID_BUTTON_RESET 10002
 #define SYMBOL_TRACKING_CONTROL_FRAME_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxCLOSE_BOX|wxTAB_TRAVERSAL
@@ -94,6 +95,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SETUP
     void OnButtonSetupClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SEND_ROI_BUTTON
+    void OnSendRoiButtonClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IDLE
     void OnButtonIdleClick( wxCommandEvent& event );
 
@@ -116,6 +120,10 @@ public:
 
 ////@begin tracking_control_frame member variables
     wx_image_panel* m_image_panel;
+    wxButton* track_button;
+    wxButton* setup_button;
+    wxButton* send_roi_button;
+    wxButton* idle_button;
     wxButton* reset_button;
 ////@end tracking_control_frame member variables
 
