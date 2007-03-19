@@ -208,7 +208,8 @@ void tracking_control_frame::OnButtonSetupClick( wxCommandEvent& WXUNUSED(event)
   m_image_panel->clear_selection();
   m_image_panel->SetEnableDragging(true);
 
-  dispatcher->send_event(all::trm::etag::SETUP);
+  //dispatcher->send_event(all::trm::etag::SETUP);
+
   setup_button->Enable(false);
   track_button->Enable(false);
   idle_button->Enable(false);
@@ -288,6 +289,13 @@ void tracking_control_frame::OnSendRoiButtonClick( wxCommandEvent& event )
   idle_button->Enable(true);
   reset_button->Enable(true);
   send_roi_button->Enable(false);
+
+  int r = m_image_panel->Getget_topleft_y();
+  int c = m_image_panel->Getget_topleft_x();
+  int h = m_image_panel->Getget_roi_height();
+  int w = m_image_panel->Getget_roi_width();
+
+  dispatcher->send_roi(r,c,h,w);
 
   m_image_panel->clear_selection();
   m_image_panel->SetEnableDragging(false);

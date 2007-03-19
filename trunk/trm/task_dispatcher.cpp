@@ -43,6 +43,19 @@ void task_dispatcher::connected_cb()
 
 }
 //-------------------------------------------------------+
+///
+void task_dispatcher::send_roi(int r, int c , int h , int w)
+{
+  core::net_packet_ptr_t packet(new core::net_packet_t());
+  packet->int_to_buf(r);
+  packet->int_to_buf(c);
+  packet->int_to_buf(h);
+  packet->int_to_buf(w);
+
+  send_command("setuproi", packet);
+
+  }
+//-------------------------------------------------------+
 }}
 //-------------------------------------------------------+
 

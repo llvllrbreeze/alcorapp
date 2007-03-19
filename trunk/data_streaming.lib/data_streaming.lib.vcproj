@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="data_streaming"
-	ProjectGUID="{004D5855-E6BE-4453-9AFA-3E37A010F162}"
+	ProjectGUID="{8DA0931F-F64C-4B69-8853-3F25978EA44F}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>

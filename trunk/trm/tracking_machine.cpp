@@ -15,7 +15,8 @@ tracking_machine::tracking_machine():running_(true)
 
   //Task Listener
   tasklistener.reset(new task_listener("config/trm_service.ini"));
-  tasklistener->notify = boost::bind(&tracking_machine::taskreceived, this, ::_1);
+  tasklistener->notify_evt = boost::bind(&tracking_machine::taskreceived, this, ::_1);
+  tasklistener->notify_roi = boost::bind(&tracking_machine::setup_roi, this, ::_1,::_2,::_3,::_4);
   tasklistener->run_async();
 
   //bumblebee
@@ -40,8 +41,8 @@ tracking_machine::tracking_machine():running_(true)
   //ptu_control->set_slam(p3_adapter);
   
   ////open views
-  rgb_win.reset(new cimglib::CImgDisplay(bee->ncols(), bee->nrows(), "rgb"));
-  rgb_cimg.reset(new cimglib::CImg<core::uint8_t>());
+  //rgb_win.reset(new cimglib::CImgDisplay(bee->ncols(), bee->nrows(), "rgb"));
+  //rgb_cimg.reset(new cimglib::CImg<core::uint8_t>());
 
   //Streaming
   stream_source_ptr.reset(new all::core::memory_stream_source_t( bee->nrows(), bee->ncols() ) );
@@ -90,29 +91,41 @@ void tracking_machine::threadloop()
 //---------------------------------------------------------------------------
 void tracking_machine::idle_cb()
 {
-
+  if (bee->grab())
+  {
+    core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
+    stream_source_ptr->update_image(rightim);
+  }
 }
 //---------------------------------------------------------------------------
 void tracking_machine::setup_cb()
 {
+  printf("Roi selezionato: r: %d c: %d h:%d w: %d\n", 
+    r_roi, c_roi, h_roi, w_roi);
+
   if (bee->grab())
   {
-    //printf("Image Grabbed\n");
     core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
 
-    //printf("buffer2array %d %d\n", bee->nrows(), bee->ncols());
     mxArray* mx_rimage = 
       matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
                                                           ,matlab::row_major
                                                           ,bee->nrows()
                                                           ,bee->ncols());
     
-  //Push into Workspace
-    //printf("put_array \n");
+    //Push into Workspace
     workspace->put_array("rgb", mx_rimage);
+
+    //ROI
+    workspace->put_scalar("r_roi", r_roi);
+    workspace->put_scalar("c_roi", c_roi);
+    workspace->put_scalar("h_roi", h_roi);
+    workspace->put_scalar("w_roi", w_roi);
+
     printf("SETUP\n");
     ////
-    workspace->command_line("[centro_r centro_c coerente] = trm_model_setup(rgb,1)");
+    workspace->command_line
+      ("[centro_r centro_c] = trm_model_setup(rgb, r_roi, c_roi, h_roi, w_roi, 0.5)");
     ///
 
     printf("Done Setup\n\n");
@@ -153,6 +166,8 @@ void tracking_machine::tracking_cb()
                                                           ,matlab::row_major
                                                           ,bee->nrows()
                                                           ,bee->ncols());
+    //
+    stream_source_ptr->update_image(rightim);
 
     //Push into Workspace
     workspace->put_array("rgb", mx_rimage);
@@ -163,6 +178,7 @@ void tracking_machine::tracking_cb()
     //***GATHER***
     int centro_r = 
       static_cast<int> (workspace->get_scalar_double("centro_r") );
+
     int centro_c = 
       static_cast<int> (workspace->get_scalar_double("centro_c") );
 
@@ -214,10 +230,10 @@ void tracking_machine::tracking_cb()
       (target, speed );
 
     //Display Image
-    const unsigned char red  [3] = {255,  0,  0};
-    rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
-    rgb_cimg->draw_circle(centro_c, centro_r, 10.0,red);
-    rgb_cimg->display(*rgb_win);
+    //const unsigned char red  [3] = {255,  0,  0};
+    //rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
+    //rgb_cimg->draw_circle(centro_c, centro_r, 10.0,red);
+    //rgb_cimg->display(*rgb_win);
     printf("Distanza %.2f\n", distanza);
 
   }//centro_c>0
@@ -341,14 +357,15 @@ void tracking_machine::move_ptu_to_screen_rc(float row, float col, double waitse
     //
     pinhole.pantilt_from_pixel(row, col, delta);
     //
-    //float nupan  = static_cast<float>(delta.pan)  + current.pan;
-    //float nutilt = static_cast<float>(delta.tilt) + current.tilt;
+    float nupan  = delta.get_pan_deg() + current.get_pan_deg();
+    float nutilt = delta.get_tilt_deg()+ current.get_tilt_deg();
     
-    //core::pantilt_angle_t bearing =
-    //  delta + current;  
-    current+=delta;
+    //
+    ptu->set_pantilt(nupan, nutilt, waitsec);
 
-    ptu->set_pantilt(current, waitsec);
+    printf("Row: %f Col: %f \n", row, col);
+    printf("current: %.2f %.2f\n", current.get_pan_deg(),current.get_tilt_deg());
+    printf("Delta:   %.2f %.2f\n",  delta.get_pan_deg(), delta.get_tilt_deg());
   }
 }
 //###########################################################################
@@ -362,9 +379,9 @@ void tracking_machine::taskreceived(int evt)
     process_event(trm::tracking_machine::reset_event() );
     break;
 
-  case etag::SETUP :
-    process_event(trm::tracking_machine::setup_event() );
-    break;
+  //case etag::SETUP :
+  //  process_event(trm::tracking_machine::setup_event() );
+  //  break;
 
   case etag::TRACK :
     process_event(trm::tracking_machine::track_event() );
@@ -389,7 +406,17 @@ void tracking_machine::taskreceived(int evt)
   default:
     break;
   }
-
+}
+//---------------------------------------------------------------------------
+void tracking_machine::setup_roi(int r, int c, int h, int w)
+{
+ //
+ r_roi = r;
+ c_roi = c;
+ h_roi = h;
+ w_roi = w;
+ //
+ process_event(trm::tracking_machine::setup_event() );
 }
 //---------------------------------------------------------------------------
 }}//all::trm
