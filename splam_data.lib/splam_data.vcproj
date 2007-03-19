@@ -156,6 +156,10 @@
 			Name="header"
 			>
 			<File
+				RelativePath="..\..\alcor\core\saliency_data_t.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\splam\splam_data.h"
 				>
 			</File>
