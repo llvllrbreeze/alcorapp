@@ -128,7 +128,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				LinkLibraryDependencies="true"
+				LinkLibraryDependencies="false"
 				AdditionalDependencies="wxctb.lib"
 				OutputFile="..\..\alcor.lib\urg_laser.lib"
 				AdditionalLibraryDirectories="..\..\alcor.lib"

@@ -128,7 +128,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				LinkLibraryDependencies="true"
+				LinkLibraryDependencies="false"
 				AdditionalDependencies="winmm.lib"
 				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
