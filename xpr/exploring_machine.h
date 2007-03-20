@@ -39,7 +39,6 @@ public:
   boost::mutex process_guard;
 
   ///EVENTS
-  //struct init_evt     : event<init_evt> {};
   ///
   struct reset_evt    : event<reset_evt> {};
   ///
@@ -50,8 +49,7 @@ public:
   struct visit_evt    : event<visit_evt> {};
   ///
   struct resume_evt   : event<resume_evt> {};
-  ///
-  //struct fail_evt     : event<fail_evt> {};
+
   ///
   typedef exploring_machine self_t;
 

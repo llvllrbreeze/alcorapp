@@ -13,24 +13,6 @@
 #define ARIA_STATIC
 //-----------------------------------------------
 using namespace all;
-//#########################################################
-struct p3_user
-{
-  p3_user()
-    {
-    std::string configname   = "config/p3_conf.ini";
-    p3.reset(new act::p3_gateway());
-    p3->open(configname);
-
-    p3_server.reset(new act::p3_server_t(configname.c_str()));
-    p3_server->set_gateway_ptr(p3);
-    p3_server->run_async();
-    }
-
-  act::p3_server_ptr_t  p3_server;
-  act::p3_gateway_ptr_t p3;
-
-};
 
 //#########################################################
 struct p3_listener
@@ -58,67 +40,12 @@ struct p3_listener
 //#########################################################
 int main ()
 {
-  p3_user       p3_server;
   p3_listener   p3_client;
   all::math::point2d target;
-  //getchar();
-  //math::pose2d localized;
 
-  //localized.set_x1(1.2);
-  //localized.set_x2(0.2);
-  //localized.set_th(34.3, math::deg_tag);
 
-  //p3_client.p3->set_slam_localized(localized);
-
-  //getchar();
-  ////p3_client.p3->enable_wander_mode();
-  //getchar();
-  ////p3_client.p3->set_vel(150);
-  ////getchar();  
-  ////p3_client.p3->enable_stop_mode();
-  //getchar();
-
-  //printf("Distance Traveled so far: %f\n",p3_client.p3data.pose.getP().magnitude());
-  //printf("Pose: x1: %.3f x2: %.3f theta: %.2f\n", 
-  //  p3_client.p3data.pose.get_x1(),
-  //  p3_client.p3data.pose.get_x2(), 
-  //  p3_client.p3data.pose.getTh().deg());
-
-  ////oppure
-  //math::pose2d pose = p3_client.p3->get_odometry();
-
-  //printf("\nPose: x1: %.3f x2: %.3f theta: %.2f\n", 
-  //  pose.get_x1(),
-  //  pose.get_x2(), 
-  //  pose.getTh().deg());
-
-  //getchar();
-
-  printf("enabling follow\n");
-  p3_client.p3->enable_follow_mode();
-
-  getchar();
-  all::math::angle  dir(0,all::math::deg_tag);
-
-  target.set(5.0, dir);
-  p3_client.p3->set_target_to_follow(target, 100);
-
-  getchar();
-
-  target.set(1.5, math::angle(-20, math::deg_tag));
-
-  p3_client.p3->set_target_to_follow(target, 120);
-
-  getchar();
-
-  p3_client.p3->set_target_to_follow(target, 25);
-
-  getchar();
 
   p3_client.p3->enable_stop_mode();
-  //getchar();
-
-  //p3_client.p3->enable_wander_mode();
 
   getchar();
 
@@ -126,7 +53,7 @@ int main ()
   p3_client.p3->enable_goto_mode();
 
   getchar();
-  target.set(2.5, math::angle(0, math::deg_tag));
+  target.set(4.5, math::angle(0, math::deg_tag));
   p3_client.p3->set_relative_goto(target, 200);
 
   getchar();
@@ -142,7 +69,7 @@ int main ()
    getchar(); 
 
    p3_client.p3->stop();
-   p3_server.p3_server->stop();
+
 
   getchar();
   return 0;
