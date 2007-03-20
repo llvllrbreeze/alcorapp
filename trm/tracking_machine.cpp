@@ -129,19 +129,22 @@ void tracking_machine::setup_cb()
     ///
 
     printf("Done Setup\n\n");
-    int coerente = workspace->get_scalar_int("coerente");
+    //int coerente = workspace->get_scalar_int("coerente");
 
-    if(coerente)
-    {
-      double  centro_r = workspace->get_scalar_double("centro_r");
-      double  centro_c = workspace->get_scalar_double("centro_c");
-      //
-      move_ptu_to_screen_rc(centro_r, centro_c, 1.5);
-      //Se tutto a posto vai in idled_tracking
-      process_event(idle_track_event());
-    }
-    else
-      process_event(reset_event());
+    //if(coerente)
+    //{
+    double  centro_r = workspace->get_scalar_double("centro_r");
+    double  centro_c = workspace->get_scalar_double("centro_c");
+
+    //
+    //printf("centro_r: %f centro_c: %f \n", centro_r, centro_c);
+
+    move_ptu_to_screen_rc(centro_r, centro_c, 1.5);
+    //Se tutto a posto vai in idled_tracking
+    process_event(idle_track_event());
+    //}
+    //else
+    //  process_event(reset_event());
   }
   else
   {
@@ -363,9 +366,9 @@ void tracking_machine::move_ptu_to_screen_rc(float row, float col, double waitse
     //
     ptu->set_pantilt(nupan, nutilt, waitsec);
 
-    printf("Row: %f Col: %f \n", row, col);
-    printf("current: %.2f %.2f\n", current.get_pan_deg(),current.get_tilt_deg());
-    printf("Delta:   %.2f %.2f\n",  delta.get_pan_deg(), delta.get_tilt_deg());
+    //printf("Row: %f Col: %f \n", row, col);
+    //printf("current: %.2f %.2f\n", current.get_pan_deg(),current.get_tilt_deg());
+    //printf("Delta:   %.2f %.2f\n",  delta.get_pan_deg(), delta.get_tilt_deg());
   }
 }
 //###########################################################################
@@ -415,6 +418,8 @@ void tracking_machine::setup_roi(int r, int c, int h, int w)
  c_roi = c;
  h_roi = h;
  w_roi = w;
+
+ boost::mutex::scoped_lock lock(process_guard);
  //
  process_event(trm::tracking_machine::setup_event() );
 }
