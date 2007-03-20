@@ -11,7 +11,6 @@
 #include <boost/mpl/list.hpp> 
 //---------------------------------------------------------------------------
 #include <iostream>
-#include <memory> 
 //---------------------------------------------------------------------------
 #include <boost\function.hpp>
 #include <boost\bind.hpp>
@@ -169,12 +168,6 @@ private:
   sense::bumblebee_sptr bee;
   ///PTU
   act::directed_perception_sptr ptu;
-
-  //PANTITL CONTROL
-
-  //act::p3_odometry_adapter_ptr p3_adapter;
-  /////
-  //boost::shared_ptr<act::pantilt_control_loop_t> ptu_control;
 
   //EVENTS
   boost::shared_ptr<all::trm::task_listener> tasklistener;

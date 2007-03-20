@@ -1,7 +1,7 @@
 #pragma once //trm_states_inc
 #include <boost/config.hpp>
 //---------------------------------------------------------------------------
-namespace all { namespace xrp {
+namespace all { namespace xpr {
 //---------------------------------------------------------------------------
 //idled;
 //setup;
@@ -9,7 +9,7 @@ namespace all { namespace xrp {
 //tracking;
 //failed;
 //recovering;
-///STATE
+///STATEs
 struct stag
 {
   BOOST_STATIC_CONSTANT(long, IDLED     = 0);
@@ -19,14 +19,15 @@ struct stag
   BOOST_STATIC_CONSTANT(long, FAILED    = 4);
 };
 
-///EVENT
+///EVENTs
 struct etag
 {
-  BOOST_STATIC_CONSTANT(int,   IDLE     = 0);
-  BOOST_STATIC_CONSTANT(int,   EXPLORE  = 1);
-  BOOST_STATIC_CONSTANT(int,   RESUME   = 2);
-  BOOST_STATIC_CONSTANT(int,   VISIT    = 3);
-  BOOST_STATIC_CONSTANT(int,   FAIL     = 4);
+  BOOST_STATIC_CONSTANT(int,   IDLE       = 0);
+  BOOST_STATIC_CONSTANT(int,   EXPLORE    = 1);
+  BOOST_STATIC_CONSTANT(int,   RESUME     = 2);
+  BOOST_STATIC_CONSTANT(int,   VISIT      = 3);
+  BOOST_STATIC_CONSTANT(int,   FAIL       = 4);
+  BOOST_STATIC_CONSTANT(int,   RESET      = 5);
 };
 //---------------------------------------------------------------------------
 }}

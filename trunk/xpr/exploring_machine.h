@@ -1,7 +1,22 @@
-#pragma once 
+#ifndef exploring_machine_H_INCLUDED
+#define exploring_machine_H_INCLUDED 
 //---------------------------------------------------------------------------
-#include "alcor.apps/xpr/xpr_tags_inc.h"
-#include "alcor.apps/xpr/xpr_app_inc.h"
+#include "xpr_tags_inc.h"
+#include "xpr_app_inc.h"
+//---------------------------------------------------------------------------
+#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */ 
+//---------------------------------------------------------------------------
+#include "alcor.extern/statemachine/state_machine.hpp" 
+//---------------------------------------------------------------------------
+#include <boost/mpl/list.hpp> 
+//---------------------------------------------------------------------------
+#include <iostream>
+//---------------------------------------------------------------------------
+#include <boost\function.hpp>
+#include <boost\bind.hpp>
+#include <boost\thread\thread.hpp>
+#include <boost\shared_ptr.hpp>
+#include <boost\thread\mutex.hpp> 
 //---------------------------------------------------------------------------
 namespace mpl = boost::mpl;
 //---------------------------------------------------------------------------
@@ -11,7 +26,7 @@ class exploring_machine : public fsm::state_machine<exploring_machine>
 {
 public:
   ///ctor
-  tracking_machine();
+  exploring_machine();
 
   /**
    *  the thread loop.
@@ -23,10 +38,12 @@ public:
    */
   boost::mutex process_guard;
 
-  ///
-  struct init_evt     : event<init_evt> {};
+  ///EVENTS
+  //struct init_evt     : event<init_evt> {};
   ///
   struct reset_evt    : event<reset_evt> {};
+  ///
+  struct idle_evt     : event<idle_evt> {};
   ///
   struct explore_evt  : event<explore_evt> {};
   ///
@@ -34,24 +51,29 @@ public:
   ///
   struct resume_evt   : event<resume_evt> {};
   ///
-  struct fail_evt     : event<fail_evt> {};
+  //struct fail_evt     : event<fail_evt> {};
   ///
   typedef exploring_machine self_t;
 
 private:
-   
- //IDLED     
- //EXPLORING 
- //OBSERVING 
- //VISITING  
- //FAILED    
-
   // state invariants
+  //performed each time the state switch (not depending on the evt)
   void idled_state_invariant() const {}
   void exploring_state_invariant() const {}
   void observing_state_invariant() const {}
   void visting_state_invariant() const {}
-  void failed_state_invariant() const {}
+
+
+  //[TRANSITION FUNCTIONS]
+  ///
+  bool go_explore  (explore_evt const&);
+  ///
+  bool go_explore  (resume_evt  const&);
+  ///
+  bool go_idle     (idle_evt  const&);
+  bool go_idle     (reset_evt const&);
+  ///
+  bool go_visit    (visit_evt const&);
 
   // states (invariants are passed as non-type template arguments)
   typedef state<stag::IDLED, &self_t::idled_state_invariant> 
@@ -66,43 +88,50 @@ private:
   typedef state<stag::VISITING, &self_t::visting_state_invariant> 
       visiting;
 
-  typedef state<stag::FAILED, &self_t::fail_state_invariant> 
-      failed;
 
   friend class fsm::state_machine<exploring_machine>;
 
-  ///Transitions
-  //IDLE   
-  //EXPLORE
-  //RESUME 
-  //VISIT  
-  //FAIL   
 
   ///Transitions
   typedef mpl::list <
   //...
-    transition  <idled , explore_evt  , observing ,  &self_t::go_explre>
+    transition  <idled     , explore_evt , observing ,  &self_t::go_explore>
 
-  , transition  <exploring , idle_evt     , idled     ,  &self_t::go_idle>
-  , transition  <observing , idle_evt     , idled     ,  &self_t::go_idle>
-  , transition  <exploring , visit_evt    , visiting  ,  &self_t::go_visit>
+  , transition  <exploring , reset_evt   , idled     ,  &self_t::go_idle>
+  , transition  <exploring , idle_evt    , idled     ,  &self_t::go_idle>
+
+  , transition  <observing , reset_evt   , idled     ,  &self_t::go_idle>
+  , transition  <observing , idle_evt    , idled     ,  &self_t::go_idle>
+
+  , transition  <exploring , visit_evt   , visiting  ,  &self_t::go_visit>
+  , transition  <observing , visit_evt   , visiting  ,  &self_t::go_visit>
+
+  , transition  <visiting  , reset_evt   , idled     ,  &self_t::go_idle>
+  , transition  <visiting  , idle_evt    , idled     ,  &self_t::go_idle>
+  , transition  <visiting  , resume_evt  , observing ,  &self_t::go_explore>
 
   > ::type transition_table;
 
   ///Initial State.
   typedef idled initial_state;
 
-  //[GO_FUNCTIONS]
-  //
-  bool go_explore (explore_evt const&){};
-  bool go_idle    (idle_evt const&){};
-  bool go_visit   (visit_evt const&){};
-
-    ///Loop Callback
+  ///Loop Callback
   typedef boost::function < void (void) > fire_callback_t;
+  ///
   fire_callback_t fire_callback;
 
-    ///
+
+  //[Actual fire callbacks]
+  ///
+  void idled_cb();
+  ///
+  void exploring_cb();
+  ///
+  void observing_cb();
+  ///
+  void visiting_cb();
+
+  ///
   void cancel() {running_ = false;};
   ///
   boost::shared_ptr<boost::thread> thisthread;
@@ -111,24 +140,33 @@ private:
 private:
   ///
   volatile bool running_;
+  ///
+  void taskreceived(int);
 
 private:
   ///MATLAB
   boost::shared_ptr<matlab::matlab_engine_t> workspace;
 
   ///Mobile Robot
-  act::p3_gateway_ptr_t p3at;
-  ///The server
-  act::p3_server_ptr_t       p3at_server;
+  act::p3_gateway_ptr_t     p3at;
+  ///The server if necessary
+  //act::p3_server_ptr_t       p3at_server;
 
   ///Bumblebee
   sense::bumblebee_driver_ptr_t bee;
 
   ///PTU
-  act::directed_perception_sptr ptu;
+  act::directed_perception_ptr_t ptu;
+
+  ///TASK
+  task_listener_sptr tasklistener;
+
   ///Pinhole util
   math::pinhole_t pinhole;
 
 };
 //---------------------------------------------------------------------------
 }}//all::xrp
+
+
+#endif

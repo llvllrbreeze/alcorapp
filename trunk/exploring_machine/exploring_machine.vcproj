@@ -112,7 +112,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;_WIN32_WINDOWS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -129,6 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="client_server_t.lib data_streaming.lib jpeg_codec.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib p3_gateway.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -176,6 +177,14 @@
 			>
 			<File
 				RelativePath="..\xpr\exploring_machine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\xpr\task_listener.cpp"
 				>
 			</File>
 		</Filter>
