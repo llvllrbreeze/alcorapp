@@ -43,7 +43,7 @@ int main ()
   p3_listener   p3_client;
   all::math::point2d target;
 
-
+  std::cout << "spam!"<< std::endl;
 
   p3_client.p3->enable_stop_mode();
 
