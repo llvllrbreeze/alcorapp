@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="pmapLIB"
-	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
+	ProjectGUID="{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
