@@ -103,9 +103,22 @@ void tracking_machine::setup_cb()
   printf("Roi selezionato: r: %d c: %d h:%d w: %d\n", 
     r_roi, c_roi, h_roi, w_roi);
 
+  //half height
+  int h_2 = h_roi/2;
+  //half width
+  int w_2 = w_roi/2;
+  //
+  double centro_r = r_roi + h_2;
+  double centro_c = c_roi + w_2;
+
+  //forst, center the ptu on the target/roi
+  move_ptu_to_screen_rc(centro_r, centro_c, 1.5);
+
+  //then grab again and launch model setup
   if (bee->grab())
   {
-    core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
+    core::uint8_sarr rightim = 
+      bee->get_color_buffer(core::right_img);
 
     mxArray* mx_rimage = 
       matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
@@ -116,6 +129,10 @@ void tracking_machine::setup_cb()
     //Push into Workspace
     workspace->put_array("rgb", mx_rimage);
 
+    //update roi data
+    
+todo:
+
     //ROI
     workspace->put_scalar("r_roi", r_roi);
     workspace->put_scalar("c_roi", c_roi);
@@ -123,23 +140,17 @@ void tracking_machine::setup_cb()
     workspace->put_scalar("w_roi", w_roi);
 
     printf("SETUP\n");
+
     ////
     workspace->command_line
       ("[centro_r centro_c] = trm_model_setup(rgb, r_roi, c_roi, h_roi, w_roi, 0.5)");
     ///
 
     printf("Done Setup\n\n");
-    //int coerente = workspace->get_scalar_int("coerente");
 
-    //if(coerente)
-    //{
     double  centro_r = workspace->get_scalar_double("centro_r");
     double  centro_c = workspace->get_scalar_double("centro_c");
 
-    //
-    //printf("centro_r: %f centro_c: %f \n", centro_r, centro_c);
-
-    move_ptu_to_screen_rc(centro_r, centro_c, 1.5);
     //Se tutto a posto vai in idled_tracking
     process_event(idle_track_event());
     //}
