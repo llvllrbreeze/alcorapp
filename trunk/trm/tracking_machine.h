@@ -194,6 +194,10 @@ private:
 
   //target w/respect to the robot ref system
   double glo_theta_target;
+  //
+  double min_safe_distance;
+  //
+  double max_vel_to_track;
   //---------------------------------------------------------------------------
 };
 //---------------------------------------------------------------------------
