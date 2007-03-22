@@ -15,7 +15,7 @@ namespace all { namespace trm {
             ///
             void send_event(int);
             ///
-            void send_roi(int r, int c , int h , int w);
+            void send_roi(int r, int c , int h , int w, int scala);
 
         private:
             ///

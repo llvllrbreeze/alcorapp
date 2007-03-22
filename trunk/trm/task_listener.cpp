@@ -39,10 +39,11 @@ namespace all { namespace trm {
     int c = packet->buf_to_int();
     int h = packet->buf_to_int();
     int w = packet->buf_to_int();
+    int scala = packet->buf_to_int();
 
     if(!notify_roi.empty())
     {
-      notify_roi(r,c,h,w);
+      notify_roi(r,c,h,w,scala);
     }
   }
   //---------------------------------------------------------------------------

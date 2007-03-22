@@ -109,6 +109,7 @@ void tracking_control_frame::Init()
     send_roi_button = NULL;
     idle_button = NULL;
     reset_button = NULL;
+    m_scala_resize = NULL;
 ////@end tracking_control_frame member initialisation
 }
 /*!
@@ -147,17 +148,27 @@ void tracking_control_frame::CreateControls()
     send_roi_button->Enable(false);
     itemStaticBoxSizer6->Add(send_roi_button, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    itemStaticBoxSizer6->Add(5, 15, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemStaticBoxSizer6->Add(5, 10, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     idle_button = new wxButton( itemFrame1, ID_BUTTON_IDLE, _("Idle"), wxDefaultPosition, wxSize(80, 40), 0 );
     idle_button->Enable(false);
     itemStaticBoxSizer6->Add(idle_button, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    itemStaticBoxSizer6->Add(5, 25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemStaticBoxSizer6->Add(5, 10, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     reset_button = new wxButton( itemFrame1, ID_BUTTON_RESET, _("Reset"), wxDefaultPosition, wxSize(80, 40), 0 );
     reset_button->Enable(false);
     itemStaticBoxSizer6->Add(reset_button, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    itemStaticBoxSizer6->Add(5, 5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    m_scala_resize = new wxSpinCtrl( itemFrame1, ID_SPINCTRL_SCALA, _T("50"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 25, 100, 50 );
+    if (ShowToolTips())
+        m_scala_resize->SetToolTip(_("Image Scale Factor"));
+    itemStaticBoxSizer6->Add(m_scala_resize, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    wxSlider* itemSlider15 = new wxSlider( itemFrame1, ID_SLIDER1, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+    itemStaticBoxSizer6->Add(itemSlider15, 0, wxGROW|wxALL, 5);
 
 ////@end tracking_control_frame content construction
 
@@ -208,7 +219,7 @@ void tracking_control_frame::OnButtonSetupClick( wxCommandEvent& WXUNUSED(event)
   m_image_panel->clear_selection();
   m_image_panel->SetEnableDragging(true);
 
-  //dispatcher->send_event(all::trm::etag::SETUP);
+
 
   setup_button->Enable(false);
   track_button->Enable(false);
@@ -295,7 +306,9 @@ void tracking_control_frame::OnSendRoiButtonClick( wxCommandEvent& event )
   int h = m_image_panel->Getget_roi_height();
   int w = m_image_panel->Getget_roi_width();
 
-  dispatcher->send_roi(r,c,h,w);
+  int scala  = m_scala_resize->GetValue();
+
+  dispatcher->send_roi(r,c,h,w, scala);
 
   m_image_panel->clear_selection();
   m_image_panel->SetEnableDragging(false);

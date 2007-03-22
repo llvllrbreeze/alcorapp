@@ -23,6 +23,7 @@
 
 ////@begin includes
 #include "wx/frame.h"
+#include "wx/spinctrl.h"
 ////@end includes
 
 #include "alcor.apps/trm/task_dispatcher.h"
@@ -34,6 +35,7 @@
 
 ////@begin forward declarations
 class wx_image_panel;
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -47,6 +49,8 @@ class wx_image_panel;
 #define ID_SEND_ROI_BUTTON 10006
 #define ID_BUTTON_IDLE 10003
 #define ID_BUTTON_RESET 10002
+#define ID_SPINCTRL_SCALA 10008
+#define ID_SLIDER1 10007
 #define SYMBOL_TRACKING_CONTROL_FRAME_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxMINIMIZE_BOX|wxCLOSE_BOX|wxTAB_TRAVERSAL
 #define SYMBOL_TRACKING_CONTROL_FRAME_TITLE _("Tracking Control")
 #define SYMBOL_TRACKING_CONTROL_FRAME_IDNAME ID_TRACKING_CONTROL_FRAME
@@ -125,6 +129,7 @@ public:
     wxButton* send_roi_button;
     wxButton* idle_button;
     wxButton* reset_button;
+    wxSpinCtrl* m_scala_resize;
 ////@end tracking_control_frame member variables
 
     all::trm::task_dispatcher_sptr dispatcher;

@@ -15,8 +15,13 @@ tracking_machine::tracking_machine():running_(true)
 
   //Task Listener
   tasklistener.reset(new task_listener("config/trm_service.ini"));
-  tasklistener->notify_evt = boost::bind(&tracking_machine::taskreceived, this, ::_1);
-  tasklistener->notify_roi = boost::bind(&tracking_machine::setup_roi, this, ::_1,::_2,::_3,::_4);
+
+  tasklistener->notify_evt = 
+    boost::bind(&tracking_machine::taskreceived, this, ::_1);
+
+  tasklistener->notify_roi = 
+    boost::bind(&tracking_machine::setup_roi, this, ::_1,::_2,::_3,::_4, ::_5);
+
   tasklistener->run_async();
 
   //bumblebee
@@ -25,20 +30,22 @@ tracking_machine::tracking_machine():running_(true)
   //PTU
   ptu.reset (new act::directed_perception_ptu_t);
   ptu->open("config/dpptu_conf.ini");
+
   //PINHOLE
   pinhole.focal = bee->focal();
   pinhole.ncols = bee->ncols();
   pinhole.nrows = bee->nrows();
 
    //P3DX
-  p3dx.reset(new act::p3_gateway()); 
-  if (p3dx->open("config/p3_conf.ini"))
-    printf("Robot connected!\n");
+  //p3dx.reset(new act::p3_gateway()); 
+  //if (p3dx->open("config/p3_conf.ini"))
+  //  printf("Robot connected!\n");
 
-  //p3_adapter.reset(new act::p3_odometry_adapter_t(p3dx) );
-  //ptu_control.reset(new act::pantilt_control_loop_t );
-  //ptu_control->set_ptu(ptu);
-  //ptu_control->set_slam(p3_adapter);
+  p3dx.reset(new act::p3_client_t("config/p3_conf.ini")); 
+  //if (p3dx->open("config/p3_conf.ini"))
+  p3dx->run_async();
+    printf("Robot connected!\n");
+  
   
   ////open views
   //rgb_win.reset(new cimglib::CImgDisplay(bee->ncols(), bee->nrows(), "rgb"));
@@ -62,7 +69,7 @@ tracking_machine::~tracking_machine()
   if (stream_server_ptr)
   {
     stream_server_ptr->stop();
-    core::BOOST_SLEEP(200);
+    core::BOOST_SLEEP(100);
     delete stream_server_ptr;
   }
 }
@@ -112,7 +119,7 @@ void tracking_machine::setup_cb()
   double centro_c = c_roi + w_2;
 
   //forst, center the ptu on the target/roi
-  move_ptu_to_screen_rc(centro_r, centro_c, 1.5);
+  move_ptu_to_screen_rc(centro_r, centro_c, 2.0);
 
   //then grab again and launch model setup
   if (bee->grab())
@@ -130,32 +137,44 @@ void tracking_machine::setup_cb()
     workspace->put_array("rgb", mx_rimage);
 
     //update roi data
-    
-todo:
+    r_roi = (bee->nrows()/2) - h_2;
+    c_roi = (bee->ncols()/2) - w_2;
+
 
     //ROI
     workspace->put_scalar("r_roi", r_roi);
     workspace->put_scalar("c_roi", c_roi);
     workspace->put_scalar("h_roi", h_roi);
     workspace->put_scalar("w_roi", w_roi);
-
+    workspace->put_scalar("scala_resize", scala_resize);
+    //
     printf("SETUP\n");
 
     ////
     workspace->command_line
-      ("[centro_r centro_c] = trm_model_setup(rgb, r_roi, c_roi, h_roi, w_roi, 0.5)");
+      ("[centro_r centro_c] = trm_model_setup(rgb, r_roi, c_roi, h_roi, w_roi, scala_resize)");
     ///
-
     printf("Done Setup\n\n");
 
     double  centro_r = workspace->get_scalar_double("centro_r");
     double  centro_c = workspace->get_scalar_double("centro_c");
+    ////
+    //move_ptu_to_screen_rc(centro_r, centro_c);
+    //
+    double pan_delta     = pinhole.delta_pan_from_pixel(centro_c);
+    double th_robot      = p3dx->get_odometry().getTh().deg();
+
+    //theta globale
+    core::pantilt_angle_t 
+                 current_pt = ptu->get_fast_pantilt();
+    double loc_theta_target = current_pt.get_pan(math::deg_tag) + pan_delta;
+    glo_theta_target = loc_theta_target + th_robot;
+
+    //center again
+    move_ptu_to_screen_rc(centro_r, centro_c ,1.5);
 
     //Se tutto a posto vai in idled_tracking
     process_event(idle_track_event());
-    //}
-    //else
-    //  process_event(reset_event());
   }
   else
   {
@@ -166,14 +185,23 @@ todo:
 //---------------------------------------------------------------------------
 void tracking_machine::tracking_cb()
 {    
+  //center pantilt, depending on last glo_theta_target and theta_rob
+  double th_robot      = p3dx->get_odometry().getTh().deg();
+  //to compensate
+  double delta_pan     = glo_theta_target - th_robot;
 
+  //compensate only pan ...
+  ptu->set_pan(delta_pan, 0.75);
+
+  //
   if (bee->grab())
   {
     //
     core::pantilt_angle_t current_pt = 
       ptu->get_fast_pantilt();
-
-    core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
+    
+    core::uint8_sarr rightim = 
+      bee->get_color_buffer(core::right_img);
 
     mxArray* mx_rimage = 
       matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
@@ -196,66 +224,70 @@ void tracking_machine::tracking_cb()
     int centro_c = 
       static_cast<int> (workspace->get_scalar_double("centro_c") );
 
-  if(centro_c > 0)//che non sia nullo ....
-  {
-    //
-    move_ptu_to_screen_rc(centro_r, centro_c);
-
-    //***Target Angular SET POINT***    
-    //double theta_target= current_pan + pan_delta;
-    double pan_delta     = pinhole.delta_pan_from_pixel(centro_c);
-    double th_robot      = p3dx->get_odometry().getTh().deg();
-
-    //theta globale
-    double loc_theta_target = current_pt.get_pan(math::deg_tag) +pan_delta;
-    double glo_theta_target = loc_theta_target + th_robot;
-    //
-    ///Profondità 3D
-    core::depth_image_t depthim;
-    core::single_sarr depth = bee->get_depth_buffer();
-
-    depthim.assign(bee->nrows(), bee->ncols(), depth.get());
-
-    //centro dell'intorno
-    core::pixelcoord_t center;
-    center.row = centro_r;
-    center.col = centro_c;
-    //raggio dell'intorno
-    size_t  hsize =  7;
-    //
-    core::mystat vstat  
-      = core::estimate_depth(depthim, center, hsize);
-    //
-    double distanza = vstat.mean;
-    double speed  = 100;//??
-
-    if(distanza < 1.2)
+    if(centro_c > 0)//che non sia nullo ....
     {
-      speed = 0;
+      //proviamo a saltarla... mmmh no..
+      move_ptu_to_screen_rc(centro_r, centro_c);
+
+      //***Target Angular SET POINT***    
+      //double theta_target= current_pan + pan_delta;
+      double pan_delta     = pinhole.delta_pan_from_pixel(centro_c);
+      double th_robot      = p3dx->get_odometry().getTh().deg();
+
+      //local offset (that is respect to robot nose)
+      double loc_theta_target = current_pt.get_pan_deg() +pan_delta;      
+      //theta globale (useful for next iteration)
+      glo_theta_target = loc_theta_target + th_robot;
+      
+      //Profondità 3D
+      core::depth_image_t depthim;
+      core::single_sarr depth = bee->get_depth_buffer();
+      depthim.assign(bee->nrows(), bee->ncols(), depth.get());
+
+      //centro dell'intorno
+      core::pixelcoord_t center;
+      center.row = centro_r;
+      center.col = centro_c;
+
+      //raggio dell'intorno
+      size_t  hsize =  7;
+      //
+      core::mystat vstat  
+        = core::estimate_depth(depthim, center, hsize);
+      //
+      double distanza = vstat.mean;
+      double speed  = 100;//??
+
+      if(distanza < 1.0)
+      {
+        speed = 0;
+      }
+      else
+      {
+        speed = (distanza - 1.0) * 100;
+      }
+
+      //relative goal
+      math::point2d 
+        target(distanza, math::angle(loc_theta_target, math::deg_tag));
+      //
+      printf("Set Target %f %f %f\n", target.get_x1(), target.get_x2(), target.orientation().deg());
+      //
+      p3dx->set_relative_goto(target, speed );
+
+      //Display Image
+      //const unsigned char red  [3] = {255,  0,  0};
+      //rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
+      //rgb_cimg->draw_circle(centro_c, centro_r, 10.0,red);
+      //rgb_cimg->display(*rgb_win);
+      printf("Distanza %.2f\n", distanza);
+
+    }//centro_c>0
+    else
+    {
+      //TODO: skip??
+      process_event(fail_event());
     }
-
-    //relative goal
-    math::point2d 
-      target(distanza, math::angle(loc_theta_target, math::deg_tag));
-    //
-    printf("Set Target %f %f %f\n", target.get_x1(), target.get_x2(), target.orientation().deg());
-    //
-    p3dx->set_target_to_follow 
-      (target, speed );
-
-    //Display Image
-    //const unsigned char red  [3] = {255,  0,  0};
-    //rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
-    //rgb_cimg->draw_circle(centro_c, centro_r, 10.0,red);
-    //rgb_cimg->display(*rgb_win);
-    printf("Distanza %.2f\n", distanza);
-
-  }//centro_c>0
-  else
-  {
-    //TODO: skip??
-    process_event(fail_event());
-  }
   ///se va storto..
   //
   }
@@ -346,8 +378,11 @@ bool tracking_machine::start_tracking (track_event const&)
 
   //
   math::point2d target(1.0, math::angle(pan,math::deg_tag));
-  p3dx->set_target_to_follow(target, 0);
-  p3dx->enable_follow_mode();
+  p3dx->set_relative_goto(target, 0);
+  //p3dx->enable_follow_mode();
+
+  printf("enabling goto\n");
+  p3dx->enable_goto_mode();
 
   ///
   fire_callback = boost::bind
@@ -422,14 +457,15 @@ void tracking_machine::taskreceived(int evt)
   }
 }
 //---------------------------------------------------------------------------
-void tracking_machine::setup_roi(int r, int c, int h, int w)
+void tracking_machine::setup_roi(int r, int c, int h, int w, int scala)
 {
  //
  r_roi = r;
  c_roi = c;
  h_roi = h;
  w_roi = w;
-
+ scala_resize = 
+   static_cast<double>(scala/100.0);
  boost::mutex::scoped_lock lock(process_guard);
  //
  process_event(trm::tracking_machine::setup_event() );

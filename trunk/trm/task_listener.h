@@ -17,7 +17,7 @@ namespace all { namespace trm {
     ///
     typedef boost::function<void (int)> notify_callback_t;
     ///
-    typedef boost::function<void (int, int, int, int)> notify_setup_t;
+    typedef boost::function<void (int, int, int, int, int)> notify_setup_t;
 
     ///The actual notify callback
     notify_callback_t       notify_evt;
