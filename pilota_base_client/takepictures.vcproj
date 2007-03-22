@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="directed_perception_server"
-	ProjectGUID="{54264168-BD9E-4CE5-81C0-845352551D58}"
+	Name="pilota_base_client"
+	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
@@ -57,7 +57,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				GenerateDebugInformation="true"
+				GenerateManifest="false"
+				GenerateDebugInformation="false"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -89,7 +90,7 @@
 			Name="Release|Win32"
 			OutputDirectory="..\..\obj\$(ProjectName)"
 			IntermediateDirectory="$(OutDir)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -110,7 +111,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\.."
+				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
@@ -127,22 +128,39 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				LinkLibraryDependencies="true"
-				OutputFile="..\..\alcor.lib\$(ProjectName).lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="client_server_t.lib data_streaming.lib jpeg_codec.lib p3_client_server.lib directed_perception_client.lib wxmsw28.lib wxpng.lib wxjpeg.lib wxzlib.lib comctl32.lib"
+				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
+				GenerateManifest="false"
+				GenerateDebugInformation="false"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
 			/>
 			<Tool
+				Name="VCManifestTool"
+				EmbedManifest="true"
+			/>
+			<Tool
 				Name="VCXDCMakeTool"
+				OutputDocumentFile="$(IntDir)\$(TargetName).xml"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -158,7 +176,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\alcor\act\directed_perception_ptu_server_t.cpp"
+				RelativePath=".\take_pictures_frame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\takepictures.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\gui\wx_img_stream_panel_t.cpp"
 				>
 			</File>
 		</Filter>
@@ -168,19 +194,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\alcor\act\directed_perception_ptu_server_t.h"
+				RelativePath=".\pilota_base_client.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\act\directed_perception_ptu_t.h"
+				RelativePath=".\take_pictures_frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\act\ptu_server_data_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\server_base_t.hpp"
+				RelativePath=".\takepictures.h"
 				>
 			</File>
 		</Filter>
@@ -189,6 +211,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\takepictures.rc"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
