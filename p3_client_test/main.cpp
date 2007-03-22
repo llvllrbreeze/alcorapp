@@ -53,19 +53,28 @@ int main ()
   p3_client.p3->enable_goto_mode();
 
   getchar();
-  target.set(4.5, math::angle(0, math::deg_tag));
+  printf("0\n");
+  target.set(0.5, math::angle(0, math::deg_tag));
   p3_client.p3->set_relative_goto(target, 200);
 
   getchar();
-  target.set(1.5, math::angle(+20, math::deg_tag));
+    printf("-25\n");
+  target.set(3.5, math::angle(-25, math::deg_tag));
   p3_client.p3->set_relative_goto(target, 100);
 
   getchar();
+      printf("0.0\n");
   target.set(2.5, math::angle(0.0, math::deg_tag));
   p3_client.p3->set_relative_goto(target, 100);
 
   getchar();
+      printf("50.0\n");
+  target.set(2.5, math::angle(50.0, math::deg_tag));
+  p3_client.p3->set_relative_goto(target, 100);
+
+  getchar();
   p3_client.p3->enable_stop_mode();
+
    getchar(); 
 
    p3_client.p3->stop();

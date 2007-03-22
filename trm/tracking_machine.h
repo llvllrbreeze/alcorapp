@@ -156,13 +156,14 @@ private: //routines
   ///
   void taskreceived(int);
   ///
-  void setup_roi(int r, int c, int h, int w);
+  void setup_roi(int r, int c, int h, int w, int scala);
 
 private:
   ///MATLAB
   boost::shared_ptr<matlab::matlab_engine_t> workspace;
   ///DORO CLIENT
-  act::p3_gateway_ptr_t p3dx;
+  //act::p3_gateway_ptr_t p3dx;
+  act::p3_client_ptr_t p3dx;
 
   ///Bumblebee
   sense::bumblebee_sptr bee;
@@ -182,11 +183,17 @@ private:
   all::core::memory_stream_source_sptr_t  stream_source_ptr;
   all::core::stream_server_t*             stream_server_ptr; 
 
-  ///
+  //Tracking Data
+  //ROI (setup)
   int r_roi;
   int c_roi;
   int h_roi;
   int w_roi;
+  //
+  double scala_resize;
+
+  //target w/respect to the robot ref system
+  double glo_theta_target;
   //---------------------------------------------------------------------------
 };
 //---------------------------------------------------------------------------
