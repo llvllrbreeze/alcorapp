@@ -451,7 +451,7 @@
                 <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                 <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                 <string name="proxy-Custom arguments">""</string>
-                <string name="proxy-Custom ctor arguments">"&quot;bumbebee_stream_client.ini&quot;"</string>
+                <string name="proxy-Custom ctor arguments">"&quot;config/bumblebee_stream_client.ini&quot;"</string>
                 <bool name="proxy-AUI manager">0</bool>
                 <string name="proxy-Event sources">""</string>
               </document>

@@ -219,8 +219,6 @@ void tracking_control_frame::OnButtonSetupClick( wxCommandEvent& WXUNUSED(event)
   m_image_panel->clear_selection();
   m_image_panel->SetEnableDragging(true);
 
-
-
   setup_button->Enable(false);
   track_button->Enable(false);
   idle_button->Enable(false);

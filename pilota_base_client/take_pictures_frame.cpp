@@ -131,7 +131,7 @@ void take_pictures_frame::CreateControls()
     wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    m_stream_panel = new wx_img_stream_panel_t( "bumbebee_stream_client.ini" );
+    m_stream_panel = new wx_img_stream_panel_t( "config/bumblebee_stream_client.ini" );
     m_stream_panel->Create( itemFrame1, ID_PANEL_IMAGE, wxDefaultPosition, wxSize(320, 240), wxNO_BORDER|wxTAB_TRAVERSAL );
     itemBoxSizer3->Add(m_stream_panel, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -268,7 +268,12 @@ void take_pictures_frame::OnButtonStopRobotClick( wxCommandEvent& event )
 void take_pictures_frame::OnSliderVelUpdated( wxCommandEvent& event )
 {
   int vel = speed_control->GetValue();
-  double velsetpoint = vel/100 * 300;
+  //std::string sliderv = "slider: ";
+  //sliderv += boost::lexical_cast<std::string>(vel);
+
+  //wxMessageBox(_T(sliderv));
+
+  double velsetpoint = (vel/100.0) * 300;
   pilota.set_vel(velsetpoint);
 }
 

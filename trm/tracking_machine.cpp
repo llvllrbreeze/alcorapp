@@ -1,6 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "tracking_machine.h"
+#include <algorithm>
 //#include "alcor.apps/trm/gil_wrap_utils.hpp"
 //---------------------------------------------------------------------------
 namespace all { namespace trm {
@@ -26,7 +27,7 @@ tracking_machine::tracking_machine():running_(true)
 
   //bumblebee
   bee.reset(new sense::bumblebee_driver_t());
-  bee->open("config/bumblebeeB.ini");
+  bee->open("config/bumblebeeA.ini");
   //PTU
   ptu.reset (new act::directed_perception_ptu_t);
   ptu->open("config/dpptu_conf.ini");
@@ -90,7 +91,7 @@ void tracking_machine::threadloop()
               fire_callback();    
       }
     boost::thread::yield();    
-    core::BOOST_SLEEP(50);
+    core::BOOST_SLEEP(10);
     }
   }
 //###########################################################################
@@ -171,7 +172,7 @@ void tracking_machine::setup_cb()
     glo_theta_target = loc_theta_target + th_robot;
 
     //center again
-    move_ptu_to_screen_rc(centro_r, centro_c ,1.5);
+    move_ptu_to_screen_rc(centro_r, centro_c ,0.5);
 
     //Se tutto a posto vai in idled_tracking
     process_event(idle_track_event());
@@ -191,7 +192,7 @@ void tracking_machine::tracking_cb()
   double delta_pan     = glo_theta_target - th_robot;
 
   //compensate only pan ...
-  ptu->set_pan(delta_pan, 0.75);
+  ptu->set_pan(delta_pan, 0.5);
 
   //
   if (bee->grab())
@@ -258,13 +259,14 @@ void tracking_machine::tracking_cb()
       double distanza = vstat.mean;
       double speed  = 100;//??
 
-      if(distanza < 1.0)
+      if(distanza < 1.5)
       {
         speed = 0;
       }
       else
       {
-        speed = (distanza - 1.0) * 100;
+      todo:
+        //speed = std::max((distanza - 1.5) * 100),200);
       }
 
       //relative goal
