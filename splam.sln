@@ -21,8 +21,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "splam_thread_LIB", "splam_t
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "splam_client_test.exe", "splam_client_test.exe\splam_client_test.exe.vcproj", "{862D553F-767A-4918-9F4C-0868CD0437E6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pmapLIB", "pmap.lib\pmapLIB.vcproj", "{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,10 +47,6 @@ Global
 		{862D553F-767A-4918-9F4C-0868CD0437E6}.Debug|Win32.Build.0 = Debug|Win32
 		{862D553F-767A-4918-9F4C-0868CD0437E6}.Release|Win32.ActiveCfg = Release|Win32
 		{862D553F-767A-4918-9F4C-0868CD0437E6}.Release|Win32.Build.0 = Release|Win32
-		{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}.Debug|Win32.Build.0 = Debug|Win32
-		{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}.Release|Win32.ActiveCfg = Release|Win32
-		{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
