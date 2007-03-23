@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="p3_gateway_test"
-	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
+	ProjectGUID="{2B14E3E7-52CC-480A-A2C7-A78733333AE3}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>

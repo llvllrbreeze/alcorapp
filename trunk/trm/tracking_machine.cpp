@@ -157,10 +157,9 @@ void tracking_machine::setup_cb()
     ///
     printf("Done Setup\n\n");
 
-    double  centro_r = workspace->get_scalar_double("centro_r");
-    double  centro_c = workspace->get_scalar_double("centro_c");
-    ////
-    //move_ptu_to_screen_rc(centro_r, centro_c);
+    centro_r = static_cast<int>( workspace->get_scalar_double("centro_r") );
+    centro_c = static_cast<int>( workspace->get_scalar_double("centro_c") );
+
     //
     double pan_delta     = pinhole.delta_pan_from_pixel(centro_c);
     double th_robot      = p3dx->get_odometry().getTh().deg();
@@ -190,14 +189,17 @@ void tracking_machine::tracking_cb()
   double th_robot      = p3dx->get_odometry().getTh().deg();
   //to compensate
   double delta_pan     = glo_theta_target - th_robot;
+  double delta_tilt    = 
 
   //compensate only pan ...
-  ptu->set_pan(delta_pan, 0.5);
+  ptu->set_pan(delta_pan, 0.2);
+
+  //ptu->set_pantilt();
 
   //
   if (bee->grab())
   {
-    //
+    //!!!!!!!!!!!!!!!!!!!
     core::pantilt_angle_t current_pt = 
       ptu->get_fast_pantilt();
     
@@ -209,8 +211,6 @@ void tracking_machine::tracking_cb()
                                                           ,matlab::row_major
                                                           ,bee->nrows()
                                                           ,bee->ncols());
-    //
-    stream_source_ptr->update_image(rightim);
 
     //Push into Workspace
     workspace->put_array("rgb", mx_rimage);
@@ -218,11 +218,14 @@ void tracking_machine::tracking_cb()
     ///MEAN SHIFT : ottenere un centro
     workspace->command_line("[centro_r centro_c]= trm_track(rgb, [120, 160])");
 
+    ////send image stream
+    //stream_source_ptr->update_image(rightim);
+
     //***GATHER***
-    int centro_r = 
+    centro_r = 
       static_cast<int> (workspace->get_scalar_double("centro_r") );
 
-    int centro_c = 
+    centro_c = 
       static_cast<int> (workspace->get_scalar_double("centro_c") );
 
     if(centro_c > 0)//che non sia nullo ....
@@ -236,7 +239,7 @@ void tracking_machine::tracking_cb()
       double th_robot      = p3dx->get_odometry().getTh().deg();
 
       //local offset (that is respect to robot nose)
-      double loc_theta_target = current_pt.get_pan_deg() +pan_delta;      
+      double loc_theta_target = current_pt.get_pan_deg() + pan_delta;      
       //theta globale (useful for next iteration)
       glo_theta_target = loc_theta_target + th_robot;
       
@@ -259,30 +262,42 @@ void tracking_machine::tracking_cb()
       double distanza = vstat.mean;
       double speed  = 100;//??
 
-      if(distanza < 1.5)
+      if( fabs (loc_theta_target) > 4.0 )
       {
-        speed = 0;
-      }
-      else
-      {
-      todo:
-        //speed = std::max((distanza - 1.5) * 100),200);
-      }
+        //relative goal
+        math::point2d 
+          target(distanza, math::angle(glo_theta_target, math::deg_tag));
+        ////
+        //printf("Set Target %f %f %f\n"
+        //  , target.get_x1()
+        //  , target.get_x2()
+        //  , target.orientation().deg());
+        //
+        if(distanza < 1.5)
+        {
+          //stop
+          speed = 0;
+        }
+        else if (distanza < 4.0)
+        {
+          //(vmax-vmin)/(dmax - dmin) * (D - dmin) + vmin
+          speed = (220-50)/(4.0 - 1.5)*(distanza - 1.5) + 50 ;
+        }
+        else
+        {
+          //saturate
+          speed = 220;
+        }
+        //
+        p3dx->set_relative_goto(target, speed );
 
-      //relative goal
-      math::point2d 
-        target(distanza, math::angle(loc_theta_target, math::deg_tag));
-      //
-      printf("Set Target %f %f %f\n", target.get_x1(), target.get_x2(), target.orientation().deg());
-      //
-      p3dx->set_relative_goto(target, speed );
-
-      //Display Image
-      //const unsigned char red  [3] = {255,  0,  0};
-      //rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
-      //rgb_cimg->draw_circle(centro_c, centro_r, 10.0,red);
-      //rgb_cimg->display(*rgb_win);
-      printf("Distanza %.2f\n", distanza);
+        //Display Image
+        //const unsigned char red  [3] = {255,  0,  0};
+        //rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
+        //rgb_cimg->draw_circle(centro_c, centro_r, 10.0,red);
+        //rgb_cimg->display(*rgb_win);
+        //printf("Distanza %.2f\n", distanza);
+      }
 
     }//centro_c>0
     else
@@ -290,6 +305,8 @@ void tracking_machine::tracking_cb()
       //TODO: skip??
       process_event(fail_event());
     }
+    //send image stream
+    stream_source_ptr->update_image(rightim);
   ///se va storto..
   //
   }
@@ -324,8 +341,7 @@ bool tracking_machine::start_setup(setup_event const&)
 bool tracking_machine::go_reset(reset_event const&)
 {
   printf("\nReset\n");
-    //
-  //ptu_control->enable(false);
+
   p3dx->enable_stop_mode();
 
   //
