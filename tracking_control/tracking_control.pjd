@@ -12,7 +12,7 @@
     <bool name="generate_cpp_for_xrc">0</bool>
     <bool name="use_help_text_for_tooltips">1</bool>
     <bool name="translate_strings">1</bool>
-    <bool name="extract_strings">0</bool>
+    <bool name="extract_strings">1</bool>
     <string name="user_name">"Andrea Carbone"</string>
     <string name="copyright_string">"Alcor"</string>
     <string name="resource_prefix">""</string>
@@ -391,7 +391,7 @@
               <bool name="proxy-wxFIXED_MINSIZE">0</bool>
               <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
               <document>
-                <string name="title">"wx_image_panel: ID__IMAGE_PANEL"</string>
+                <string name="title">"wx_image_panel: ID_IMAGE_PANEL"</string>
                 <string name="type">"dialog-control-document"</string>
                 <string name="filename">""</string>
                 <string name="icon-name">"panel"</string>
@@ -411,7 +411,7 @@
                 <string name="event-handler-1">"wxEVT_PAINT|OnPaint|NONE||"</string>
                 <string name="event-handler-2">"wxEVT_LEFT_UP|OnLeftUp|NONE||"</string>
                 <string name="event-handler-3">"All mouse events|OnMouse|NONE||"</string>
-                <string name="proxy-Id name">"ID__IMAGE_PANEL"</string>
+                <string name="proxy-Id name">"ID_IMAGE_PANEL"</string>
                 <long name="proxy-Id value">10004</long>
                 <string name="proxy-Class">"wx_image_panel"</string>
                 <string name="proxy-Base class">"wxPanel"</string>

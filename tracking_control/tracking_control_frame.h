@@ -22,6 +22,7 @@
  */
 
 ////@begin includes
+#include "tracking_control_frame_symbols.h"
 #include "wx/frame.h"
 #include "wx/spinctrl.h"
 ////@end includes
