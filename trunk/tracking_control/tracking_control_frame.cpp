@@ -127,7 +127,7 @@ void tracking_control_frame::CreateControls()
     wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer2->Add(itemBoxSizer3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_image_panel = new wx_image_panel( itemFrame1, ID__IMAGE_PANEL, wxDefaultPosition, wxSize(320, 240), wxNO_BORDER|wxTAB_TRAVERSAL );
+    m_image_panel = new wx_image_panel( itemFrame1, ID_IMAGE_PANEL, wxDefaultPosition, wxSize(320, 240), wxNO_BORDER|wxTAB_TRAVERSAL );
     itemBoxSizer3->Add(m_image_panel, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     track_button = new wxButton( itemFrame1, ID_BUTTON_TRACK, _("Track"), wxDefaultPosition, wxSize(-1, 35), 0 );
