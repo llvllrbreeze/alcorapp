@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="splam_service_EXE"
+	Name="splam_service.exe"
 	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
@@ -111,9 +111,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="2"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="NDEBUG;WIN32;ARIA_STATIC"
+				PreprocessorDefinitions="NDEBUG;WIN32;ARIA_STATIC;_WIN32_WINDOWS"
 				RuntimeLibrary="0"
+				FloatingPointExceptions="true"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
@@ -129,7 +131,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="splam_thread.lib splam_data.lib p3_client_server.lib pmap.lib iniwrapper.lib urg_laser.lib AriaStatic.lib ArNetworkingStatic.lib coder.lib winmm.lib wsock32.lib client_server_t.lib"
+				AdditionalDependencies="splam_data.lib p3_client_server.lib pmap.lib iniwrapper.lib urg_laser.lib AriaStatic.lib ArNetworkingStatic.lib coder.lib winmm.lib wsock32.lib client_server_t.lib"
 				OutputFile="..\..\alcor.bin\splam_service.exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -174,12 +176,36 @@
 			Name="header"
 			>
 			<File
+				RelativePath="..\..\alcor\splam\detail\pmap_wrap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\splam\scan_data.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\splam\splam_data.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\splam\splam_thread.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\splam\typedefs.hpp"
 				>
 			</File>
 		</Filter>
 		<File
 			RelativePath=".\main.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\alcor\splam\detail\pmap_wrap.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\alcor\splam\splam_thread.cpp"
 			>
 		</File>
 	</Files>
