@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="splam_thread_LIB"
+	Name="splam_thread.lib"
 	ProjectGUID="{FD24E1AB-C5E3-4DC1-9629-690D3FE08ACA}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
@@ -176,14 +176,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\..\alcor\splam\detail\pmap_wrap.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\alcor\splam\splam_thread.cpp"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

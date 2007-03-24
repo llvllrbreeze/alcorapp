@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="splam_data_LIB"
+	Name="splam_data.lib"
 	ProjectGUID="{9927B2AD-8CA3-4055-BC56-901488B11D98}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
