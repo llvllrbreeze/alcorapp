@@ -9,6 +9,8 @@
 #include "alcor/sense/MTi_driver_t.h"
 //-------------------------------------------------------------------------++
 #include <boost/timer.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/bind.hpp>
 //-------------------------------------------------------------------------++
 #include <iostream>
 #include <fstream>

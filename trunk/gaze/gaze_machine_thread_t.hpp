@@ -11,12 +11,15 @@ class gaze_machine_thread_t
 public:
     gaze_machine_thread_t():running_(true),elapsed_(0)
     {
-      gaze_.reset(new gaze_machine_t);
-      gaze_->print_welcome();
+
     }
 
     void run_thread()
-    {
+    {      
+      
+      gaze_.reset(new gaze_machine_t);
+      gaze_->print_welcome();
+
       //int device in the thread loop!
         if(gaze_->start_machine())
         {
@@ -26,9 +29,9 @@ public:
             {
                 gaze_->sample_gaze();
                 boost::thread::yield();
-                all::core::BOOST_SLEEP(70);
+                all::core::BOOST_SLEEP(50);
             }
-
+            printf("Thread Canceled\n");
             elapsed_=gaze_->elapsed();
         }
         else
@@ -36,8 +39,8 @@ public:
 
     }
 
-    int nsamples() const {return gaze_->nsamples();};
-    double elapsed()const {return elapsed_;};
+    int     nsamples()  const {return gaze_->nsamples();};
+    double  elapsed()   const {return elapsed_;};
 
     void cancel(){running_=false;};
 

@@ -206,10 +206,6 @@
 				RelativePath="..\gaze\gaze_machine_t.h"
 				>
 			</File>
-			<File
-				RelativePath="..\gaze\gaze_machine_thread_t.hpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
