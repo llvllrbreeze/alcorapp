@@ -188,8 +188,8 @@ private:
 
   //VIEW
   //boost::shared_ptr<cimglib::CImgDisplay>          rgb_win;
-  //boost::shared_ptr<cimglib::CImg<core::uint8_t> >   rgb_cimg;
-  CImg<core::uint8_t>    rgb_cimg;
+  boost::shared_ptr<CImg<core::uint8_t> >   rgb_cimg;
+  //CImg<core::uint8_t>    rgb_cimg;
 
   //IMAGE STREAM
   all::core::memory_stream_source_sptr_t  stream_source_ptr;

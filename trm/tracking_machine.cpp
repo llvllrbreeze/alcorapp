@@ -59,7 +59,7 @@ tracking_machine::tracking_machine():running_(true)
   
   ////open views
   //rgb_win.reset(new cimglib::CImgDisplay(bee->ncols(), bee->nrows(), "rgb"));
-  //rgb_cimg.reset(new cimglib::CImg<core::uint8_t>());
+    rgb_cimg.reset(new CImg<core::uint8_t>(bee->ncols(), bee->nrows()), core::null_deleter() );
 
   //Streaming
   stream_source_ptr.reset(new all::core::memory_stream_source_t( bee->nrows(), bee->ncols() ) );
@@ -370,15 +370,16 @@ void tracking_machine::tracking_cb()
         //sprintf( dtag, "Distanza: %.2f", distanza);
 
 
-        const unsigned char red  [3] = {255,  0,  0};
+        const unsigned char color  [3] = {217,  241,  60};
+
         ///
-        rgb_cimg.assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
-        rgb_cimg.draw_circle(centro_c, centro_r, 10.0,red);
-        //rgb_cimg.draw_text(dtag, centro_c, centro_r, black);
-        //CImg & 	draw_rectangle (const int x0, const int y0, const int x1, const int y1, const T *const color, const float opacity=1)
- 	//Draw a 2D filled colored rectangle in the instance image, at coordinates (x0,y0)-(x1,y1). 
+        rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3, true)
+          .draw_rectangle(centro_c - (w_roi/2) , centro_r - (h_roi/2)
+                          ,centro_c + (w_roi/2) , centro_r + (h_roi/2)
+                          ,color
+                          , 0.5);
+        
         //send image stream
-        //stream_source_ptr->update_image(rgb_cimg.ptr());
         stream_source_ptr->update_image(rightim);
       }
 
