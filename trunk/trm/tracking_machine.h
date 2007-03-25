@@ -16,7 +16,13 @@
 #include <boost\bind.hpp>
 #include <boost\thread\thread.hpp>
 #include <boost\shared_ptr.hpp>
-#include <boost\thread\mutex.hpp> 
+#include <boost\thread\mutex.hpp>
+//---------------------------------------------------------------------------
+//#define TIMEDEBUG_
+
+#ifdef TIMEDEBUG_
+#include <boost/timer.hpp>
+#endif
 //---------------------------------------------------------------------------
 namespace mpl = boost::mpl;
 //---------------------------------------------------------------------------
@@ -167,6 +173,11 @@ private:
 
   ///Bumblebee
   sense::bumblebee_sptr bee;
+  ///Depth Image
+  core::single_sarr depth;
+  ///RGB
+  core::uint8_sarr rightim;
+
   ///PTU
   act::directed_perception_sptr ptu;
 
@@ -177,7 +188,8 @@ private:
 
   //VIEW
   //boost::shared_ptr<cimglib::CImgDisplay>          rgb_win;
-  //boost::shared_ptr<cimglib::CImg<core::uint8_t> > rgb_cimg;
+  //boost::shared_ptr<cimglib::CImg<core::uint8_t> >   rgb_cimg;
+  CImg<core::uint8_t>    rgb_cimg;
 
   //IMAGE STREAM
   all::core::memory_stream_source_sptr_t  stream_source_ptr;
@@ -202,6 +214,17 @@ private:
   //
   int  centro_r;
   int  centro_c;
+
+  //
+  #ifdef TIMEDEBUG_
+  boost::timer gprofile;
+  #endif
+  //command strings
+  //to be loaded at startup
+  ///setup command string
+  std::string setup_command;
+  ///tracking command string
+  std::string tracking_command;
   //---------------------------------------------------------------------------
 };
 //---------------------------------------------------------------------------
