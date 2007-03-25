@@ -1,41 +1,34 @@
-#include "alcor.apps/gaze/gaze_machine_thread_t.hpp"
-#include <boost/thread/thread.hpp>
-#include <boost/bind.hpp>
-#include <iostream>
+#include "alcor.apps/gaze/gaze_machine_t.h"
+//#include <boost/thread/thread.hpp>
+//#include <boost/bind.hpp>
+//#include <iostream>
 
 using namespace all;
 
 int main()
 {
-    gaze::gaze_machine_thread_t gaze_machine;
+  //
+  gaze::gaze_machine_t gaze_machine;
+  printf("\nPress Return to start\n");
+  getchar();
+  gaze_machine.log_enabled();
+  gaze_machine.run_machine();
+  printf("\nPress Return to stop\n");
+  getchar();
+  gaze_machine.cancel();
 
-    getchar();
+  std::cout << "Elapsed Time: " 
+      << (gaze_machine.elapsed()) 
+      << " Secs." << std::endl
+      << "Gaze Samples: "
+      << gaze_machine.nsamples()
+      << std::endl;
 
-	boost::thread gaze_thr
-		(
-		boost::bind(
-        &gaze::gaze_machine_thread_t::run_thread
-		    ,&gaze_machine) 
-		);
+  std::cout << "RATE: " 
+    << ( gaze_machine.nsamples()/(gaze_machine.elapsed() ) ) 
+      << std::endl;
 
-    std::cout << "Check Everything is ok .......\nPress return to start" << std::endl;
-    getchar();
-    std::cout << "Running..." << std::endl;
-
-    gaze_machine.cancel();
-
-    std::cout << "Elapsed Time: " 
-        << (gaze_machine.elapsed()) 
-        << " Secs." << std::endl
-        << "Gaze Samples: "
-        << gaze_machine.nsamples()
-        << std::endl;
-
-    std::cout << "RATE: " 
-      << ( gaze_machine.nsamples()/(gaze_machine.elapsed() ) ) 
-        << std::endl;
-
-    getchar();
+  getchar();
     
     return 0;
 }
