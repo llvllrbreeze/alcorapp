@@ -14,7 +14,7 @@ int main()
   sense::bumblebee_driver_ptr_t cam = 
       sense::bumblebee_driver_t::create();
 
-  cam->open("config/bumblebeeB.ini");
+  cam->open("config/bumblebeeA.ini");
   cam->set_interleaved();
   //
   int dim = 3;

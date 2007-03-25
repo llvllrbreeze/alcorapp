@@ -1,8 +1,11 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "tracking_machine.h"
-#include <algorithm>
-//#include "alcor.apps/trm/gil_wrap_utils.hpp"
+#include "alcor/core/config_parser_t.hpp"
+
+
+
+
 //---------------------------------------------------------------------------
 namespace all { namespace trm {
 //---------------------------------------------------------------------------
@@ -13,6 +16,11 @@ tracking_machine::tracking_machine():running_(true)
   fire_callback = boost::bind
     (&tracking_machine::idle_cb, this);
 
+  config_parser_t config;
+  config.load(core::tags::ini, "config/trm_matlab_commands.ini");
+
+  setup_command     = config.get<std::string>("matlab.setup_command");
+  tracking_command  = config.get<std::string>("matlab.tracking_command");
 
   //Task Listener
   tasklistener.reset(new task_listener("config/trm_service.ini"));
@@ -26,7 +34,8 @@ tracking_machine::tracking_machine():running_(true)
   tasklistener->run_async();
 
   //bumblebee
-  bee.reset(new sense::bumblebee_driver_t());
+  //bee.reset(new sense::bumblebee_driver_t());
+  bee = sense::bumblebee_driver_t::create();
   bee->open("config/bumblebeeA.ini");
   //PTU
   ptu.reset (new act::directed_perception_ptu_t);
@@ -54,6 +63,7 @@ tracking_machine::tracking_machine():running_(true)
 
   //Streaming
   stream_source_ptr.reset(new all::core::memory_stream_source_t( bee->nrows(), bee->ncols() ) );
+  stream_source_ptr->set_quality(80);
   stream_server_ptr = new all::core::stream_server_t(stream_source_ptr,"config/trm_stream_server.ini");
   stream_server_ptr->run_async();
 
@@ -125,7 +135,7 @@ void tracking_machine::setup_cb()
   //then grab again and launch model setup
   if (bee->grab())
   {
-    core::uint8_sarr rightim = 
+    rightim = 
       bee->get_color_buffer(core::right_img);
 
     mxArray* mx_rimage = 
@@ -152,8 +162,12 @@ void tracking_machine::setup_cb()
     printf("SETUP\n");
 
     ////
+    //workspace->command_line
+      //("[centro_r centro_c] = trm_model_setup(rgb, r_roi, c_roi, h_roi, w_roi, scala_resize)");
+
     workspace->command_line
-      ("[centro_r centro_c] = trm_model_setup(rgb, r_roi, c_roi, h_roi, w_roi, scala_resize)");
+      (setup_command.c_str());
+
     ///
     printf("Done Setup\n\n");
 
@@ -173,6 +187,9 @@ void tracking_machine::setup_cb()
     //center again
     move_ptu_to_screen_rc(centro_r, centro_c ,0.5);
 
+    //
+    centro_r = bee->nrows()/2;
+
     //Se tutto a posto vai in idled_tracking
     process_event(idle_track_event());
   }
@@ -185,41 +202,77 @@ void tracking_machine::setup_cb()
 //---------------------------------------------------------------------------
 void tracking_machine::tracking_cb()
 {    
+#ifdef TIMEDEBUG_
+  printf("\n--------------------\n");
+  boost::timer profile;
+  gprofile.restart();
+#endif
+
   //center pantilt, depending on last glo_theta_target and theta_rob
   double th_robot      = p3dx->get_odometry().getTh().deg();
   //to compensate
-  double delta_pan     = glo_theta_target - th_robot;
-  double delta_tilt    = 
+  double pan_     = glo_theta_target - th_robot;
+  double tilt_    = pinhole.delta_tilt_from_pixel(centro_r);
 
   //compensate only pan ...
-  ptu->set_pan(delta_pan, 0.2);
+  //ptu->set_pan(delta_pan, 0.2);
 
-  //ptu->set_pantilt();
+  #ifdef TIMEDEBUG_
+    profile.restart();
+  #endif
 
-  //
+  //compensate!!
+  ptu->set_pantilt(pan_, tilt_);
+
+  #ifdef TIMEDEBUG_
+    printf("->set_pantilt %.3f\n", profile.elapsed());
+  #endif
+
+  //Grab Images!
   if (bee->grab())
   {
-    //!!!!!!!!!!!!!!!!!!!
+
+    #ifdef TIMEDEBUG_
+      profile.restart();
+    #endif
+    //Current PanTilt
     core::pantilt_angle_t current_pt = 
       ptu->get_fast_pantilt();
+
+    #ifdef TIMEDEBUG_
+      printf("->get_fast_pantilt %.3f\n", profile.elapsed());
+    #endif
     
-    core::uint8_sarr rightim = 
+    rightim = 
       bee->get_color_buffer(core::right_img);
 
+    #ifdef TIMEDEBUG_
+      profile.restart();
+    #endif
     mxArray* mx_rimage = 
       matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
                                                           ,matlab::row_major
                                                           ,bee->nrows()
                                                           ,bee->ncols());
+    #ifdef TIMEDEBUG_
+      printf("->create_from_planar %.3f\n", profile.elapsed());
+    #endif
 
     //Push into Workspace
     workspace->put_array("rgb", mx_rimage);
 
-    ///MEAN SHIFT : ottenere un centro
-    workspace->command_line("[centro_r centro_c]= trm_track(rgb, [120, 160])");
+    #ifdef TIMEDEBUG_
+    profile.restart();
+    #endif
 
-    ////send image stream
-    //stream_source_ptr->update_image(rightim);
+    ///MEAN SHIFT : ottenere un centro
+    //workspace->command_line("[centro_r centro_c]= trm_track(rgb, [120, 160])");
+
+    workspace->command_line(tracking_command.c_str());
+
+    #ifdef TIMEDEBUG_
+      printf("->track routine %.3f\n", profile.elapsed());
+    #endif
 
     //***GATHER***
     centro_r = 
@@ -231,7 +284,7 @@ void tracking_machine::tracking_cb()
     if(centro_c > 0)//che non sia nullo ....
     {
       //proviamo a saltarla... mmmh no..
-      move_ptu_to_screen_rc(centro_r, centro_c);
+      //move_ptu_to_screen_rc(centro_r, centro_c);
 
       //***Target Angular SET POINT***    
       //double theta_target= current_pan + pan_delta;
@@ -242,22 +295,43 @@ void tracking_machine::tracking_cb()
       double loc_theta_target = current_pt.get_pan_deg() + pan_delta;      
       //theta globale (useful for next iteration)
       glo_theta_target = loc_theta_target + th_robot;
-      
+
+      #ifdef TIMEDEBUG_
+      profile.restart();
+      #endif   
       //Profondità 3D
       core::depth_image_t depthim;
-      core::single_sarr depth = bee->get_depth_buffer();
-      depthim.assign(bee->nrows(), bee->ncols(), depth.get());
+      depth = bee->get_depth_buffer();      
+      #ifdef TIMEDEBUG_
+        printf("->get_depth_buffer %.3f\n", profile.elapsed());
+      #endif
 
+      #ifdef TIMEDEBUG_
+      profile.restart();
+      #endif         
+      depthim.assign(bee->nrows(), bee->ncols(), depth.get());
+      #ifdef TIMEDEBUG_
+        printf("->depthim.assign %.3f\n", profile.elapsed());
+      #endif
+
+      #ifdef TIMEDEBUG_
+      profile.restart();
+      #endif   
       //centro dell'intorno
       core::pixelcoord_t center;
       center.row = centro_r;
       center.col = centro_c;
 
       //raggio dell'intorno
-      size_t  hsize =  7;
+      size_t  hsize =  8;
       //
       core::mystat vstat  
         = core::estimate_depth(depthim, center, hsize);
+
+      #ifdef TIMEDEBUG_
+        printf("->estimate_depth %.3f\n", profile.elapsed());
+      #endif
+
       //
       double distanza = vstat.mean;
       double speed  = 100;//??
@@ -281,22 +355,31 @@ void tracking_machine::tracking_cb()
         else if (distanza < 4.0)
         {
           //(vmax-vmin)/(dmax - dmin) * (D - dmin) + vmin
-          speed = (220-50)/(4.0 - 1.5)*(distanza - 1.5) + 50 ;
+          speed = (200-50)/(4.0 - 1.5)*(distanza - 1.5) + 50 ;
         }
         else
         {
           //saturate
-          speed = 220;
+          speed = 200;
         }
         //
         p3dx->set_relative_goto(target, speed );
 
         //Display Image
-        //const unsigned char red  [3] = {255,  0,  0};
-        //rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
-        //rgb_cimg->draw_circle(centro_c, centro_r, 10.0,red);
-        //rgb_cimg->display(*rgb_win);
-        //printf("Distanza %.2f\n", distanza);
+        //char* dtag = "" ;
+        //sprintf( dtag, "Distanza: %.2f", distanza);
+
+
+        const unsigned char red  [3] = {255,  0,  0};
+        ///
+        rgb_cimg.assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3);
+        rgb_cimg.draw_circle(centro_c, centro_r, 10.0,red);
+        //rgb_cimg.draw_text(dtag, centro_c, centro_r, black);
+        //CImg & 	draw_rectangle (const int x0, const int y0, const int x1, const int y1, const T *const color, const float opacity=1)
+ 	//Draw a 2D filled colored rectangle in the instance image, at coordinates (x0,y0)-(x1,y1). 
+        //send image stream
+        //stream_source_ptr->update_image(rgb_cimg.ptr());
+        stream_source_ptr->update_image(rightim);
       }
 
     }//centro_c>0
@@ -305,12 +388,13 @@ void tracking_machine::tracking_cb()
       //TODO: skip??
       process_event(fail_event());
     }
-    //send image stream
-    stream_source_ptr->update_image(rightim);
+
   ///se va storto..
   //
   }
-
+  #ifdef TIMEDEBUG_
+  printf("Cycle time: %.2f\n", gprofile.elapsed());
+  #endif
 }
 //---------------------------------------------------------------------------
 void tracking_machine::idle_tracking_cb()
@@ -394,9 +478,9 @@ bool tracking_machine::start_tracking (track_event const&)
   //Desired Heading
   double theta_rob = p3dx->get_odometry().getTh().deg();
 
-  //
-  math::point2d target(1.0, math::angle(pan,math::deg_tag));
-  p3dx->set_relative_goto(target, 0);
+  ////
+  //math::point2d target(1.0, math::angle(pan,math::deg_tag));
+  //p3dx->set_relative_goto(target, 0);
   //p3dx->enable_follow_mode();
 
   printf("enabling goto\n");
@@ -405,6 +489,10 @@ bool tracking_machine::start_tracking (track_event const&)
   ///
   fire_callback = boost::bind
     (&tracking_machine::tracking_cb, this);
+
+#ifdef TIMEDEBUG_
+  gprofile.restart();
+#endif
 
   return true;
 }

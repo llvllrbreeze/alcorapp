@@ -18,3 +18,10 @@
 #include "alcor/core/memory_stream_source_t.hpp"
 #include <alcor/core/stream_server_t.hpp>
 //-----------------------------------------------------------------------++
+#include "alcor.extern/CImg/CImg.h"
+using namespace cimg_library;
+//-----------------------------------------------------------------------++
+//#pragma comment(lib, "bumblebee_driver_t.lib")
+#pragma comment(lib, "digiclops.lib")
+#pragma comment(lib, "triclops.lib")
+//-----------------------------------------------------------------------++
