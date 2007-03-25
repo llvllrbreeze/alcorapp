@@ -206,10 +206,13 @@ private:
 
   //target w/respect to the robot ref system
   double glo_theta_target;
-  //
+  //[limits]
+  ///
   double min_safe_distance;
-  //
-  double max_vel_to_track;
+  double max_safe_distance;
+  ///
+  double max_tracking_vel;
+  double min_tracking_vel;
 
   //
   int  centro_r;
@@ -221,6 +224,8 @@ private:
   #endif
   //command strings
   //to be loaded at startup
+  ///
+  std::string init_commmand;
   ///setup command string
   std::string setup_command;
   ///tracking command string

@@ -17,10 +17,22 @@ tracking_machine::tracking_machine():running_(true)
     (&tracking_machine::idle_cb, this);
 
   config_parser_t config;
-  config.load(core::tags::ini, "config/trm_matlab_commands.ini");
+  config.load(core::tags::ini, "config/trm_app_details.ini");
 
+  init_command      = config.get<std::string>("matlab.init_command");
   setup_command     = config.get<std::string>("matlab.setup_command");
   tracking_command  = config.get<std::string>("matlab.tracking_command");
+
+  min_safe_distance = config.get<double>("limits.min_safe_distance");
+  max_safe_distance = config.get<double>("limits.max_safe_distance");
+
+  min_tracking_vel  = config.get<double>("limits.min_tracking_vel");
+  max_tracking_vel  = config.get<double>("limits.max_tracking_vel");
+
+  std::string 
+    beeconfigfile = config.get<std::string>("bumblebee.config");
+  std::string 
+    p3configfile = config.get<std::string>("p3.config");
 
   //Task Listener
   tasklistener.reset(new task_listener("config/trm_service.ini"));
@@ -36,7 +48,7 @@ tracking_machine::tracking_machine():running_(true)
   //bumblebee
   //bee.reset(new sense::bumblebee_driver_t());
   bee = sense::bumblebee_driver_t::create();
-  bee->open("config/bumblebeeA.ini");
+  bee->open(beeconfigfile);
   //PTU
   ptu.reset (new act::directed_perception_ptu_t);
   ptu->open("config/dpptu_conf.ini");
@@ -51,7 +63,7 @@ tracking_machine::tracking_machine():running_(true)
   //if (p3dx->open("config/p3_conf.ini"))
   //  printf("Robot connected!\n");
 
-  p3dx.reset(new act::p3_client_t("config/p3_conf.ini")); 
+  p3dx.reset(new act::p3_client_t(p3configfile.c_str() )); 
   //if (p3dx->open("config/p3_conf.ini"))
   p3dx->run_async();
     printf("Robot connected!\n");
@@ -87,22 +99,22 @@ tracking_machine::~tracking_machine()
 //---------------------------------------------------------------------------
 void tracking_machine::threadloop()
   {
-  ///
+  //
   workspace.reset( new matlab::matlab_engine_t);
-  workspace->command_line("cd tracking");
-  workspace->command_line("init_tracking");
-
-
-    while (running_)
+  //
+  workspace->command_line(init_command);
+  //Enter loop
+  while (running_)
+  {
     {
-      {
-        boost::mutex::scoped_lock lock(process_guard);
-        if(!fire_callback.empty())
-              fire_callback();    
-      }
+      boost::mutex::scoped_lock lock(process_guard);
+      if(!fire_callback.empty())
+            fire_callback();    
+    }
     boost::thread::yield();    
     core::BOOST_SLEEP(10);
-    }
+  }
+
   }
 //###########################################################################
 //CALLBACK
@@ -352,15 +364,19 @@ void tracking_machine::tracking_cb()
           //stop
           speed = 0;
         }
-        else if (distanza < 4.0)
+        else if (distanza < max_safe_distance)
         {
           //(vmax-vmin)/(dmax - dmin) * (D - dmin) + vmin
-          speed = (200-50)/(4.0 - 1.5)*(distanza - 1.5) + 50 ;
+          speed = (   (max_tracking_vel-min_tracking_vel)
+                    / (max_safe_distance - min_safe_distance)
+                    * (distanza - min_safe_distance) 
+                  )
+                  + min_tracking_vel ;
         }
         else
         {
           //saturate
-          speed = 200;
+          speed = max_tracking_vel;
         }
         //
         p3dx->set_relative_goto(target, speed );
@@ -372,9 +388,9 @@ void tracking_machine::tracking_cb()
 
         const unsigned char color  [3] = {217,  241,  60};
 
-        ///
+        ///shared memory
         rgb_cimg->assign(rightim.get(),  bee->ncols(), bee->nrows(),1,3, true)
-          .draw_rectangle(centro_c - (w_roi/2) , centro_r - (h_roi/2)
+                .draw_rectangle(centro_c - (w_roi/2) , centro_r - (h_roi/2)
                           ,centro_c + (w_roi/2) , centro_r + (h_roi/2)
                           ,color
                           , 0.5);
