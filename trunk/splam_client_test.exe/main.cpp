@@ -11,7 +11,7 @@ int main()
 	splam_data		data;
 	while(esc != 'q')
 	{
-		std::cin >> esc;
+		esc  = getchar();
 		splam.lock();
 		splam.get_splam_data(data);
 		std::cout << "posa corrente: " << data.get_current_position()<< " --- premere 'q' per uscire!" << std::endl;

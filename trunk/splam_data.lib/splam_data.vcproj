@@ -156,6 +156,10 @@
 			Name="header"
 			>
 			<File
+				RelativePath="..\..\alcor\math\geom2dtypes.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\core\saliency_data_t.hpp"
 				>
 			</File>
