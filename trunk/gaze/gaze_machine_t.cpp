@@ -88,33 +88,7 @@ void gaze_machine_t::allocate_()
   //iscene.reset( new core::uint8_t  [bee_->color_buffer_size()] );
   //idepth.reset( new core::single_t [bee_->depth_buffer_size()] );
 }
-/////////////////////////////////////////////////////////////////////////////
-void gaze_machine_t::write_header_()
-{
-  printf("Writing Header!\n");
-  size_t sample_sz = sizeof(nsamples_);
-  elapsed_sz = sizeof(double);
-  eye_sz     = eye_->size();
 
-#ifndef NOBEE_
-  scene_sz   = bee_->color_buffer_size();
-  depth_sz   = bee_->depth_buffer_size();
-#endif
-  head_sz    = sizeof(math::rpy_angle_t);
-
-  //skip  ... this position will held the number of frames.
-  gazelog_.seekp(sample_sz);
-
-  gazelog_.write((char*)&elapsed_sz, sizeof(size_t)); 
-  gazelog_.write((char*)&eye_sz    , sizeof(size_t));
-
-#ifndef NOBEE_
-  gazelog_.write((char*)&scene_sz  ,   sizeof(size_t));
-  gazelog_.write((char*)&depth_sz  ,   sizeof(size_t));
-#endif
-
-  gazelog_.write((char*)&head_sz  ,   sizeof(size_t));
-}
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 void gaze_machine_t::print_welcome()
@@ -174,23 +148,67 @@ void gaze_machine_t::sample_gaze_()
 #endif
 
 }
+/////////////////////////////////////////////////////////////////////////////
+void gaze_machine_t::write_header_()
+{
+  printf("Writing Header!\n");
+
+  size_t sample_sz = sizeof(nsamples_);
+  
+  elapsed_sz = sizeof(double);
+  eye_sz     = eye_->size();
+
+#ifndef NOBEE_
+  scene_sz   = bee_->color_buffer_size();
+  depth_sz   = bee_->depth_buffer_size();
+#endif
+
+  head_sz    = sizeof(math::rpy_angle_t);
+
+  //skip  ... this position will hold the number of frames.
+  gazelog_.seekp(sample_sz);
+  //skip .... this will hold the total time elapsed.
+  gazelog_.seekp(sample_sz+elapsed_sz);
+
+  //eye dimensions
+  eyedims_.row_ = eye_->height();
+  eyedims_.col_ = eye_->width();
+  eyedims_.depth_= eye_->channels();
+  gazelog_.write((char*)&eyedims_, sizeof(eyedims_));
+
+  ////scene dimensions
+  //scenedims_.row_ = bee_->nrows();
+  //scenedims_.col_ = bee_->ncols();
+  //scenedims_.depth_ = 3; //always
+  //gazelog_.write((char*)&scenedims_, sizeof(scenedims_) );  
+
+  gazelog_.write((char*)&elapsed_sz, sizeof(size_t)); 
+  gazelog_.write((char*)&eye_sz    , sizeof(size_t));
+
+#ifndef NOBEE_
+  gazelog_.write((char*)&scene_sz  ,   sizeof(size_t));
+  gazelog_.write((char*)&depth_sz  ,   sizeof(size_t));
+#endif
+
+  gazelog_.write((char*)&head_sz  ,   sizeof(size_t));
+}
 //-------------------------------------------------------------------------++
 void gaze_machine_t::write_gaze_()
 {
-  //nsamples_++;
 
   gazelog_.write((char*)&elapsed_,      elapsed_sz); 
   gazelog_.write((char*)ieye.get()  ,   eye_sz);
+
 #ifndef NOBEE_
   gazelog_.write((char*)iscene.get(),   scene_sz);
   gazelog_.write((char*)idepth.get(),   depth_sz);
 #endif
+
   gazelog_.write((char*)&ihead,         head_sz);
 }
 //-------------------------------------------------------------------------++
 void gaze_machine_t::show_gaze_()
 {
-  //nsamples_++;
 }
 //-------------------------------------------------------------------------++
 int gaze_machine_t::nsamples() const
@@ -245,8 +263,9 @@ void gaze_machine_t::gaze_loop()
     //
     gazelog_.seekp(std::ios::beg);
     //
-    gazelog_.write((char*)&nsamples_, sizeof(size_t)); 
-
+    gazelog_.write((char*)&nsamples_, sizeof(nsamples_)); 
+    //
+    gazelog_.write((char*)&elapsed_, sizeof(elapsed_)); 
     //
     gazelog_.close(); 
   }
