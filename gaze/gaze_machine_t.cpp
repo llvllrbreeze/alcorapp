@@ -2,7 +2,7 @@
 #include "alcor/core/config_parser_t.hpp"
 #include "alcor.extern/CImg/CImg.h"
 using namespace cimg_library;
-#define NOBEE_
+//#define NOBEE_
 
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze { 
@@ -177,10 +177,10 @@ void gaze_machine_t::write_header_()
   gazelog_.write((char*)&eyedims_, sizeof(eyedims_));
 
   ////scene dimensions
-  //scenedims_.row_ = bee_->nrows();
-  //scenedims_.col_ = bee_->ncols();
-  //scenedims_.depth_ = 3; //always
-  //gazelog_.write((char*)&scenedims_, sizeof(scenedims_) );  
+  scenedims_.row_ = bee_->nrows();
+  scenedims_.col_ = bee_->ncols();
+  scenedims_.depth_ = 3; //always
+  gazelog_.write((char*)&scenedims_, sizeof(scenedims_) );  
 
   gazelog_.write((char*)&elapsed_sz, sizeof(size_t)); 
   gazelog_.write((char*)&eye_sz    , sizeof(size_t));
@@ -227,8 +227,8 @@ void gaze_machine_t::gaze_loop()
   printf("->boot_machine_ .. \n");
   if(boot_machine_())
   {  
-    CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
-    CImg<core::uint8_t> imag;
+    //CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
+    //CImg<core::uint8_t> imag;
     reset_mti();
     start_timing();
     printf("->machine booted ...starting loop\n");
@@ -240,20 +240,20 @@ void gaze_machine_t::gaze_loop()
         sample_gaze_();
         process_gaze_data();
         //////
-        imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
-        //
-        imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
-        imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
-        imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
-        imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
-        imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
+        //imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
+        ////
+        //imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
+        //imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
+        //imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
+        //imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
+        //imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
 
-        imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
-        imag.draw_line(1,1, 200,1, color);
-        imag.draw_line(1,1, 0,200, color);
-        imag.draw_line(200,1, 200,200, color);
-        imag.draw_line(1,200, 200,200, color);
-        imag.display(view) ;
+        //imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
+        //imag.draw_line(1,1, 200,1, color);
+        //imag.draw_line(1,1, 0,200, color);
+        //imag.draw_line(200,1, 200,200, color);
+        //imag.draw_line(1,200, 200,200, color);
+        //imag.display(view) ;
 
         boost::thread::yield();
         all::core::BOOST_SLEEP(msecspause);
