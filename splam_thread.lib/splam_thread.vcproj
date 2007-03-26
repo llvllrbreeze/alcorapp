@@ -176,6 +176,14 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\alcor\splam\detail\pmap_wrap.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\alcor\splam\splam_thread.cpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

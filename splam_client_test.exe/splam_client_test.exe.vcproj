@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="splam_client.lib AriaStatic.lib ArNetworkingStatic.lib iniwrapper.lib coder.lib winmm.lib wsock32.lib"
+				AdditionalDependencies="AriaStatic.lib ArNetworkingStatic.lib iniwrapper.lib coder.lib winmm.lib wsock32.lib"
 				OutputFile="..\..\alcor.bin\splam_client_test.exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -176,12 +176,24 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\alcor\core\i_connection_handler_t.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\splam\splam_client.h"
 				>
 			</File>
 		</Filter>
 		<File
+			RelativePath="..\..\alcor\core\i_connection_handler_t.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\main.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\alcor\splam\splam_client.cpp"
 			>
 		</File>
 	</Files>

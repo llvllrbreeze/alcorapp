@@ -7,11 +7,12 @@ int main()
 {
 	char esc='0';
 	splam_thread splam;
+	//esc = getchar();
 	splam.run();
 	splam.start_server();
 	while(esc != 'q')
 	{
-		std::cin >> esc;
+		esc = getchar();
 		std::cout << "Premere 'q' per uscire"<<std::endl;
 	}
 	return 0;
