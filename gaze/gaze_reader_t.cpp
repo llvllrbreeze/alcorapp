@@ -143,11 +143,11 @@ void gaze_reader_t::play()
     imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw.deg());
     imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", i+1);
 
-    imag.draw_rectangle(1, 1, 100, 100,color, 0.2);
-    imag.draw_line(1,1, 100,1, color);
-    imag.draw_line(1,1, 0,100, color);
-    imag.draw_line(100,1, 100,100, color);
-    imag.draw_line(1,100, 100,100, color);
+    imag.draw_rectangle(1, 1, 120, 150, color, 0.2);
+    imag.draw_line(1,1, 120,1, color);
+    imag.draw_line(1,1, 0,150, color);
+    imag.draw_line(120,1, 120,150, color);
+    imag.draw_line(1,150, 120,150, color);
 
     imag.display(view) ;
 

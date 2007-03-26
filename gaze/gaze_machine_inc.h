@@ -18,7 +18,7 @@
 #include <cstdio>
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze {
-const char VERSION_INFORMATION[] = "Gaze Machine 0.5.0";
+const char VERSION_INFORMATION[] = "Gaze Machine 0.5.5";
 const char AUTHOR_INFORMATION[]  = "Andrea Carbone";
 }}
 
