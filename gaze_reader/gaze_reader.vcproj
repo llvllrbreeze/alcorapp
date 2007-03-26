@@ -192,6 +192,10 @@
 				RelativePath="..\gaze\gaze_reader_t.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\alcor\math\size3d_t.hpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

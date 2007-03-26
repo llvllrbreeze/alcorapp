@@ -2,6 +2,7 @@
 #define gaze_machine_t_H_INCLUDE
 //-------------------------------------------------------------------------++
 #include "gaze_machine_inc.h"
+#include "alcor/math/size3d_t.hpp"
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze{
 //-------------------------------------------------------------------------++
@@ -66,6 +67,9 @@ private:
   ///Binary Data Stream
   std::fstream gazelog_;
 
+  //[GAZE DATA]
+  ///elapsed time .. in seconds
+  double elapsed_;
   ///eye buffer
   all::core::uint8_sarr   ieye;
   ///rgb scene buffer
@@ -75,17 +79,21 @@ private:
   ///Orientation
   all::math::rpy_angle_t  ihead;
 
-  ///Size ...
-  size_t  elapsed_sz   ;
-  size_t  eye_sz       ;
-  size_t  scene_sz     ;
-  size_t  depth_sz     ;
-  size_t  head_sz      ; 
+
+  ///image sizes:
+  all::math::size3d_t eyedims_;
+  all::math::size3d_t scenedims_;
+  
+  ///per samples sizes ...
+  size_t  elapsed_sz ;
+  size_t  eye_sz     ;
+  size_t  scene_sz   ;
+  size_t  depth_sz   ;
+  size_t  head_sz    ; 
 
   ///Samples num
   size_t nsamples_;
-  ///elapsed time .. in seconds
-  double elapsed_;
+
   ///loop control
   volatile bool running_;
   ///
