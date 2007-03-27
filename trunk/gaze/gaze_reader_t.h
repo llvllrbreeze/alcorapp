@@ -34,6 +34,9 @@ private:
   ///read a sample from current pos
   void sample_();
 
+  ///
+  void play_loop_();
+
   //[header content]
   ///
   size_t nsamples_;

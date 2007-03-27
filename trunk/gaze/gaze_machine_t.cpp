@@ -16,6 +16,12 @@ gaze_machine_t::gaze_machine_t():
                       , is_opened_(false)
 {
   process_gaze_data = boost::bind(&gaze_machine_t::null_op_, this);
+
+  //eye_.reset(new sense::opencv_grabber_t);
+  //mti_.reset(new sense::MTi_driver_t());
+  //bee_.reset(new sense::bumblebee_driver_t);
+  reset_devices_();
+
   print_welcome();
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -27,6 +33,13 @@ gaze_machine_t::~gaze_machine_t()
 void gaze_machine_t::set_logname(std::string& logname)
 {
   logname_ = logname;
+}
+/////////////////////////////////////////////////////////////////////////////
+void gaze_machine_t::reset_devices_()
+{
+  eye_.reset(new sense::opencv_grabber_t);
+  mti_.reset(new sense::MTi_driver_t());
+  bee_.reset(new sense::bumblebee_driver_t);
 }
 /////////////////////////////////////////////////////////////////////////////
 bool gaze_machine_t::boot_machine_()
@@ -55,7 +68,7 @@ bool gaze_machine_t::boot_machine_()
     ////
     std::cout << "<Eye Camera ...>"; 
     printf("Config: %s\n", eyeconf.c_str());
-    eye_.reset(new sense::opencv_grabber_t);
+    //eye_.reset(new sense::opencv_grabber_t);
 
     if( !eye_->open(eyeconf, !is_opened_) ) return false;    
     if (!is_opened_) is_opened_ = true;
@@ -64,14 +77,14 @@ bool gaze_machine_t::boot_machine_()
 
     //
     std::cout << "<MTi......>"; 
-    mti_.reset(new sense::MTi_driver_t());
+    //mti_.reset(new sense::MTi_driver_t());
     if( !mti_->open(mticonf) ) return false;    
     std::cout << "<Done>"<< std::endl << std::endl;
 
 #ifndef NOBEE_
     //
     std::cout << "<Bumblebee ...>";
-    bee_.reset(new sense::bumblebee_driver_t);
+    //bee_.reset(new sense::bumblebee_driver_t);
     if( !bee_->open(beeconf) ) return false;
     std::cout << "<Done>" << std::endl<< std::endl;
 #endif
@@ -130,7 +143,8 @@ std::cout << "Author: " <<  gaze::AUTHOR_INFORMATION << std::endl;
 /////////////////////////////////////////////////////////////////////////////
 void gaze_machine_t::reset_mti()
 {
-  mti_->reset(sense::tags::align_reset);
+  mti_->reset(sense::tags::global_reset);
+  mti_->reset(sense::tags::heading_reset);
 }
 /////////////////////////////////////////////////////////////////////////////
 void gaze_machine_t::sample_gaze_()

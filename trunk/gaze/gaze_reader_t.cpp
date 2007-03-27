@@ -57,14 +57,19 @@ void gaze_reader_t::load(std::string& binlog)
                   + sizeof(total_elapsed_)
                   + sizeof(eyedims_)
                   + sizeof(scenedims_)
+                  + sizeof(elapsed_offset_)
+                  + sizeof(eye_offset_)
+                  + sizeof(scene_offset_)
+                  + sizeof(depth_offset_)
+                  + sizeof(rpy_offset_)
                   ;
 
   size_t per_sample_offset_ = 
-      elapsed_offset_
-    + eye_offset_
-    + scene_offset_
-    + depth_offset_
-    + rpy_offset_;
+                  elapsed_offset_
+                + eye_offset_
+                + scene_offset_
+                + depth_offset_
+                + rpy_offset_;
 
   printf("header offset: %d\n", header_offset_);
   printf("per sample offset: %d\n", per_sample_offset_);
@@ -99,12 +104,7 @@ void gaze_reader_t::sample_()
 //-------------------------------------------------------------------------++
 void gaze_reader_t::reset()
 {
-  //questo è l'inizio
-  //gazelog_.seekg(std::ios::beg);
-  //start from the initial sample ... jump header
-  //non funziona... bah
   gazelog_.seekg(header_offset_);
-
 }
 //-------------------------------------------------------------------------++
 ///
@@ -116,7 +116,7 @@ void gaze_reader_t::next()
 ///
 void gaze_reader_t::play()
 {
-  //reset();
+  reset();
 
   double last_elapsed = 0;
   unsigned int timeroffset;
