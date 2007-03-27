@@ -11,8 +11,7 @@ int main()
   gaze::gaze_machine_t gaze_machine;
   printf("\nPress Return to start\n");
   getchar();
-  gaze_machine.log_enabled();
-  gaze_machine.run_machine();
+  gaze_machine.run_machine(gaze::binlog);
   printf("\nPress Return to stop\n");
   getchar();
   gaze_machine.cancel();
