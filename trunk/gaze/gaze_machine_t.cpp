@@ -8,9 +8,14 @@ using namespace cimg_library;
 namespace all { namespace gaze { 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-gaze_machine_t::gaze_machine_t():nsamples_(0),running_(true)
+gaze_machine_t::gaze_machine_t():
+                        nsamples_(0)
+                      , calib_samples_cnt(0)
+                      , running_(true)
+                      , logname_("gazelog.bin")
+                      , is_opened_(false)
 {
-  process_gaze_data = boost::bind(&gaze_machine_t::show_gaze_, this);
+  process_gaze_data = boost::bind(&gaze_machine_t::null_op_, this);
   print_welcome();
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -19,12 +24,9 @@ gaze_machine_t::~gaze_machine_t()
 
 }
 /////////////////////////////////////////////////////////////////////////////
-void gaze_machine_t::log_enabled(bool enabled)
+void gaze_machine_t::set_logname(std::string& logname)
 {
-  if(enabled)
-    process_gaze_data = boost::bind(&gaze_machine_t::write_gaze_, this);
-  else
-    process_gaze_data = boost::bind(&gaze_machine_t::show_gaze_, this);
+  logname_ = logname;
 }
 /////////////////////////////////////////////////////////////////////////////
 bool gaze_machine_t::boot_machine_()
@@ -43,7 +45,7 @@ bool gaze_machine_t::boot_machine_()
     config.load(core::tags::ini,"config/gaze_machine.ini");
 
     //
-    std::string filelog = config.get<std::string>("config.binfile", "gazelog.bin");
+    //logname_ = config.get<std::string>("config.binfile", "gazelog.bin");
     std::string mticonf = config.get<std::string>("config.mti", "config/mti_config.ini");
     std::string eyeconf = config.get<std::string>("config.reye","config/eyecamera.ini");
     std::string beeconf = config.get<std::string>("config.bee", "config/bumblebeeB.ini");
@@ -54,7 +56,10 @@ bool gaze_machine_t::boot_machine_()
     std::cout << "<Eye Camera ...>"; 
     printf("Config: %s\n", eyeconf.c_str());
     eye_.reset(new sense::opencv_grabber_t);
-    if( !eye_->open(eyeconf) ) return false;
+
+    if( !eye_->open(eyeconf, !is_opened_) ) return false;    
+    if (!is_opened_) is_opened_ = true;
+
     std::cout << "<Done>"<< std::endl << std::endl;
 
     //
@@ -72,7 +77,7 @@ bool gaze_machine_t::boot_machine_()
 #endif
 
     //
-    gazelog_.open(filelog.c_str(),std::ios::out|std::ios::binary);
+    gazelog_.open(logname_.c_str(),std::ios::out|std::ios::binary);
     
     allocate_();
     
@@ -195,7 +200,6 @@ void gaze_machine_t::write_header_()
 //-------------------------------------------------------------------------++
 void gaze_machine_t::write_gaze_()
 {
-
   gazelog_.write((char*)&elapsed_,      elapsed_sz); 
   gazelog_.write((char*)ieye.get()  ,   eye_sz);
 
@@ -207,7 +211,60 @@ void gaze_machine_t::write_gaze_()
   gazelog_.write((char*)&ihead,         head_sz);
 }
 //-------------------------------------------------------------------------++
-void gaze_machine_t::show_gaze_()
+void gaze_machine_t::calib_()
+{
+  printf("->in the thread loop!\n");
+  printf("->boot_machine_ .. \n");
+  if(boot_machine_())
+  {  
+    CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
+    CImg<core::uint8_t> imag;
+
+    reset_mti();
+    start_timing();
+    printf("->machine booted ...starting loop\n");
+    const unsigned char color  [3] = {215,  240,  60};
+    const unsigned char blue   [3] = {0,  0,  255};
+    while (running_)
+    {
+      nsamples_++;
+      sample_gaze_();
+      write_gaze_();
+      //////
+      imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
+      //
+      imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
+      imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
+      imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
+      imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
+      imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
+
+      imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
+      imag.draw_line(1,1, 200,1, color);
+      imag.draw_line(1,1, 0,200, color);
+      imag.draw_line(200,1, 200,200, color);
+      imag.draw_line(1,200, 200,200, color);
+      imag.display(view) ;
+
+      boost::thread::yield();
+      all::core::BOOST_SLEEP(msecspause);
+    }
+    printf("Thread Canceled\n");
+    elapsed_ = elapsed();
+    //
+    gazelog_.seekp(std::ios::beg);
+    //
+    gazelog_.write((char*)&nsamples_, sizeof(nsamples_)); 
+    //
+    gazelog_.write((char*)&elapsed_, sizeof(elapsed_)); 
+    //
+    gazelog_.close(); 
+  }
+  else
+      printf("devices not started!\n"); 
+}
+//-------------------------------------------------------------------------++
+void gaze_machine_t::null_op_()
 {
 }
 //-------------------------------------------------------------------------++
@@ -216,8 +273,15 @@ int gaze_machine_t::nsamples() const
 return nsamples_;
 }
 //-------------------------------------------------------------------------++
-void gaze_machine_t::run_machine()
+void gaze_machine_t::run_machine(binlog_t const&)
 {
+  gaze_loop_ = boost::bind(&gaze_machine_t::gaze_loop,      this);
+  thread_ptr.reset( new boost::thread(boost::bind(&gaze_machine_t::gaze_loop, this) ) );
+}
+//-------------------------------------------------------------------------++
+void gaze_machine_t::run_machine(calib_t const&)
+{
+  gaze_loop_ = boost::bind(&gaze_machine_t::calib_,      this);
   thread_ptr.reset( new boost::thread(boost::bind(&gaze_machine_t::gaze_loop, this) ) );
 }
 //-------------------------------------------------------------------------++
@@ -227,8 +291,9 @@ void gaze_machine_t::gaze_loop()
   printf("->boot_machine_ .. \n");
   if(boot_machine_())
   {  
-    //CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
-    //CImg<core::uint8_t> imag;
+    CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
+    CImg<core::uint8_t> imag;
+
     reset_mti();
     start_timing();
     printf("->machine booted ...starting loop\n");
@@ -238,22 +303,22 @@ void gaze_machine_t::gaze_loop()
     {
         nsamples_++;
         sample_gaze_();
-        process_gaze_data();
+        write_gaze_();
         //////
-        //imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
-        ////
-        //imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
-        //imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
-        //imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
-        //imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
-        //imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
+        imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
+        //
+        imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
+        imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
+        imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
+        imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
+        imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
 
-        //imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
-        //imag.draw_line(1,1, 200,1, color);
-        //imag.draw_line(1,1, 0,200, color);
-        //imag.draw_line(200,1, 200,200, color);
-        //imag.draw_line(1,200, 200,200, color);
-        //imag.display(view) ;
+        imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
+        imag.draw_line(1,1, 200,1, color);
+        imag.draw_line(1,1, 0,200, color);
+        imag.draw_line(200,1, 200,200, color);
+        imag.draw_line(1,200, 200,200, color);
+        imag.display(view) ;
 
         boost::thread::yield();
         all::core::BOOST_SLEEP(msecspause);

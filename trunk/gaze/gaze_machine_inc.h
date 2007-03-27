@@ -11,11 +11,16 @@
 #include <boost/timer.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/bind.hpp>
+//#include <boost/shared_ptr.hpp>
 //-------------------------------------------------------------------------++
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <cstdio>
+//-------------------------------------------------------------------------++
+#pragma comment (lib, "MTi_driver_t.lib")
+#pragma comment (lib, "bumblebee_driver_t.lib")
+#pragma comment (lib, "opencv_grabber_t.lib")
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze {
 const char VERSION_INFORMATION[] = "Gaze Machine 0.5.5";
