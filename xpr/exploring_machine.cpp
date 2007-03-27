@@ -10,8 +10,8 @@ namespace all { namespace  xpr {
   exploring_machine::exploring_machine()
   {
   //
-  //fire_callback = boost::bind
-  //  (&exploring_machine::idled_cb, this);
+  fire_callback = boost::bind
+    (&exploring_machine::idled_cb, this);
 
   //Task Listener
   tasklistener.reset(new task_listener("config/xrp_service.ini"));
@@ -34,7 +34,7 @@ namespace all { namespace  xpr {
  //P3AT
   p3at.reset(new act::p3_gateway()); 
   ///
-  if (p3at->open("config/p3_conf.ini"))
+  if (p3at->open("config/p3at_conf.ini"))
         printf("Robot connected!\n");
 
   //STREAMING

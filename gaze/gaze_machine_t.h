@@ -46,6 +46,8 @@ private:
   ///
   void print_welcome();
   ///
+  void reset_devices_();
+  ///
   bool boot_machine_();  
   ///
   void sample_gaze_(); 
