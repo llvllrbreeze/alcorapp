@@ -6,6 +6,11 @@
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze{
 //-------------------------------------------------------------------------++
+struct calib_t {};
+struct binlog_t{};
+static const calib_t calib = calib_t();
+static const binlog_t binlog = binlog_t();
+//-------------------------------------------------------------------------++
 ///
 class  gaze_machine_t
 {
@@ -27,12 +32,15 @@ public:
   void reset_mti();
 
   ///
-  void run_machine();
+  void run_machine(calib_t const&);
+  ///
+  void run_machine(binlog_t const&);
+
   ///
   void cancel(){running_=false;};
 
   ///
-  void log_enabled(bool enabled = true);
+  void set_logname(std::string&);
 
 private:    
   ///
@@ -41,10 +49,15 @@ private:
   bool boot_machine_();  
   ///
   void sample_gaze_(); 
+  /////////////////////////////////////////////////
+  //routines
   ///
   void write_gaze_();
   ///
-  void show_gaze_();
+  void null_op_();
+  ///
+  void calib_();
+  /////////////////////////////////////////////////
   ///
   boost::function<void (void)> process_gaze_data;
 
@@ -57,6 +70,9 @@ private:
   ///Scene Camera
   all::sense::bumblebee_sptr        bee_; 
 
+  ///
+  bool is_opened_;
+
   ///allocate enough space .. 
   void allocate_();
   void write_header_();
@@ -64,8 +80,14 @@ private:
   ///sampling loop
   void gaze_loop();
 
+  ///generic gaze_loop
+  boost::function<void (void)> gaze_loop_;
+
+
   ///Binary Data Stream
   std::fstream gazelog_;
+  ///
+  std::string logname_;
 
   //[GAZE DATA]
   ///elapsed time .. in seconds
@@ -93,6 +115,10 @@ private:
 
   ///Samples num
   size_t nsamples_;
+  ///
+  BOOST_STATIC_CONSTANT(int, calibsamples = 9);
+  ///
+  int calib_samples_cnt;
 
   ///loop control
   volatile bool running_;
@@ -104,7 +130,7 @@ private:
   boost::shared_ptr<boost::thread> thread_ptr;
 };
 //-------------------------------------------------------------------------++
-typedef boost::shared_ptr<gaze_machine_t> gaze_machine_ptr;
+typedef boost::shared_ptr<gaze_machine_t> gaze_machine_sptr;
 //-------------------------------------------------------------------------++
 }}
 //-------------------------------------------------------------------------++
