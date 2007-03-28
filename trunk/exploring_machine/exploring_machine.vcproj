@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="client_server_t.lib data_streaming.lib jpeg_codec.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib p3_gateway.lib"
+				AdditionalDependencies="client_server_t.lib data_streaming.lib jpeg_codec.lib winmm.lib AriaStatic.lib ArNetWorkingStatic.lib&#x0D; &#x0A;p3_gateway.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
