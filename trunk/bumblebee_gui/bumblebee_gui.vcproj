@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28_gl.lib wxzlib.lib wxpng.lib wxjpeg.lib wxmsw28.lib comctl32.lib data_streaming.lib jpeg_codec.lib"
+				AdditionalDependencies="wxmsw28_gl.lib wxzlib.lib wxpng.lib wxjpeg.lib wxmsw28.lib comctl32.lib data_streaming.lib jpeg_codec.lib bumblebee_driver_t.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -175,10 +175,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath="..\..\alcor\sense\bumblebee_driver_t.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\bumblebee_frame.cpp"
 				>

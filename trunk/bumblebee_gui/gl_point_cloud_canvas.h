@@ -24,7 +24,7 @@
 #include "wx/glcanvas.h"
 ////@end includes
 
-#define SIMPCLOUD
+//#define SIMPCLOUD
 
 
 #include "trackball.h"
