@@ -89,6 +89,10 @@ private:
 
   friend class fsm::state_machine<exploring_machine>;
 
+  //NOTA
+  //explore e observe  sono lo stesso stato praticamente
+  //la tavola delle transizioni andrebbe  rivista perchè ridondante ..
+  //ma lasciamola così 
 
   ///Transitions
   typedef mpl::list <
@@ -145,19 +149,35 @@ private:
   ///MATLAB
   boost::shared_ptr<matlab::matlab_engine_t> workspace;
 
+  ///MAtlab Commands
+  std::string fair_attention_com;
+  ///
+  std::string init_attention_com;
+
+
   ///Mobile Robot
-  act::p3_gateway_ptr_t     p3at;
+  act::p3_gateway_ptr_t       p3at;
   ///The server if necessary
-  //act::p3_server_ptr_t       p3at_server;
+  act::p3_server_ptr_t        p3at_server;
 
   ///Bumblebee
   sense::bumblebee_driver_ptr_t bee;
+  ///Depth Image
+  core::single_sarr depth;
+  ///RGB
+  core::uint8_sarr  rightim;
+  ///Depth
+  core::single_sarr depthim;
 
   ///PTU
   act::directed_perception_ptr_t ptu;
 
   ///TASK
   task_listener_sptr tasklistener;
+
+  ///SPLAM
+  all::splam::splam_client  splam;
+  all::splam::splam_data    splamdata;
 
   ///Pinhole util
   math::pinhole_t pinhole;

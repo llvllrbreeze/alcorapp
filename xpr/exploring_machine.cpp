@@ -36,7 +36,10 @@ namespace all { namespace  xpr {
   ///
   if (p3at->open("config/p3at_conf.ini"))
         printf("Robot connected!\n");
-
+  ///
+  p3at_server.reset(new act::p3_server_t("config/p3at_conf.ini"));
+  p3at_server->set_gateway_ptr(p3at);
+  p3at_server->run_async();
   //STREAMING
 
   //Initiate thread
@@ -85,19 +88,17 @@ void exploring_machine::threadloop()
   {
   ///
   workspace.reset( new matlab::matlab_engine_t);
-  //workspace->command_line("cd tracking");
-  //workspace->command_line("init_tracking");
-
-    while (running_)
+  ///
+  while (running_)
+  {
     {
-      {
-        boost::mutex::scoped_lock lock(process_guard);
-        if(!fire_callback.empty())
-              fire_callback();    
-      }
-    boost::thread::yield();    
-    core::BOOST_SLEEP(50);
+      boost::mutex::scoped_lock lock(process_guard);
+      if(!fire_callback.empty())
+            fire_callback();    
     }
+  boost::thread::yield();    
+  core::BOOST_SLEEP(50);
+  }
   }
 //---------------------------------------------------------------------------
   //[FIRE callbacks]
@@ -105,6 +106,7 @@ void exploring_machine::threadloop()
   //idled
   void exploring_machine::idled_cb()
   {
+  //Forse niente ... boh
   }
 
   ///
@@ -115,6 +117,59 @@ void exploring_machine::threadloop()
   ///
   void exploring_machine::observing_cb()
   {
+    //GRAB
+    if (bee->grab())
+    {
+      ///GET
+      rightim = 
+        bee->get_color_buffer(core::right_img);
+      ///
+      depthim =
+        bee->get_depth_buffer();
+
+      //ADAPT
+      ///transform
+      mxArray* mx_rimage = 
+        matlab::buffer2array<core::uint8_t>::create_from_planar(rightim.get()
+                                                            ,matlab::row_major
+                                                            ,bee->nrows()
+                                                            ,bee->ncols());
+      //XYZ
+      mxArray* mx_xyz =
+      matlab::buffer2array<core::single_t>::create_from_planar(
+                              depthim.get()
+                            , matlab::row_major
+                            ,bee->nrows()
+                            ,bee->ncols());
+
+
+      //WORKSPACE
+      //Push into Workspace
+      workspace->put_array("xyz", mx_xyz);
+      //Push into Workspace
+      workspace->put_array("rgb", mx_rimage);
+      
+      ///COMMANDs
+      workspace->command_line
+        (fair_attention_com.c_str());
+
+    //read details
+      //[valX valY ]
+    //transform to local map position
+    //.......................
+    //.......................
+      //
+
+    ///SWITCH TO EXPLORE ...mmmmm
+    fire_callback = boost::bind
+      (&exploring_machine::exploring_cb, this);
+
+    }
+    else
+    {
+      printf("cannot grab!\n");
+      process_event(exploring_machine::reset_evt());
+    }
   }
 
   ///
@@ -126,23 +181,57 @@ void exploring_machine::threadloop()
   //
   bool exploring_machine::go_explore (explore_evt const&)
   {
+        //
+    p3at->enable_goto_mode();
+    //
+    p3at->set_relative_goto(math::point2d(0,0) , 0);
+    //
+    boost::mutex::scoped_lock lock(process_guard);
+    ///
+    fire_callback = boost::bind
+      (&exploring_machine::observing_cb, this);
+
     return true;
   }
+//---------------------------------------------------------------------------
   ///
   bool exploring_machine::go_explore  (resume_evt  const&)
   {
+    //
+    boost::mutex::scoped_lock lock(process_guard);
+    ///
+    fire_callback = boost::bind
+      (&exploring_machine::observing_cb, this);
+
     return true;
   }
+//---------------------------------------------------------------------------
   //
   bool exploring_machine::go_idle    (idle_evt const&)
   {
+    //
+    p3at->enable_stop_mode();
+    //
+    boost::mutex::scoped_lock lock(process_guard);
+    ///
+    fire_callback = boost::bind
+      (&exploring_machine::idled_cb, this);
     return true;
   }
+  //---------------------------------------------------------------------------
   //
   bool exploring_machine::go_idle    (reset_evt const&)
-  {
+  { 
+    //
+    p3at->enable_stop_mode();
+    //
+    boost::mutex::scoped_lock lock(process_guard);
+    ///
+    fire_callback = boost::bind
+      (&exploring_machine::idled_cb, this);
     return true;
   }
+//---------------------------------------------------------------------------
   //
   bool exploring_machine::go_visit   (visit_evt const&)
   {
