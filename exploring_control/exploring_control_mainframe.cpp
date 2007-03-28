@@ -46,6 +46,14 @@ IMPLEMENT_CLASS( exploring_control_mainframe, wxFrame )
 BEGIN_EVENT_TABLE( exploring_control_mainframe, wxFrame )
 
 ////@begin exploring_control_mainframe event table entries
+    EVT_BUTTON( ID_IDLE_BUTTON, exploring_control_mainframe::OnIdleButtonClick )
+
+    EVT_BUTTON( ID_RESET_BUTTON, exploring_control_mainframe::OnResetButtonClick )
+
+    EVT_BUTTON( ID_RESUME_BUTTON, exploring_control_mainframe::OnResumeButtonClick )
+
+    EVT_BUTTON( ID_EXPLORE_BUTTON, exploring_control_mainframe::OnExploreButtonClick )
+
 ////@end exploring_control_mainframe event table entries
 
 END_EVENT_TABLE()
@@ -75,6 +83,10 @@ bool exploring_control_mainframe::Create( wxWindow* parent, wxWindowID id, const
     wxFrame::Create( parent, id, caption, pos, size, style );
 
     CreateControls();
+    if (GetSizer())
+    {
+        GetSizer()->SetSizeHints(this);
+    }
     Centre();
 ////@end exploring_control_mainframe creation
     return true;
@@ -109,7 +121,39 @@ void exploring_control_mainframe::CreateControls()
 ////@begin exploring_control_mainframe content construction
     exploring_control_mainframe* itemFrame1 = this;
 
+    wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
+    itemFrame1->SetSizer(itemBoxSizer2);
+
+    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemFrame1, wxID_ANY, _("3D Plot"));
+    wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
+    itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    wx_img_stream_panel_t* item_img_stream_panel_t4 = new wx_img_stream_panel_t( "config/explore_3d_stream_client.ini" );
+    item_img_stream_panel_t4->Create( itemFrame1, ID_3DCAMERA_PANEL, wxDefaultPosition, wxSize(500, 300), wxNO_BORDER|wxTAB_TRAVERSAL );
+    itemStaticBoxSizer3->Add(item_img_stream_panel_t4, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    wxStaticBox* itemStaticBoxSizer5Static = new wxStaticBox(itemFrame1, wxID_ANY, _("Dispatcher"));
+    wxStaticBoxSizer* itemStaticBoxSizer5 = new wxStaticBoxSizer(itemStaticBoxSizer5Static, wxHORIZONTAL);
+    itemBoxSizer2->Add(itemStaticBoxSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+
+    wxButton* itemButton6 = new wxButton;
+    itemButton6->Create( itemFrame1, ID_IDLE_BUTTON, _("Idle"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer5->Add(itemButton6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxButton* itemButton7 = new wxButton;
+    itemButton7->Create( itemFrame1, ID_RESET_BUTTON, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer5->Add(itemButton7, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxButton* itemButton8 = new wxButton;
+    itemButton8->Create( itemFrame1, ID_RESUME_BUTTON, _("Resume"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer5->Add(itemButton8, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxButton* itemButton9 = new wxButton;
+    itemButton9->Create( itemFrame1, ID_EXPLORE_BUTTON, _("Explore"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer5->Add(itemButton9, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
 ////@end exploring_control_mainframe content construction
+    dispatcher_.reset(new all::xpr::task_dispatcher_t("config/xpr_service.ini"));
 }
 
 /*!
@@ -146,3 +190,40 @@ wxIcon exploring_control_mainframe::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end exploring_control_mainframe icon retrieval
 }
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_IDLE_BUTTON
+ */
+
+void exploring_control_mainframe::OnIdleButtonClick( wxCommandEvent& event )
+{
+  dispatcher_->send_event(all::xpr::etag::IDLE);
+}
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_EXPLORE_BUTTON
+ */
+
+void exploring_control_mainframe::OnExploreButtonClick( wxCommandEvent& event )
+{
+  dispatcher_->send_event(all::xpr::etag::EXPLORE);
+}
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_RESUME_BUTTON
+ */
+
+void exploring_control_mainframe::OnResumeButtonClick( wxCommandEvent& event )
+{
+  dispatcher_->send_event(all::xpr::etag::RESUME);
+}
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_RESET_BUTTON
+ */
+
+void exploring_control_mainframe::OnResetButtonClick( wxCommandEvent& event )
+{
+  dispatcher_->send_event(all::xpr::etag::RESET);
+}
+

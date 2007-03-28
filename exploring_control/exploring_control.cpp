@@ -31,7 +31,6 @@
 #include "exploring_control.h"
 
 ////@begin XPM images
-
 ////@end XPM images
 
 /*!
@@ -84,21 +83,24 @@ void Exploring_controlApp::Init()
 bool Exploring_controlApp::OnInit()
 {    
 ////@begin Exploring_controlApp initialisation
-    // Remove the comment markers above and below this block
-    // to make permanent changes to the code.
+	// Remove the comment markers above and below this block
+	// to make permanent changes to the code.
 
 #if wxUSE_XPM
-    wxImage::AddHandler(new wxXPMHandler);
+	wxImage::AddHandler(new wxXPMHandler);
 #endif
 #if wxUSE_LIBPNG
-    wxImage::AddHandler(new wxPNGHandler);
+	wxImage::AddHandler(new wxPNGHandler);
 #endif
 #if wxUSE_LIBJPEG
-    wxImage::AddHandler(new wxJPEGHandler);
+	wxImage::AddHandler(new wxJPEGHandler);
 #endif
 #if wxUSE_GIF
-    wxImage::AddHandler(new wxGIFHandler);
+	wxImage::AddHandler(new wxGIFHandler);
 #endif
+	exploring_control_mainframe* mainWindow = new exploring_control_mainframe;
+	mainWindow->Create( NULL, exploring_control_mainframe::ID_EXPLORING_CONTROL_MAINFRAME );
+	mainWindow->Show(true);
 ////@end Exploring_controlApp initialisation
 
     return true;
@@ -110,7 +112,7 @@ bool Exploring_controlApp::OnInit()
 int Exploring_controlApp::OnExit()
 {    
 ////@begin Exploring_controlApp cleanup
-    return wxApp::OnExit();
+	return wxApp::OnExit();
 ////@end Exploring_controlApp cleanup
 }
 

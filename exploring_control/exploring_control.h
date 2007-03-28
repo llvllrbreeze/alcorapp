@@ -22,6 +22,7 @@
 
 ////@begin includes
 #include "wx/image.h"
+#include "exploring_control_mainframe.h"
 ////@end includes
 
 /*!
@@ -61,9 +62,11 @@ public:
     virtual int OnExit();
 
 ////@begin Exploring_controlApp event handler declarations
+
 ////@end Exploring_controlApp event handler declarations
 
 ////@begin Exploring_controlApp member function declarations
+
 ////@end Exploring_controlApp member function declarations
 
 ////@begin Exploring_controlApp member variables

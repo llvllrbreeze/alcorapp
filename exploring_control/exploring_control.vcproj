@@ -183,6 +183,10 @@
 				RelativePath=".\exploring_control_mainframe.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\alcor\gui\wx_img_stream_panel_t.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -199,6 +203,10 @@
 			</File>
 			<File
 				RelativePath="..\xpr\task_dispatcher_t.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\gui\wx_img_stream_panel_t.hpp"
 				>
 			</File>
 		</Filter>

@@ -9,7 +9,7 @@ namespace all { namespace  xpr {
   //ctor
   exploring_machine::exploring_machine()
   {
-  //
+  //Idling ... default
   fire_callback = boost::bind
     (&exploring_machine::idled_cb, this);
 
@@ -33,19 +33,29 @@ namespace all { namespace  xpr {
 
  //P3AT
   p3at.reset(new act::p3_gateway()); 
+
   ///
   if (p3at->open("config/p3at_conf.ini"))
         printf("Robot connected!\n");
-  ///
+
+  ///P3AT server
   p3at_server.reset(new act::p3_server_t("config/p3at_conf.ini"));
   p3at_server->set_gateway_ptr(p3at);
   p3at_server->run_async();
-  //STREAMING
 
+  //STREAMING
   stream_source_ptr.reset(new all::core::memory_stream_source_t( bee->nrows(), bee->ncols() ) );
   stream_server_ptr = new all::core::stream_server_t(stream_source_ptr,"config/bumblebee_stream_server.ini");
   stream_server_ptr->run_async();
 
+  ///SPLAM STREAMING
+  splam_stream_source_ptr.reset(new all::core::memory_stream_source_t( splam.get_row(), splam.get_col() ) );
+  splam_stream_server_ptr = new all::core::stream_server_t(splam_stream_source_ptr,"config/.....ini");
+  splam_stream_server_ptr->run_async();
+
+  ///Streaming OPen GL outside???
+
+  
   //Initiate thread
   thisthread.reset( 
       new boost::thread
@@ -87,7 +97,6 @@ namespace all { namespace  xpr {
     }
   }
 //---------------------------------------------------------------------------
-//---------------------------------------------------------------------------
 void exploring_machine::threadloop()
   {
   ///
@@ -121,6 +130,12 @@ void exploring_machine::threadloop()
   ///
   void exploring_machine::observing_cb()
   {
+    //
+    math::pose2d robotpose = splam.get_current_position();
+    //
+    core::pantilt_angle_t currentptu = ptu->get_fast_pantilt();
+
+
     //GRAB
     if (bee->grab())
     {
@@ -158,8 +173,17 @@ void exploring_machine::threadloop()
         (fair_attention_com.c_str());
 
     //read details
-      //[valX valY ]
-    //transform to local map position
+//[valX, valY, prob, dimX] = fair_attention(i)
+      //estrarre distanza sulla immagine e estensione sul piano.
+
+      //QUI ho in valX valY prob e dimX[.,.] la
+      //osservazione.
+       // in robotpose la posa localizzata
+       // in currentptu la posa del pantilt.
+       
+
+    //!!!!!!transform to local map position
+      //GIORGIO!!!
     //.......................
     //.......................
       //
