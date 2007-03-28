@@ -17,7 +17,7 @@
 #endif
 
 #include "alcor.apps/xpr/task_dispatcher_t.hpp"
-
+#include "alcor/gui/wx_img_stream_panel_t.hpp"
 /*!
  * Includes
  */
@@ -38,7 +38,6 @@
  */
 
 ////@begin control identifiers
-#define ID_EXPLORING_CONTROL_MAINFRAME 10000
 #define SYMBOL_EXPLORING_CONTROL_MAINFRAME_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_EXPLORING_CONTROL_MAINFRAME_TITLE _("Dialog")
 #define SYMBOL_EXPLORING_CONTROL_MAINFRAME_IDNAME ID_EXPLORING_CONTROL_MAINFRAME
@@ -81,6 +80,18 @@ public:
 
 ////@begin exploring_control_mainframe event handler declarations
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_IDLE_BUTTON
+    void OnIdleButtonClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_RESET_BUTTON
+    void OnResetButtonClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_RESUME_BUTTON
+    void OnResumeButtonClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_EXPLORE_BUTTON
+    void OnExploreButtonClick( wxCommandEvent& event );
+
 ////@end exploring_control_mainframe event handler declarations
 
 ////@begin exploring_control_mainframe member function declarations
@@ -96,6 +107,15 @@ public:
     static bool ShowToolTips();
 
 ////@begin exploring_control_mainframe member variables
+    /// Control identifiers
+    enum {
+        ID_EXPLORING_CONTROL_MAINFRAME = 10000,
+        ID_3DCAMERA_PANEL = 10005,
+        ID_IDLE_BUTTON = 10001,
+        ID_RESET_BUTTON = 10002,
+        ID_RESUME_BUTTON = 10003,
+        ID_EXPLORE_BUTTON = 10004
+    };
 ////@end exploring_control_mainframe member variables
 
     boost::shared_ptr<all::xpr::task_dispatcher_t>  dispatcher_;

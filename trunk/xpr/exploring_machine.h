@@ -167,10 +167,13 @@ private:
   ///Depth
   core::single_sarr depthim;
 
-    //IMAGE STREAM
+    //IMAGE STREAM BEE-RGB
   all::core::memory_stream_source_sptr_t  stream_source_ptr;
   all::core::stream_server_t*             stream_server_ptr; 
 
+    //IMAGE STREAM  SPLAM
+  all::core::memory_stream_source_sptr_t  splam_stream_source_ptr;
+  all::core::stream_server_t*             splam_stream_server_ptr; 
   //
 
   ///PTU
