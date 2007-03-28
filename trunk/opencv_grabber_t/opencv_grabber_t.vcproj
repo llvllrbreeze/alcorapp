@@ -125,7 +125,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				LinkLibraryDependencies="true"
+				LinkLibraryDependencies="false"
 				AdditionalDependencies="cxcore.lib cv.lib highgui.lib "
 				OutputFile="..\..\alcor.lib\$(ProjectName)"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
