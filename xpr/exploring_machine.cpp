@@ -183,10 +183,13 @@ void exploring_machine::threadloop()
        
 
     //!!!!!!transform to local map position
-      //GIORGIO!!!
-    //.......................
-    //.......................
+      // BEGIN GIORGIO!!!
       //
+      // l = distanza dall'oggetto visto
+      // th = angolo (all::math::angle) rispetto il centro dell'immagine dell'oggetto visto
+      // relative_goal = goal relativo... costruttore con modulo ed angolo
+      all::math::point2d relative_goal(l/2.0, th + currentptu.get_pan_angle());
+      // END GIORGIO!!!
 
     ///SWITCH TO EXPLORE ...mmmmm
     fire_callback = boost::bind
