@@ -359,7 +359,7 @@ void tracking_machine::tracking_cb()
         //  , target.get_x2()
         //  , target.orientation().deg());
         //
-        if(distanza < 1.5)
+        if(distanza < min_safe_distance)
         {
           //stop
           speed = 0;
