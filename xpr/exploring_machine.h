@@ -162,12 +162,16 @@ private:
 
   ///Bumblebee
   sense::bumblebee_driver_ptr_t bee;
-  ///Depth Image
-  core::single_sarr depth;
   ///RGB
   core::uint8_sarr  rightim;
   ///Depth
   core::single_sarr depthim;
+
+    //IMAGE STREAM
+  all::core::memory_stream_source_sptr_t  stream_source_ptr;
+  all::core::stream_server_t*             stream_server_ptr; 
+
+  //
 
   ///PTU
   act::directed_perception_ptr_t ptu;

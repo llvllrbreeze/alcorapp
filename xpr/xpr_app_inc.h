@@ -12,6 +12,10 @@
 //-----------------------------------------------------------------------++
 //#include "alcor.extern/CImg/CImg.h"
 //namespace cimglib=cimg_library;
+//STREAM
+//-----------------------------------------------------------------------++
+#include "alcor/core/memory_stream_source_t.hpp"
+#include <alcor/core/stream_server_t.hpp>
 //-----------------------------------------------------------------------++
 #include "alcor/splam/splam_client.h"
 //-----------------------------------------------------------------------++
