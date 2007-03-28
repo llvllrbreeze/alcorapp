@@ -6,22 +6,21 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "splam_data.lib", "splam_dat
 		{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC} = {53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "splam_service.exe", "splam_service.exe\splam_service.vcproj", "{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "splam_service.exe", "splam_service.exe\splam_service.vcproj", "{CE92C712-28EB-466F-A1C8-4332BB0B13A6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC} = {53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}
 		{9927B2AD-8CA3-4055-BC56-901488B11D98} = {9927B2AD-8CA3-4055-BC56-901488B11D98}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "splam_client.exe", "splam_client_test.exe\splam_client_test.exe.vcproj", "{862D553F-767A-4918-9F4C-0868CD0437E6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "splam_client_test.exe", "splam_client_test.exe\splam_client_test.exe.vcproj", "{862D553F-767A-4918-9F4C-0868CD0437E6}"
 	ProjectSection(ProjectDependencies) = postProject
-		{004D5855-E6BE-4453-9AFA-3E37A010F162} = {004D5855-E6BE-4453-9AFA-3E37A010F162}
 		{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC} = {53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}
 		{9927B2AD-8CA3-4055-BC56-901488B11D98} = {9927B2AD-8CA3-4055-BC56-901488B11D98}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pmapLIB", "pmap.lib\pmapLIB.vcproj", "{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "splam_client.lib", "splam_client.lib\splam_client.vcproj", "{004D5855-E6BE-4453-9AFA-3E37A010F162}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "splam_client.lib", "splam_client.lib\splam_client.vcproj", "{4A42E5AA-5355-4E67-8660-717858F394A3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "splam_thread.lib", "splam_thread.lib\splam_thread.vcproj", "{FD24E1AB-C5E3-4DC1-9629-690D3FE08ACA}"
 EndProject
@@ -35,10 +34,10 @@ Global
 		{9927B2AD-8CA3-4055-BC56-901488B11D98}.Debug|Win32.Build.0 = Debug|Win32
 		{9927B2AD-8CA3-4055-BC56-901488B11D98}.Release|Win32.ActiveCfg = Release|Win32
 		{9927B2AD-8CA3-4055-BC56-901488B11D98}.Release|Win32.Build.0 = Release|Win32
-		{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}.Debug|Win32.Build.0 = Debug|Win32
-		{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}.Release|Win32.ActiveCfg = Release|Win32
-		{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}.Release|Win32.Build.0 = Release|Win32
+		{CE92C712-28EB-466F-A1C8-4332BB0B13A6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CE92C712-28EB-466F-A1C8-4332BB0B13A6}.Debug|Win32.Build.0 = Debug|Win32
+		{CE92C712-28EB-466F-A1C8-4332BB0B13A6}.Release|Win32.ActiveCfg = Release|Win32
+		{CE92C712-28EB-466F-A1C8-4332BB0B13A6}.Release|Win32.Build.0 = Release|Win32
 		{862D553F-767A-4918-9F4C-0868CD0437E6}.Debug|Win32.ActiveCfg = Debug|Win32
 		{862D553F-767A-4918-9F4C-0868CD0437E6}.Debug|Win32.Build.0 = Debug|Win32
 		{862D553F-767A-4918-9F4C-0868CD0437E6}.Release|Win32.ActiveCfg = Release|Win32
@@ -47,10 +46,10 @@ Global
 		{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}.Debug|Win32.Build.0 = Debug|Win32
 		{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}.Release|Win32.ActiveCfg = Release|Win32
 		{53BF9AEE-3F8B-484C-A1CA-13F9BDEA48DC}.Release|Win32.Build.0 = Release|Win32
-		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.ActiveCfg = Debug|Win32
-		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.Build.0 = Debug|Win32
-		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.ActiveCfg = Release|Win32
-		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.Build.0 = Release|Win32
+		{4A42E5AA-5355-4E67-8660-717858F394A3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4A42E5AA-5355-4E67-8660-717858F394A3}.Debug|Win32.Build.0 = Debug|Win32
+		{4A42E5AA-5355-4E67-8660-717858F394A3}.Release|Win32.ActiveCfg = Release|Win32
+		{4A42E5AA-5355-4E67-8660-717858F394A3}.Release|Win32.Build.0 = Release|Win32
 		{FD24E1AB-C5E3-4DC1-9629-690D3FE08ACA}.Debug|Win32.ActiveCfg = Debug|Win32
 		{FD24E1AB-C5E3-4DC1-9629-690D3FE08ACA}.Debug|Win32.Build.0 = Debug|Win32
 		{FD24E1AB-C5E3-4DC1-9629-690D3FE08ACA}.Release|Win32.ActiveCfg = Release|Win32
