@@ -25,6 +25,7 @@
 #endif
 
 ////@begin includes
+#include "tridim_scene_canvas.h"
 ////@end includes
 
 #include "exploration_machine_gui.h"
@@ -115,8 +116,8 @@ void exploration_machine_gui::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemFrame1->SetSizer(itemBoxSizer2);
 
-    wxPanel* itemPanel3 = new wxPanel( itemFrame1, ID_PANEL1, wxDefaultPosition, wxSize(640, 480), wxNO_BORDER|wxTAB_TRAVERSAL );
-    itemBoxSizer2->Add(itemPanel3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    tri_scene_canvas* itemGLCanvas3 = new tri_scene_canvas( itemFrame1, tri_scene_canvas::ID_GLCANVAS1, wxDefaultPosition, wxSize(600, 400), 0 );
+    itemBoxSizer2->Add(itemGLCanvas3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 ////@end exploration_machine_gui content construction
 }

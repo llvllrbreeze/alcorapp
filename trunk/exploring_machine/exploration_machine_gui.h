@@ -29,6 +29,7 @@
  */
 
 ////@begin forward declarations
+class tri_scene_canvas;
 ////@end forward declarations
 
 /*!
@@ -36,12 +37,10 @@
  */
 
 ////@begin control identifiers
-#define ID_EXPLORATION_MACHINE_GUI 10000
-#define ID_PANEL1 10001
 #define SYMBOL_EXPLORATION_MACHINE_GUI_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_EXPLORATION_MACHINE_GUI_TITLE _("Dialog")
 #define SYMBOL_EXPLORATION_MACHINE_GUI_IDNAME ID_EXPLORATION_MACHINE_GUI
-#define SYMBOL_EXPLORATION_MACHINE_GUI_SIZE wxSize(400, 300)
+#define SYMBOL_EXPLORATION_MACHINE_GUI_SIZE wxSize(600, 400)
 #define SYMBOL_EXPLORATION_MACHINE_GUI_POSITION wxDefaultPosition
 ////@end control identifiers
 
@@ -95,6 +94,10 @@ public:
     static bool ShowToolTips();
 
 ////@begin exploration_machine_gui member variables
+    /// Control identifiers
+    enum {
+        ID_EXPLORATION_MACHINE_GUI = 10000
+    };
 ////@end exploration_machine_gui member variables
 };
 
