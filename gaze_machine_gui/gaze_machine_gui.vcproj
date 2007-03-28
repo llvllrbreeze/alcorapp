@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28.lib wxzlib.lib wxpng.lib wxjpeg.lib wxmsw28.lib comctl32.lib"
+				AdditionalDependencies="wxmsw28.lib wxzlib.lib wxpng.lib wxjpeg.lib comctl32.lib cxcore.lib cv.lib highgui.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
