@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="splam_service.exe"
-	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
+	ProjectGUID="{CE92C712-28EB-466F-A1C8-4332BB0B13A6}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>

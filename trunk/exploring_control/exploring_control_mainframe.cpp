@@ -8,6 +8,7 @@
 // Copyright:   Alcor
 // Licence:     
 /////////////////////////////////////////////////////////////////////////////
+#define WIN32_LEAN_AND_MEAN
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "exploring_control_mainframe.h"

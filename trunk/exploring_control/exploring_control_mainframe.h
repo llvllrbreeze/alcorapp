@@ -16,6 +16,8 @@
 #pragma interface "exploring_control_mainframe.h"
 #endif
 
+#include "alcor.apps/xpr/task_dispatcher_t.hpp"
+
 /*!
  * Includes
  */
@@ -95,6 +97,8 @@ public:
 
 ////@begin exploring_control_mainframe member variables
 ////@end exploring_control_mainframe member variables
+
+    boost::shared_ptr<all::xpr::task_dispatcher_t>  dispatcher_;
 };
 
 #endif
