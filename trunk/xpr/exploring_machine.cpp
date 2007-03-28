@@ -42,6 +42,10 @@ namespace all { namespace  xpr {
   p3at_server->run_async();
   //STREAMING
 
+  stream_source_ptr.reset(new all::core::memory_stream_source_t( bee->nrows(), bee->ncols() ) );
+  stream_server_ptr = new all::core::stream_server_t(stream_source_ptr,"config/bumblebee_stream_server.ini");
+  stream_server_ptr->run_async();
+
   //Initiate thread
   thisthread.reset( 
       new boost::thread
