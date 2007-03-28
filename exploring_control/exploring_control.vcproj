@@ -129,6 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="client_server_t.lib data_streaming.lib jpeg_codec.lib wxmsw28.lib wxpng.lib wxjpeg.lib wxzlib.lib comctl32.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -206,6 +207,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\exploring_control.rc"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
