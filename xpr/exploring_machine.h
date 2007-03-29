@@ -102,8 +102,13 @@ private:
   , transition  <exploring , reset_evt   , idled     ,  &self_t::go_idle>
   , transition  <exploring , idle_evt    , idled     ,  &self_t::go_idle>
 
+  //DEMO il exploring adesso corrisponde a navigare  con set point.
+  , transition  <exploring , explore_evt , observing ,  &self_t::go_explore>
+  , transition  <exploring , resume_evt  , observing ,  &self_t::go_explore>
+
   , transition  <observing , reset_evt   , idled     ,  &self_t::go_idle>
   , transition  <observing , idle_evt    , idled     ,  &self_t::go_idle>
+
 
   , transition  <exploring , visit_evt   , visiting  ,  &self_t::go_visit>
   , transition  <observing , visit_evt   , visiting  ,  &self_t::go_visit>
@@ -144,6 +149,13 @@ private:
   volatile bool running_;
   ///
   void taskreceived(int);
+
+//###########################################################################
+//Support Routines
+//###########################################################################
+  void move_ptu_to_screen_rc(float row, float col);
+
+  math::angle glo_theta_target;
 
 private:
   ///MATLAB
@@ -189,6 +201,12 @@ private:
   ///Pinhole util
   math::pinhole_t pinhole;
 
+  ///
+  int valX ;
+  int valY ;
+  double prob;
+  int odimX;
+  int odimY;
 };
 //---------------------------------------------------------------------------
 }}//all::xrp

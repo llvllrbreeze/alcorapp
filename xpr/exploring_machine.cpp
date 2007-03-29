@@ -127,15 +127,32 @@ void exploring_machine::threadloop()
     rgb_stream_source_ptr->update_image(rightim);
   }
   }
-
+//---------------------------------------------------------------------------
   ///
   void exploring_machine::exploring_cb()
   {
-      ///SWITCH TO EXPLORE ...mmmmm
-      fire_callback = boost::bind
-        (&exploring_machine::idled_cb, this);
-  }
+  math::angle pana_;
+  math::angle tilta_;
 
+  //center pantilt, depending on last glo_theta_target and theta_rob
+  splam.get_splam_data(splamdata);
+  //
+  math::pose2d robotpose = splamdata.get_current_position();
+
+  //to compensate
+  pana_.set_deg(glo_theta_target.deg() - robotpose.getTh().deg());
+
+  //compensate!!
+  ptu->set_pan(pana_.deg()); 
+
+  if (bee->grab())
+  {
+    rightim = bee->get_color_buffer(core::right_img);
+    rgb_stream_source_ptr->update_image(rightim);
+  }
+   
+  }
+//---------------------------------------------------------------------------
   ///
   void exploring_machine::observing_cb()
   {
@@ -145,7 +162,6 @@ void exploring_machine::threadloop()
     math::pose2d robotpose = splamdata.get_current_position();
     //
     core::pantilt_angle_t currentptu = ptu->get_fast_pantilt();
-
 
     //GRAB
     if (bee->grab())
@@ -184,28 +200,24 @@ void exploring_machine::threadloop()
         ("[valX, valY, prob, odimX, odimY] = fair_attention_wrap(rgb, xyz)");
 
       //***GATHER***
-      int valX = 
+      valX = 
         static_cast<int> (workspace->get_scalar_double("valX") );
 
-      int valY = 
+      valY = 
         static_cast<int> (workspace->get_scalar_double("valY") );
       
-      double prob = 
+      prob = 
         static_cast<int> (workspace->get_scalar_double("prob") );
 
-      int odimX = 
+      odimX = 
         static_cast<int> (workspace->get_scalar_double("odimX") );
 
-      int odimY = 
+      odimY = 
         static_cast<int> (workspace->get_scalar_double("odimY") );
 
-      //estrarre distanza sulla immagine e estensione sul piano.
+      //first, center the ptu on the target/roi
+      move_ptu_to_screen_rc(valX, valY );
 
-      //QUI ho in valX valY prob e dimX[.,.] la
-      //osservazione.
-       // in robotpose la posa localizzata
-       // in currentptu la posa del pantilt.
-       
       //Profondità 3D
       core::depth_image_t mydepthim;
       mydepthim.assign(bee->nrows(), bee->ncols(), depthim.get());
@@ -227,8 +239,14 @@ void exploring_machine::threadloop()
       //angolo (all::math::angle) rispetto il centro dell'immagine dell'oggetto visto
       math::angle th ( pinhole.delta_pan_from_pixel(valY) , math::deg_tag) ;
 
+      ////local offset (that is respect to robot nose)
+      double loc_theta_target = currentptu.get_pan_deg() + th.deg(); 
+
+      ////theta globale (useful for next iteration)
+      glo_theta_target.set_deg( loc_theta_target + robotpose.get_th(math::deg_tag) );
+
       // relative_goal = goal relativo... costruttore con modulo ed angolo
-      all::math::point2d relative_goal(distanza/2.0, th + currentptu.get_pan_angle());
+      all::math::point2d relative_goal(distanza/2.0, glo_theta_target);
 
       //SETPOINT NAVIGAZIONE
       p3at->set_relative_goto(math::point2d(0,0) , 0);
@@ -237,8 +255,11 @@ void exploring_machine::threadloop()
       rgb_stream_source_ptr->update_image(rightim);
 
       ///SWITCH TO EXPLORE ...mmmmm
-      fire_callback = boost::bind
-        (&exploring_machine::exploring_cb, this);
+      //fire_callback = boost::bind
+      //  (&exploring_machine::exploring_cb, this);
+
+      printf("Navigate with setpoint\n");
+      process_event(exploring_machine::explore_evt());
 
     }
     else
@@ -257,7 +278,7 @@ void exploring_machine::threadloop()
   //
   bool exploring_machine::go_explore (explore_evt const&)
   {
-        //
+    //
     p3at->enable_goto_mode();
     //
     p3at->set_relative_goto(math::point2d(0,0) , 0);
@@ -283,7 +304,7 @@ void exploring_machine::threadloop()
   }
 //---------------------------------------------------------------------------
   //
-  bool exploring_machine::go_idle    (idle_evt const&)
+  bool exploring_machine::go_idle (idle_evt const&)
   {
     //
     p3at->enable_stop_mode();
@@ -315,6 +336,30 @@ void exploring_machine::threadloop()
   }
 
 //---------------------------------------------------------------------------
+//###########################################################################
+  void exploring_machine::move_ptu_to_screen_rc(float row, float col)
+{
+  if(ptu)
+  {
+    //
+    core::pantilt_angle_t current = 
+      ptu->get_fast_pantilt();
+    //
+    core::pantilt_angle_t delta;
+    //
+    pinhole.pantilt_from_pixel(row, col, delta);
+    //
+    float nupan  = delta.get_pan_deg() + current.get_pan_deg();
+    float nutilt = delta.get_tilt_deg()+ current.get_tilt_deg();
+    
+    //
+    ptu->set_pantilt(nupan, nutilt);
+
+    //printf("Row: %f Col: %f \n", row, col);
+    //printf("current: %.2f %.2f\n", current.get_pan_deg(),current.get_tilt_deg());
+    //printf("Delta:   %.2f %.2f\n",  delta.get_pan_deg(), delta.get_tilt_deg());
+  }
+}
 //---------------------------------------------------------------------------
 }}//all::xpr
 //---------------------------------------------------------------------------
