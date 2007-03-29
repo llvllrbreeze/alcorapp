@@ -6,6 +6,12 @@
 #include "alcor/math/rpy_angle_t.h"
 #include "alcor/math/size3d_t.hpp"
 //-------------------------------------------------------------------------++
+#include <boost/lexical_cast.hpp>
+//-------------------------------------------------------------------------++
+#include "mat.h"
+#pragma comment (lib, "libmat.lib")
+#pragma comment (lib, "libmx.lib")
+//-------------------------------------------------------------------------++
 namespace all { namespace gaze {
 //-------------------------------------------------------------------------++
 ///
@@ -23,7 +29,8 @@ public:
   ///
   void next();
   ///
-  void play();
+  void play(bool savemat = false);
+
   ///
   size_t nsamples()const {return nsamples_;}
 

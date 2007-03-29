@@ -44,9 +44,9 @@ namespace all { namespace  xpr {
   p3at_server->run_async();
 
   //STREAMING
-  stream_source_ptr.reset(new all::core::memory_stream_source_t( bee->nrows(), bee->ncols() ) );
-  stream_server_ptr = new all::core::stream_server_t(stream_source_ptr,"config/bumblebee_stream_server.ini");
-  stream_server_ptr->run_async();
+  rgb_stream_source_ptr.reset(new all::core::memory_stream_source_t( bee->nrows(), bee->ncols() ) );
+  rgb_stream_server_ptr = new all::core::stream_server_t(rgb_stream_source_ptr,"config/bumblebee_stream_server.ini");
+  rgb_stream_server_ptr->run_async();
 
   ///SPLAM STREAMING
   splam_stream_source_ptr.reset(new all::core::memory_stream_source_t( splam.get_row(), splam.get_col() ) );
@@ -102,6 +102,8 @@ void exploring_machine::threadloop()
   ///
   workspace.reset( new matlab::matlab_engine_t);
   ///
+  workspace->command_line("cd explore");
+  ///
   while (running_)
   {
     {
@@ -119,19 +121,28 @@ void exploring_machine::threadloop()
   //idled
   void exploring_machine::idled_cb()
   {
-  //Forse niente ... boh
+  if (bee->grab())
+  {
+    rightim = bee->get_color_buffer(core::right_img);
+    rgb_stream_source_ptr->update_image(rightim);
+  }
   }
 
   ///
   void exploring_machine::exploring_cb()
   {
+      ///SWITCH TO EXPLORE ...mmmmm
+      fire_callback = boost::bind
+        (&exploring_machine::idled_cb, this);
   }
 
   ///
   void exploring_machine::observing_cb()
   {
     //
-    math::pose2d robotpose = splam.get_current_position();
+    splam.get_splam_data(splamdata);
+    //
+    math::pose2d robotpose = splamdata.get_current_position();
     //
     core::pantilt_angle_t currentptu = ptu->get_fast_pantilt();
 
@@ -170,10 +181,24 @@ void exploring_machine::threadloop()
       
       ///COMMANDs
       workspace->command_line
-        (fair_attention_com.c_str());
+        ("[valX, valY, prob, odimX, odimY] = fair_attention_wrap(rgb, xyz)");
 
-    //read details
-//[valX, valY, prob, dimX] = fair_attention(i)
+      //***GATHER***
+      int valX = 
+        static_cast<int> (workspace->get_scalar_double("valX") );
+
+      int valY = 
+        static_cast<int> (workspace->get_scalar_double("valY") );
+      
+      double prob = 
+        static_cast<int> (workspace->get_scalar_double("prob") );
+
+      int odimX = 
+        static_cast<int> (workspace->get_scalar_double("odimX") );
+
+      int odimY = 
+        static_cast<int> (workspace->get_scalar_double("odimY") );
+
       //estrarre distanza sulla immagine e estensione sul piano.
 
       //QUI ho in valX valY prob e dimX[.,.] la
@@ -181,19 +206,39 @@ void exploring_machine::threadloop()
        // in robotpose la posa localizzata
        // in currentptu la posa del pantilt.
        
+      //Profondità 3D
+      core::depth_image_t mydepthim;
+      mydepthim.assign(bee->nrows(), bee->ncols(), depthim.get());
 
-    //!!!!!!transform to local map position
-      // BEGIN GIORGIO!!!
+      //centro dell'intorno
+      core::pixelcoord_t center;
+      center.row = valX;
+      center.col = valY;
+
+      //raggio dell'intorno
+      size_t  hsize =  (odimX > odimY) ? (odimX):(odimY);
       //
-      // l = distanza dall'oggetto visto
-      // th = angolo (all::math::angle) rispetto il centro dell'immagine dell'oggetto visto
-      // relative_goal = goal relativo... costruttore con modulo ed angolo
-      all::math::point2d relative_goal(l/2.0, th + currentptu.get_pan_angle());
-      // END GIORGIO!!!
+      core::mystat vstat  
+        = core::estimate_depth(mydepthim, center, hsize);
 
-    ///SWITCH TO EXPLORE ...mmmmm
-    fire_callback = boost::bind
-      (&exploring_machine::exploring_cb, this);
+      //---------------------------
+      double distanza = vstat.mean;
+
+      //angolo (all::math::angle) rispetto il centro dell'immagine dell'oggetto visto
+      math::angle th ( pinhole.delta_pan_from_pixel(valY) , math::deg_tag) ;
+
+      // relative_goal = goal relativo... costruttore con modulo ed angolo
+      all::math::point2d relative_goal(distanza/2.0, th + currentptu.get_pan_angle());
+
+      //SETPOINT NAVIGAZIONE
+      p3at->set_relative_goto(math::point2d(0,0) , 0);
+
+      //
+      rgb_stream_source_ptr->update_image(rightim);
+
+      ///SWITCH TO EXPLORE ...mmmmm
+      fire_callback = boost::bind
+        (&exploring_machine::exploring_cb, this);
 
     }
     else
@@ -218,7 +263,7 @@ void exploring_machine::threadloop()
     p3at->set_relative_goto(math::point2d(0,0) , 0);
     //
     boost::mutex::scoped_lock lock(process_guard);
-    ///
+    ///PROVVISORIO
     fire_callback = boost::bind
       (&exploring_machine::observing_cb, this);
 

@@ -231,6 +231,7 @@ void gaze_machine_t::calib_()
   printf("->boot_machine_ .. \n");
   if(boot_machine_())
   {  
+    //
     CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
     CImg<core::uint8_t> imag;
 
@@ -239,6 +240,8 @@ void gaze_machine_t::calib_()
     printf("->machine booted ...starting loop\n");
     const unsigned char color  [3] = {215,  240,  60};
     const unsigned char blue   [3] = {0,  0,  255};
+
+    //in the furious loop!
     while (running_)
     {
       nsamples_++;
@@ -259,6 +262,7 @@ void gaze_machine_t::calib_()
       imag.draw_line(200,1, 200,200, color);
       imag.draw_line(1,200, 200,200, color);
       imag.display(view) ;
+
 
       boost::thread::yield();
       all::core::BOOST_SLEEP(msecspause);
@@ -304,9 +308,17 @@ void gaze_machine_t::gaze_loop()
   printf("->in the thread loop!\n");
   printf("->boot_machine_ .. \n");
   if(boot_machine_())
-  {  
+  { 
+    //
     CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
     CImg<core::uint8_t> imag;
+    //
+    CImgDisplay viewscene (  bee_->ncols(), bee_->nrows(), "Scene");
+    CImg<core::uint8_t> imagscene;
+
+    ////
+    //CImgDisplay threedview (  bee_->ncols(),  bee_->nrows(), "3D");
+    //CImg<core::single_t> threedscene;
 
     reset_mti();
     start_timing();
@@ -315,6 +327,7 @@ void gaze_machine_t::gaze_loop()
     const unsigned char blue   [3] = {0,  0,  255};
     while (running_)
     {
+        ///
         nsamples_++;
         sample_gaze_();
         write_gaze_();
@@ -333,6 +346,26 @@ void gaze_machine_t::gaze_loop()
         imag.draw_line(200,1, 200,200, color);
         imag.draw_line(1,200, 200,200, color);
         imag.display(view) ;
+
+        //DRAW
+        imagscene.assign( 
+              iscene.get()
+          ,   bee_->ncols()
+          ,   bee_->nrows()
+          ,   1
+          ,   3);
+
+        ///
+        imagscene.display(viewscene);
+
+        /////
+        // threedscene.assign(
+        //   idepth.get()+ (bee_->ncols()*bee_->nrows()*2)
+        //   ,  bee_->ncols()
+        //   ,  bee_->nrows()
+        //   ,  1);
+
+        //threedscene.display(threedview);
 
         boost::thread::yield();
         all::core::BOOST_SLEEP(msecspause);

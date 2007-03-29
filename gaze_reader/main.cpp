@@ -9,7 +9,7 @@ int main()
   gazelog.load(binlogname);
 
   getchar();
-  gazelog.play();
+  gazelog.play(false);
   getchar();
 
   //size_t  thesize;

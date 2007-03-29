@@ -168,8 +168,8 @@ private:
   core::single_sarr depthim;
 
     //IMAGE STREAM BEE-RGB
-  all::core::memory_stream_source_sptr_t  stream_source_ptr;
-  all::core::stream_server_t*             stream_server_ptr; 
+  all::core::memory_stream_source_sptr_t  rgb_stream_source_ptr;
+  all::core::stream_server_t*             rgb_stream_server_ptr; 
 
     //IMAGE STREAM  SPLAM
   all::core::memory_stream_source_sptr_t  splam_stream_source_ptr;
