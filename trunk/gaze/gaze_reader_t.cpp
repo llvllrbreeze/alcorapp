@@ -1,4 +1,5 @@
 #include "gaze_reader_t.h"
+#include "alcor/matlab/matlab_mx_utils.hpp"
 //-------------------------------------------------------------------------++
 #include "alcor.extern/CImg/CImg.h"
 using namespace cimg_library;
@@ -114,7 +115,7 @@ void gaze_reader_t::next()
 }
 //-------------------------------------------------------------------------++
 ///
-void gaze_reader_t::play()
+void gaze_reader_t::play(bool savemat)
 {
   reset();
 
@@ -127,9 +128,13 @@ void gaze_reader_t::play()
   CImgDisplay viewscene (  scenedims_.col_,  scenedims_.row_, "SCene");
   CImg<core::uint8_t> imagscene;
 
+  CImgDisplay threedview (  scenedims_.col_,  scenedims_.row_, "3D");
+  CImg<core::single_t> threedscene;
+
   const unsigned char color  [3] = {215,  240,  60};
   const unsigned char blue   [3] = {0,  0,  255};
 
+  ///
   for(size_t i=0 ; i < nsamples_; i++)
   {
     //EXTRACT
@@ -156,9 +161,58 @@ void gaze_reader_t::play()
     imag.draw_line(120,1, 120,150, color);
     imag.draw_line(1,150, 120,150, color);
 
-    imag.display(view) ;
-    imagscene.display(viewscene);
+    /////3D
+    threedscene.assign(
+      (core::single_ptr)idepth.get() + (scenedims_.col_*scenedims_.row_)
+         ,  scenedims_.col_
+         ,  scenedims_.row_
+         ,  1);
 
+    ///----------------------------+
+    imag.display(view) ;
+    ///----------------------------+
+    imagscene.display(viewscene);
+    ///----------------------------+
+    threedscene.display(threedview);
+    ///----------------------------+
+    if (savemat)
+    {
+    ////////////////////////////////////////////////////////////////////////
+    //MATLAB --------------------------------------------------------------+
+    //
+    MATFile *pmat = 0;
+    //MATLAB
+    std::string namebase = "cameralog_";
+    //
+    namebase += boost::lexical_cast<std::string>(i+1);
+    namebase += ".mat";
+    //
+    pmat = matOpen(namebase.c_str(), "w");
+
+    //-----------------
+    mxArray* mx_rgb = 
+      matlab::buffer2array<core::uint8_t>::create_from_planar(iscene.get()
+                                                      , matlab::row_major
+                                                      , scenedims_.row_
+                                                      , scenedims_.col_);
+    //-----------------
+    mxArray* mx_depth  = 
+      all::matlab::buffer2array<  core::single_t  >::create_from_planar(
+        idepth.get()
+      , matlab::row_major
+      , scenedims_.row_
+      , scenedims_.col_);
+
+    //add to file
+    matPutVariable(pmat, "rgb", mx_rgb);
+    matPutVariable(pmat, "xyz", mx_depth);
+    
+    //  
+    matClose(pmat);  
+    }//savemat -- matlab section code
+    ////////////////////////////////////////////////////////////////////////
+
+    //for next loop
     last_elapsed = elapsed_;
     //printf("Roll: %.2f Pitch: %.2f Yaw: %.2f\n"
     //  , ihead.roll.deg(), ihead.pitch.deg(), ihead.yaw.deg());
