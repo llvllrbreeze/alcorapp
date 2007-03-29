@@ -1,11 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
-
+//---------------------------------------------------------------------------
 #include "tracking_machine.h"
 #include "alcor/core/config_parser_t.hpp"
-
-
-
-
 //---------------------------------------------------------------------------
 namespace all { namespace trm {
 //---------------------------------------------------------------------------
@@ -19,7 +15,7 @@ tracking_machine::tracking_machine():running_(true)
   config_parser_t config;
   config.load(core::tags::ini, "config/trm_app_details.ini");
 
-  init_command      = config.get<std::string>("matlab.init_command");
+  //init_command      = config.get<std::string>("matlab.init_command");
   setup_command     = config.get<std::string>("matlab.setup_command");
   tracking_command  = config.get<std::string>("matlab.tracking_command");
 
@@ -102,7 +98,7 @@ void tracking_machine::threadloop()
   //
   workspace.reset( new matlab::matlab_engine_t);
   //
-  workspace->command_line(init_command);
+  //workspace->command_line(init_command);
   //Enter loop
   while (running_)
   {
@@ -138,8 +134,8 @@ void tracking_machine::setup_cb()
   //half width
   int w_2 = w_roi/2;
   //
-  double centro_r = r_roi + h_2;
-  double centro_c = c_roi + w_2;
+  centro_r = r_roi + h_2;
+  centro_c = c_roi + w_2;
 
   //forst, center the ptu on the target/roi
   move_ptu_to_screen_rc(centro_r, centro_c, 2.0);
@@ -173,19 +169,20 @@ void tracking_machine::setup_cb()
     //
     printf("SETUP\n");
 
-    ////
     //workspace->command_line
-      //("[centro_r centro_c] = trm_model_setup(rgb, r_roi, c_roi, h_roi, w_roi, scala_resize)");
-
-    workspace->command_line
-      (setup_command.c_str());
-
+    //  (setup_command.c_str());
+    workspace->command_line("[centro_r centro_c] = fh_setup_stepRGB(rgb, r_roi, c_roi, h_roi, w_roi, scala_resize)");
+    //workspace->command_line("[centro_r centro_c] = trm_model_setup(rgb, r_roi, c_roi, h_roi, w_roi, scala_resize)");
     ///
     printf("Done Setup\n\n");
 
-    centro_r = static_cast<int>( workspace->get_scalar_double("centro_r") );
-    centro_c = static_cast<int>( workspace->get_scalar_double("centro_c") );
+    //centro_r = static_cast<int>( workspace->get_scalar_double("centro_r") );
+    //centro_c = static_cast<int>( workspace->get_scalar_double("centro_c") );
 
+    centro_r = static_cast<int> ( (r_roi + (static_cast<double> (h_roi/2.0) )  ));
+    centro_c = static_cast<int> ( (c_roi + (static_cast<double>  (w_roi/2.0) ) ));
+
+    printf("setup centro: %d %d \n", centro_r, centro_c);
     //
     double pan_delta     = pinhole.delta_pan_from_pixel(centro_c);
     double th_robot      = p3dx->get_odometry().getTh().deg();
@@ -193,6 +190,7 @@ void tracking_machine::setup_cb()
     //theta globale
     core::pantilt_angle_t 
                  current_pt = ptu->get_fast_pantilt();
+
     double loc_theta_target = current_pt.get_pan(math::deg_tag) + pan_delta;
     glo_theta_target = loc_theta_target + th_robot;
 
@@ -201,6 +199,7 @@ void tracking_machine::setup_cb()
 
     //
     centro_r = bee->nrows()/2;
+    centro_c = bee->ncols()/2;
 
     //Se tutto a posto vai in idled_tracking
     process_event(idle_track_event());
@@ -223,8 +222,8 @@ void tracking_machine::tracking_cb()
   //center pantilt, depending on last glo_theta_target and theta_rob
   double th_robot      = p3dx->get_odometry().getTh().deg();
   //to compensate
-  double pan_     = glo_theta_target - th_robot;
-  double tilt_    = pinhole.delta_tilt_from_pixel(centro_r);
+  double pan_         = glo_theta_target - th_robot;
+  double tilt_        = pinhole.delta_tilt_from_pixel(centro_r);
 
   //compensate only pan ...
   //ptu->set_pan(delta_pan, 0.2);
@@ -278,9 +277,9 @@ void tracking_machine::tracking_cb()
     #endif
 
     ///MEAN SHIFT : ottenere un centro
-    //workspace->command_line("[centro_r centro_c]= trm_track(rgb, [120, 160])");
+    workspace->command_line("[centro_r centro_c]= fh_track_stepRGB(rgb, [120, 160])");
 
-    workspace->command_line(tracking_command.c_str());
+    //workspace->command_line(tracking_command.c_str());
 
     #ifdef TIMEDEBUG_
       printf("->track routine %.3f\n", profile.elapsed());
@@ -292,6 +291,8 @@ void tracking_machine::tracking_cb()
 
     centro_c = 
       static_cast<int> (workspace->get_scalar_double("centro_c") );
+
+    //printf("\nCentro: %d : %d\n", centro_r , centro_c);
 
     if(centro_c > 0)//che non sia nullo ....
     {
@@ -402,6 +403,7 @@ void tracking_machine::tracking_cb()
     }//centro_c>0
     else
     {
+      printf("FAIL!!");
       //TODO: skip??
       process_event(fail_event());
     }

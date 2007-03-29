@@ -18,7 +18,7 @@
 #include <boost\shared_ptr.hpp>
 #include <boost\thread\mutex.hpp>
 //---------------------------------------------------------------------------
-//#define TIMEDEBUG_
+#define TIMEDEBUG_
 
 #ifdef TIMEDEBUG_
 #include <boost/timer.hpp>
@@ -225,7 +225,7 @@ private:
   //command strings
   //to be loaded at startup
   ///
-  std::string init_commmand;
+  std::string init_command;
   ///setup command string
   std::string setup_command;
   ///tracking command string
