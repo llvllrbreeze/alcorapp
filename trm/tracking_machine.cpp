@@ -25,6 +25,15 @@ tracking_machine::tracking_machine():running_(true)
   min_tracking_vel  = config.get<double>("limits.min_tracking_vel");
   max_tracking_vel  = config.get<double>("limits.max_tracking_vel");
 
+  tilt_threshold    = config.get<double>("limits.tilt_threshold");
+
+  printf("\nLimits\n");
+  printf("-> min_safe_distance: %f\n", min_safe_distance);
+  printf("-> max_safe_distance: %f\n", max_safe_distance);
+  printf("-> min_tracking_vel: %f\n", min_tracking_vel);
+  printf("-> max_tracking_vel: %f\n", max_tracking_vel);
+  printf("-> tilt_threshold: %f\n\n", tilt_threshold);
+
   std::string 
     beeconfigfile = config.get<std::string>("bumblebee.config");
   std::string 
@@ -53,6 +62,9 @@ tracking_machine::tracking_machine():running_(true)
   pinhole.focal = bee->focal();
   pinhole.ncols = bee->ncols();
   pinhole.nrows = bee->nrows();
+  //
+  half_rows = bee->nrows()/2;
+  half_cols = bee->ncols()/2;
 
    //P3DX
   //p3dx.reset(new act::p3_gateway()); 
@@ -119,7 +131,7 @@ void tracking_machine::idle_cb()
 {
   if (bee->grab())
   {
-    core::uint8_sarr rightim = bee->get_color_buffer(core::right_img);
+    rightim = bee->get_color_buffer(core::right_img);
     stream_source_ptr->update_image(rightim);
   }
 }
@@ -219,21 +231,35 @@ void tracking_machine::tracking_cb()
   gprofile.restart();
 #endif
 
+  math::angle pana_;
+  math::angle tilta_;
+
   //center pantilt, depending on last glo_theta_target and theta_rob
   double th_robot      = p3dx->get_odometry().getTh().deg();
-  //to compensate
-  double pan_         = glo_theta_target - th_robot;
-  double tilt_        = pinhole.delta_tilt_from_pixel(centro_r);
 
-  //compensate only pan ...
-  //ptu->set_pan(delta_pan, 0.2);
+  //to compensate
+  pana_.set_deg(glo_theta_target - th_robot);
+  tilta_.set_deg(pinhole.delta_tilt_from_pixel(centro_r));
+
+  //double pan_         = glo_theta_target - th_robot;
+  //double tilt_        = pinhole.delta_tilt_from_pixel(centro_r);
 
   #ifdef TIMEDEBUG_
     profile.restart();
   #endif
-
-  //compensate!!
-  ptu->set_pantilt(pan_, tilt_);
+  if( ::fabs((double) centro_r - (double)half_rows ) < tilt_threshold)
+  {
+    //compensate only pan ...
+    ptu->set_pan(pana_.deg()); 
+    centro_c = half_cols;
+  }
+  else
+  {
+    //compensate!!
+    ptu->set_pantilt(pana_.deg(), tilta_.deg());
+    centro_c = half_cols;
+    centro_r = half_rows;
+  }
 
   #ifdef TIMEDEBUG_
     printf("->set_pantilt %.3f\n", profile.elapsed());
@@ -276,8 +302,12 @@ void tracking_machine::tracking_cb()
     profile.restart();
     #endif
 
+    //the center
+    workspace->put_scalar("centro_c", centro_c);
+    workspace->put_scalar("centro_r", centro_r);
+
     ///MEAN SHIFT : ottenere un centro
-    workspace->command_line("[centro_r centro_c]= fh_track_stepRGB(rgb, [120, 160])");
+    workspace->command_line("[centro_r centro_c]= fh_track_stepRGB(rgb, [centro_r, centro_c])");
 
     //workspace->command_line(tracking_command.c_str());
 
@@ -313,7 +343,6 @@ void tracking_machine::tracking_cb()
       profile.restart();
       #endif   
       //Profondità 3D
-      core::depth_image_t depthim;
       depth = bee->get_depth_buffer();      
       #ifdef TIMEDEBUG_
         printf("->get_depth_buffer %.3f\n", profile.elapsed());

@@ -175,6 +175,9 @@ private:
   sense::bumblebee_sptr bee;
   ///Depth Image
   core::single_sarr depth;
+  ///depth util
+  core::depth_image_t depthim;
+
   ///RGB
   core::uint8_sarr rightim;
 
@@ -204,8 +207,14 @@ private:
   //
   double scala_resize;
 
+  //
+  int half_rows;
+  int half_cols;
+
   //target w/respect to the robot ref system
   double glo_theta_target;
+  double tilt_threshold;
+
   //[limits]
   ///
   double min_safe_distance;
