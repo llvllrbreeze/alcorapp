@@ -260,6 +260,7 @@ void shrimp_frame::CreateControls()
 ////@end shrimp_frame content construction
 
 	m_joy.SetCapture(this, 100);
+
 }
 
 /*!
@@ -431,10 +432,7 @@ void shrimp_frame::on_timer(wxTimerEvent& event) {
 
 void shrimp_frame::OnScanButtonClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SCAN_BUTTON in shrimp_frame.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SCAN_BUTTON in shrimp_frame. 
+	m_gl_stream->m_stream_client->send_command("scan");
 }
 
 
