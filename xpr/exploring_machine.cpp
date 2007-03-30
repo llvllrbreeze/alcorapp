@@ -14,7 +14,7 @@ namespace all { namespace  xpr {
     (&exploring_machine::idled_cb, this);
 
   //Task Listener
-  tasklistener.reset(new task_listener("config/xrp_service.ini"));
+  tasklistener.reset(new task_listener("config/xpr_service.ini"));
   tasklistener->notify_evt = boost::bind(&exploring_machine::taskreceived, this, ::_1);
   tasklistener->run_async();
 
@@ -35,11 +35,11 @@ namespace all { namespace  xpr {
   p3at.reset(new act::p3_gateway()); 
 
   ///
-  if (p3at->open("config/p3at_conf.ini"))
+  if (p3at->open("config/p3_conf.ini"))
         printf("Robot connected!\n");
 
   ///P3AT server
-  p3at_server.reset(new act::p3_server_t("config/p3at_conf.ini"));
+  p3at_server.reset(new act::p3_server_t("config/p3_conf.ini"));
   p3at_server->set_gateway_ptr(p3at);
   p3at_server->run_async();
 
@@ -68,6 +68,7 @@ namespace all { namespace  xpr {
   ///
   void exploring_machine::taskreceived(int evt)
   {
+    printf("TASK RECEIVED\n");
     boost::mutex::scoped_lock lock(process_guard);
 
     switch (evt)
