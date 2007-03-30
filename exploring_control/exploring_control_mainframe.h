@@ -110,7 +110,6 @@ public:
     /// Control identifiers
     enum {
         ID_EXPLORING_CONTROL_MAINFRAME = 10000,
-        ID_3DCAMERA_PANEL = 10005,
         ID_IDLE_BUTTON = 10001,
         ID_RESET_BUTTON = 10002,
         ID_RESUME_BUTTON = 10003,
