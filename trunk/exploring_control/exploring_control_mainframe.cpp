@@ -124,33 +124,25 @@ void exploring_control_mainframe::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemFrame1->SetSizer(itemBoxSizer2);
 
-    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemFrame1, wxID_ANY, _("3D Plot"));
-    wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
+    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemFrame1, wxID_ANY, _("Dispatcher"));
+    wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxHORIZONTAL);
     itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wx_img_stream_panel_t* item_img_stream_panel_t4 = new wx_img_stream_panel_t( "config/explore_3d_stream_client.ini" );
-    item_img_stream_panel_t4->Create( itemFrame1, ID_3DCAMERA_PANEL, wxDefaultPosition, wxSize(500, 300), wxNO_BORDER|wxTAB_TRAVERSAL );
-    itemStaticBoxSizer3->Add(item_img_stream_panel_t4, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxButton* itemButton4 = new wxButton;
+    itemButton4->Create( itemFrame1, ID_IDLE_BUTTON, _("Idle"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer3->Add(itemButton4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticBox* itemStaticBoxSizer5Static = new wxStaticBox(itemFrame1, wxID_ANY, _("Dispatcher"));
-    wxStaticBoxSizer* itemStaticBoxSizer5 = new wxStaticBoxSizer(itemStaticBoxSizer5Static, wxHORIZONTAL);
-    itemBoxSizer2->Add(itemStaticBoxSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxButton* itemButton5 = new wxButton;
+    itemButton5->Create( itemFrame1, ID_RESET_BUTTON, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer3->Add(itemButton5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxButton* itemButton6 = new wxButton;
-    itemButton6->Create( itemFrame1, ID_IDLE_BUTTON, _("Idle"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer5->Add(itemButton6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemButton6->Create( itemFrame1, ID_RESUME_BUTTON, _("Resume"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer3->Add(itemButton6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxButton* itemButton7 = new wxButton;
-    itemButton7->Create( itemFrame1, ID_RESET_BUTTON, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer5->Add(itemButton7, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    wxButton* itemButton8 = new wxButton;
-    itemButton8->Create( itemFrame1, ID_RESUME_BUTTON, _("Resume"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer5->Add(itemButton8, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    wxButton* itemButton9 = new wxButton;
-    itemButton9->Create( itemFrame1, ID_EXPLORE_BUTTON, _("Explore"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer5->Add(itemButton9, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemButton7->Create( itemFrame1, ID_EXPLORE_BUTTON, _("Explore"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer3->Add(itemButton7, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
 ////@end exploring_control_mainframe content construction
     dispatcher_.reset(new all::xpr::task_dispatcher_t("config/xpr_service.ini"));
