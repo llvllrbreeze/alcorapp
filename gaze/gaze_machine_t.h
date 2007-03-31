@@ -41,6 +41,9 @@ public:
 
   ///
   void set_logname(std::string&);
+  ///
+  void sample_gaze_(); 
+
 
 private:    
   ///
@@ -49,8 +52,7 @@ private:
   void reset_devices_();
   ///
   bool boot_machine_();  
-  ///
-  void sample_gaze_(); 
+
   /////////////////////////////////////////////////
   //routines
   ///

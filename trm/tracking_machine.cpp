@@ -15,7 +15,7 @@ tracking_machine::tracking_machine():running_(true)
   config_parser_t config;
   config.load(core::tags::ini, "config/trm_app_details.ini");
 
-  //init_command      = config.get<std::string>("matlab.init_command");
+  init_command      = config.get<std::string>("matlab.init_command");
   setup_command     = config.get<std::string>("matlab.setup_command");
   tracking_command  = config.get<std::string>("matlab.tracking_command");
 
@@ -110,7 +110,7 @@ void tracking_machine::threadloop()
   //
   workspace.reset( new matlab::matlab_engine_t);
   //
-  //workspace->command_line(init_command);
+  workspace->command_line(init_command);
   //Enter loop
   while (running_)
   {
