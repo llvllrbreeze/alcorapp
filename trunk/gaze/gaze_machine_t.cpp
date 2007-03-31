@@ -327,48 +327,48 @@ void gaze_machine_t::gaze_loop()
     const unsigned char blue   [3] = {0,  0,  255};
     while (running_)
     {
-        ///
-        nsamples_++;
-        sample_gaze_();
-        write_gaze_();
-        //////
-        imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
-        //
-        imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
-        imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
-        imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
-        imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
-        imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
+      ///
+      nsamples_++;
+      sample_gaze_();
+      write_gaze_();
+      //////
+      imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
+      //
+      imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
+      imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
+      imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
+      imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
+      imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
 
-        imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
-        imag.draw_line(1,1, 200,1, color);
-        imag.draw_line(1,1, 0,200, color);
-        imag.draw_line(200,1, 200,200, color);
-        imag.draw_line(1,200, 200,200, color);
-        imag.display(view) ;
+      imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
+      imag.draw_line(1,1, 200,1, color);
+      imag.draw_line(1,1, 0,200, color);
+      imag.draw_line(200,1, 200,200, color);
+      imag.draw_line(1,200, 200,200, color);
+      imag.display(view) ;
 
-        //DRAW
-        imagscene.assign( 
-              iscene.get()
-          ,   bee_->ncols()
-          ,   bee_->nrows()
-          ,   1
-          ,   3);
+      //DRAW
+      imagscene.assign( 
+            iscene.get()
+        ,   bee_->ncols()
+        ,   bee_->nrows()
+        ,   1
+        ,   3);
 
-        ///
-        imagscene.display(viewscene);
+      ///
+      imagscene.display(viewscene);
 
-        /////
-        // threedscene.assign(
-        //   idepth.get()+ (bee_->ncols()*bee_->nrows()*2)
-        //   ,  bee_->ncols()
-        //   ,  bee_->nrows()
-        //   ,  1);
+      /////
+      // threedscene.assign(
+      //   idepth.get()+ (bee_->ncols()*bee_->nrows()*2)
+      //   ,  bee_->ncols()
+      //   ,  bee_->nrows()
+      //   ,  1);
 
-        //threedscene.display(threedview);
+      //threedscene.display(threedview);
 
-        boost::thread::yield();
-        all::core::BOOST_SLEEP(msecspause);
+      boost::thread::yield();
+      all::core::BOOST_SLEEP(msecspause);
     }
     printf("Thread Canceled\n");
     elapsed_ = elapsed();
