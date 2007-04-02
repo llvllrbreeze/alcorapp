@@ -209,6 +209,10 @@ void gaze_reader_t::play(bool savemat)
     
     //  
     matClose(pmat);  
+
+    //
+    mxDestroyArray(mx_rgb);
+    mxDestroyArray(mx_depth);
     }//savemat -- matlab section code
     ////////////////////////////////////////////////////////////////////////
 

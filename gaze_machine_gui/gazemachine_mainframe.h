@@ -80,9 +80,6 @@ public:
 
 ////@begin gazemachine_mainframe event handler declarations
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_CALIB_BUTTON
-    void OnCalibButtonClick( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_GAZELOG_BUTTON
     void OnGazelogButtonClick( wxCommandEvent& event );
 
@@ -104,14 +101,12 @@ public:
     static bool ShowToolTips();
 
 ////@begin gazemachine_mainframe member variables
-    wxButton* caliblog_btn;
     wxButton* gazelog_btn;
     wxButton* stoplog_btn;
     wxTextCtrl* m_logname_;
     /// Control identifiers
     enum {
         ID_GAZEMACHINE_MAINFRAME = 10000,
-        ID_CALIB_BUTTON = 10001,
         ID_GAZELOG_BUTTON = 10002,
         ID_STOP_BUTTON = 10003,
         ID_NAME_TEXTCTRL = 10005

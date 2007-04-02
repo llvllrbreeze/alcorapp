@@ -1,9 +1,12 @@
 #include "gaze_machine_t.h"
 #include "alcor/core/config_parser_t.hpp"
+#include "alcor/matlab/matlab_mx_utils.hpp"
 #include "alcor.extern/CImg/CImg.h"
 using namespace cimg_library;
 //#define NOBEE_
-
+//-------------------------------------------------------------------------++
+#include <boost/lexical_cast.hpp>
+#include "mat.h"
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze { 
 /////////////////////////////////////////////////////////////////////////////
@@ -17,9 +20,6 @@ gaze_machine_t::gaze_machine_t():
 {
   process_gaze_data = boost::bind(&gaze_machine_t::null_op_, this);
 
-  //eye_.reset(new sense::opencv_grabber_t);
-  //mti_.reset(new sense::MTi_driver_t());
-  //bee_.reset(new sense::bumblebee_driver_t);
   reset_devices_();
 
   print_welcome();
@@ -234,6 +234,9 @@ void gaze_machine_t::calib_()
     //
     CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
     CImg<core::uint8_t> imag;
+    //
+    CImgDisplay viewscene (  bee_->ncols(), bee_->nrows(), "Scene");
+    CImg<core::uint8_t> imagscene;
 
     reset_mti();
     start_timing();
@@ -241,42 +244,107 @@ void gaze_machine_t::calib_()
     const unsigned char color  [3] = {215,  240,  60};
     const unsigned char blue   [3] = {0,  0,  255};
 
+    const int imagestosave = 9;
+    int imagecnt = 0;
     //in the furious loop!
-    while (running_)
+    ///////////////////////////////////////////
+    while (running_ && imagecnt < imagestosave)
     {
-      nsamples_++;
+      //nsamples_++;
       sample_gaze_();
-      write_gaze_();
-      //////
+      //write_gaze_();
+
+      //EYE
       imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
       //
-      imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
-      imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
-      imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
-      imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
-      imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
+      //imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
+      //imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
+      //imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
+      //imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
+      //imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
 
-      imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
-      imag.draw_line(1,1, 200,1, color);
-      imag.draw_line(1,1, 0,200, color);
-      imag.draw_line(200,1, 200,200, color);
-      imag.draw_line(1,200, 200,200, color);
+      //imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
+      //imag.draw_line(1,1, 200,1, color);
+      //imag.draw_line(1,1, 0,200, color);
+      //imag.draw_line(200,1, 200,200, color);
+      //imag.draw_line(1,200, 200,200, color);
       imag.display(view) ;
 
+      //SCENE
+      imagscene.assign( 
+            iscene.get()
+        ,   bee_->ncols()
+        ,   bee_->nrows()
+        ,   1
+        ,   3);
 
+      ///
+      imagscene.display(viewscene);
+
+      ///
+      if (viewscene.key == cimg::keySPACE) 
+      {
+        imagecnt++;
+        ////////////////////////////////////////////////////////////////////////
+        //MATLAB --------------------------------------------------------------+
+        //
+        MATFile *pmat = 0;
+        //MATLAB
+        std::string namebase = "calib_";
+        //
+        namebase += boost::lexical_cast<std::string>(imagecnt);
+        namebase += ".mat";
+        //
+        pmat = matOpen(namebase.c_str(), "w");
+
+        //-----------------
+        mxArray* mx_rgb = 
+          matlab::buffer2array<core::uint8_t>::create_from_planar(iscene.get()
+                                                          , matlab::row_major
+                                                          , scenedims_.row_
+                                                          , scenedims_.col_);
+        //-----------------
+        mxArray* mx_eye = 
+          matlab::buffer2array<core::uint8_t>::create_from_planar(ieye.get()
+                                                          , matlab::row_major
+                                                          , eyedims_.row_
+                                                          , eyedims_.col_
+                                                          , eyedims_.depth_);
+
+        //-----------------
+        mxArray* mx_depth  = 
+          all::matlab::buffer2array<  core::single_t  >::create_from_planar(
+            idepth.get()
+          , matlab::row_major
+          , scenedims_.row_
+          , scenedims_.col_);
+        //-----------------
+        mxArray* mx_num = mxCreateDoubleScalar(imagecnt);
+        //-----------------
+
+        //add to file
+        matPutVariable(pmat, "calib_rgb", mx_rgb);
+        matPutVariable(pmat, "calib_xyz", mx_depth);
+        matPutVariable(pmat, "calib_eye", mx_eye);
+        matPutVariable(pmat, "calib_num", mx_num);
+        
+        //  
+        matClose(pmat);  
+
+        //
+        mxDestroyArray(mx_rgb);
+        mxDestroyArray(mx_depth);
+        mxDestroyArray(mx_eye);
+        mxDestroyArray(mx_num);
+      }
+
+      //
+      cimg::wait(100);
+      //
       boost::thread::yield();
-      all::core::BOOST_SLEEP(msecspause);
     }
+
     printf("Thread Canceled\n");
-    elapsed_ = elapsed();
-    //
-    gazelog_.seekp(std::ios::beg);
-    //
-    gazelog_.write((char*)&nsamples_, sizeof(nsamples_)); 
-    //
-    gazelog_.write((char*)&elapsed_, sizeof(elapsed_)); 
-    //
-    gazelog_.close(); 
   }
   else
       printf("devices not started!\n"); 
@@ -372,11 +440,12 @@ void gaze_machine_t::gaze_loop()
     }
     printf("Thread Canceled\n");
     elapsed_ = elapsed();
-    //
+    //go beginning
     gazelog_.seekp(std::ios::beg);
-    //
+    //save info
+    //numsamples
     gazelog_.write((char*)&nsamples_, sizeof(nsamples_)); 
-    //
+    //time spent
     gazelog_.write((char*)&elapsed_, sizeof(elapsed_)); 
     //
     gazelog_.close(); 
