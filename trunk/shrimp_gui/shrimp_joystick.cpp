@@ -31,7 +31,7 @@ void shrimp_joystick::reset_mti() {
 
 void shrimp_joystick::get_pan_tilt(all::math::angle& pan, all::math::angle& tilt) {
 	all::math::rpy_angle_t rpy = m_mti.get_euler();
-	pan = rpy.yaw;
+	pan = -rpy.yaw;
 	tilt = rpy.pitch;
 }
 
