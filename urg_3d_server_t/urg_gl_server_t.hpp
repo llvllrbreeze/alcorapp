@@ -29,6 +29,8 @@ inline urg_gl_server_t::urg_gl_server_t(int w, int h) : glt_stream_server_t(w, h
 	
 	m_urg.reset(new all::sense::urg_laser_t);
 
+	m_urg->connect();
+
 	m_scanner.reset(new all::sense::urg_3d_scanner_t(m_urg.get(), 5));
 
 	m_scanner->reset(all::math::angle(-90, all::math::deg_tag), all::math::angle(90, all::math::deg_tag), all::math::angle(-40, all::math::deg_tag),all::math::angle(40, all::math::deg_tag), 80);
