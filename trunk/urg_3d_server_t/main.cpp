@@ -16,7 +16,7 @@ void test() {
 
 bool GlutMain(const std::vector<std::string> &arg) {
 
-	urg_gl_server_t* main = new urg_gl_server_t(640, 480);
+	urg_gl_server_t* main = new urg_gl_server_t(320, 240);
 	
 	boost::shared_ptr<boost::thread> glt_thread;
 
