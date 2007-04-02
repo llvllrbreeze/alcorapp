@@ -22,6 +22,8 @@
 #pragma comment (lib, "MTi_driver_t.lib")
 #pragma comment (lib, "bumblebee_driver_t.lib")
 #pragma comment (lib, "opencv_grabber_t.lib")
+#pragma comment (lib, "libmat.lib")
+#pragma comment (lib, "libmx.lib")
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze {
 const char VERSION_INFORMATION[] = "Gaze Machine 0.5.5";

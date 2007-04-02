@@ -8,7 +8,7 @@
 // Copyright:   Alcor
 // Licence:     
 /////////////////////////////////////////////////////////////////////////////
-
+#define WIN32_LEAN_AND_MEAN
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "gazemachine_mainframe.h"
 #endif
@@ -45,8 +45,6 @@ IMPLEMENT_CLASS( gazemachine_mainframe, wxFrame )
 BEGIN_EVENT_TABLE( gazemachine_mainframe, wxFrame )
 
 ////@begin gazemachine_mainframe event table entries
-    EVT_BUTTON( ID_CALIB_BUTTON, gazemachine_mainframe::OnCalibButtonClick )
-
     EVT_BUTTON( ID_GAZELOG_BUTTON, gazemachine_mainframe::OnGazelogButtonClick )
 
     EVT_BUTTON( ID_STOP_BUTTON, gazemachine_mainframe::OnStopButtonClick )
@@ -106,7 +104,6 @@ gazemachine_mainframe::~gazemachine_mainframe()
 void gazemachine_mainframe::Init()
 {
 ////@begin gazemachine_mainframe member initialisation
-    caliblog_btn = NULL;
     gazelog_btn = NULL;
     stoplog_btn = NULL;
     m_logname_ = NULL;
@@ -126,10 +123,6 @@ void gazemachine_mainframe::CreateControls()
 
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemFrame1->SetSizer(itemBoxSizer2);
-
-    caliblog_btn = new wxButton;
-    caliblog_btn->Create( itemFrame1, ID_CALIB_BUTTON, _("Calib"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer2->Add(caliblog_btn, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     gazelog_btn = new wxButton;
     gazelog_btn->Create( itemFrame1, ID_GAZELOG_BUTTON, _("Log\n"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -181,17 +174,6 @@ wxIcon gazemachine_mainframe::GetIconResource( const wxString& name )
 ////@end gazemachine_mainframe icon retrieval
 }
 
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_CALIB_BUTTON1
- */
-
-void gazemachine_mainframe::OnCalibButtonClick( wxCommandEvent& event )
-{
-  gaze_->run_machine(gaze::calib);  
-  gazelog_btn->Enable(false);
-  stoplog_btn->Enable(true);
-  caliblog_btn->Enable(false);
-}
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_GAZELOG_BUTTON
@@ -216,6 +198,5 @@ void gazemachine_mainframe::OnStopButtonClick( wxCommandEvent& event )
   gaze_->cancel();
   gazelog_btn->Enable(true);
   stoplog_btn->Enable(false);
-  caliblog_btn->Enable(true);
 }
 

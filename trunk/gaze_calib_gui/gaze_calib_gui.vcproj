@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="gaze_machine_gui"
-	ProjectGUID="{18DD4274-9F2B-4770-BC18-234E449A0787}"
+	Name="gaze_calib_gui"
+	ProjectGUID="{9784755B-6E47-48EB-9273-3FE7A5F45315}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28.lib wxzlib.lib wxpng.lib wxjpeg.lib comctl32.lib cv.lib cxcore.lib highgui.lib"
+				AdditionalDependencies="wxmsw28.lib wxzlib.lib wxpng.lib wxjpeg.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
@@ -176,19 +176,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\gaze_machine_gui.cpp"
+				RelativePath=".\calib_frame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\gaze_calib_gui.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\gaze\gaze_machine_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\gaze\gaze_reader_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\gazemachine_mainframe.cpp"
 				>
 			</File>
 		</Filter>
@@ -198,7 +194,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\gaze_machine_gui.h"
+				RelativePath=".\calib_frame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\gaze_calib_gui.h"
 				>
 			</File>
 			<File
@@ -209,14 +209,6 @@
 				RelativePath="..\gaze\gaze_machine_t.h"
 				>
 			</File>
-			<File
-				RelativePath="..\gaze\gaze_reader_t.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gazemachine_mainframe.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -224,7 +216,7 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\gaze_machine_gui.rc"
+				RelativePath=".\gaze_calib_gui.rc"
 				>
 			</File>
 		</Filter>
