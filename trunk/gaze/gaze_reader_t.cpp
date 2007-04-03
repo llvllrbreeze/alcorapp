@@ -188,13 +188,15 @@ void gaze_reader_t::play(bool savemat)
     namebase += ".mat";
     //
     pmat = matOpen(namebase.c_str(), "w");
-
+    //
+    //printf("\nrgb\n");
     //-----------------
     mxArray* mx_rgb = 
       matlab::buffer2array<core::uint8_t>::create_from_planar(iscene.get()
                                                       , matlab::row_major
                                                       , scenedims_.row_
-                                                      , scenedims_.col_);
+                                                      , scenedims_.col_);    
+    //printf("depth\n");
     //-----------------
     mxArray* mx_depth  = 
       all::matlab::buffer2array<  core::single_t  >::create_from_planar(
@@ -203,16 +205,50 @@ void gaze_reader_t::play(bool savemat)
       , scenedims_.row_
       , scenedims_.col_);
 
+    //printf("eye\n");
+    //------------------
+    mxArray* mx_eye = 
+      matlab::buffer2array<core::uint8_t>::create_from_planar(ieye.get()
+                                                      , matlab::row_major
+                                                      , eyedims_.row_
+                                                      , eyedims_.col_
+                                                      , 1);    
+    //------------------
+    //printf("time\n");
+    mxArray* mx_time = 
+      mxCreateScalarDouble(elapsed_);
+    //------------------
+    //printf("roll, pitch, yaw\n");
+    mxArray* mx_roll = 
+      mxCreateScalarDouble(ihead.roll.deg());
+    mxArray* mx_pitch = 
+      mxCreateScalarDouble(ihead.pitch.deg());
+    mxArray* mx_yaw = 
+      mxCreateScalarDouble(ihead.yaw.deg());
+    //------------------
+    //printf("Write to mat\n");
     //add to file
-    matPutVariable(pmat, "rgb", mx_rgb);
-    matPutVariable(pmat, "xyz", mx_depth);
-    
+    matPutVariable(pmat, "elapsed", mx_time);
+    matPutVariable(pmat, "scene"    , mx_rgb);
+    matPutVariable(pmat, "xyz"    , mx_depth);
+    matPutVariable(pmat, "imeye"    , mx_eye);
+    matPutVariable(pmat, "roll"   , mx_roll);
+    matPutVariable(pmat, "pitch"  , mx_pitch);
+    matPutVariable(pmat, "yaw"    , mx_yaw);
+    //------------------
     //  
+    //printf("Close mat\n");
     matClose(pmat);  
 
     //
+    //printf("Destroy array\n");
     mxDestroyArray(mx_rgb);
     mxDestroyArray(mx_depth);
+    mxDestroyArray(mx_eye);
+    mxDestroyArray(mx_time);
+    mxDestroyArray(mx_roll);
+    mxDestroyArray(mx_pitch);
+    mxDestroyArray(mx_yaw);
     }//savemat -- matlab section code
     ////////////////////////////////////////////////////////////////////////
 

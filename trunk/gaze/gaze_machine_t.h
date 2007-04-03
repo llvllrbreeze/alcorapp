@@ -1,5 +1,5 @@
 #ifndef gaze_machine_t_H_INCLUDED
-#define gaze_machine_t_H_INCLUDE
+#define gaze_machine_t_H_INCLUDED
 //-------------------------------------------------------------------------++
 #include "gaze_machine_inc.h"
 #include "alcor/math/size3d_t.hpp"
@@ -43,6 +43,8 @@ public:
   void set_logname(std::string&);
   ///
   void sample_gaze_(); 
+  ///
+  void save_calib(){bsavecalib = true;};
 
 
 private:    
@@ -126,6 +128,8 @@ private:
 
   ///loop control
   volatile bool running_;
+  ///
+  volatile bool bsavecalib;
   ///
   //volatile bool enabled_;
   //

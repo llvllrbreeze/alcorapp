@@ -49,6 +49,8 @@ IMPLEMENT_CLASS( calib_frame, wxFrame )
 BEGIN_EVENT_TABLE( calib_frame, wxFrame )
 
 ////@begin calib_frame event table entries
+    EVT_CLOSE( calib_frame::OnCloseWindow )
+
     EVT_BUTTON( ID_DO_CALIB_BUTTON, calib_frame::OnDoCalibButtonClick )
 
     EVT_BUTTON( ID_STOP_BUTTON, calib_frame::OnStopButtonClick )
@@ -133,7 +135,7 @@ void calib_frame::CreateControls()
     itemBoxSizer2->Add(5, 5, 0, wxGROW|wxALL, 5);
 
     wxButton* itemButton5 = new wxButton;
-    itemButton5->Create( itemFrame1, ID_STOP_BUTTON, _("Stop"), wxDefaultPosition, wxSize(90, 30), 0 );
+    itemButton5->Create( itemFrame1, ID_STOP_BUTTON, _("Save"), wxDefaultPosition, wxSize(90, 30), 0 );
     itemBoxSizer2->Add(itemButton5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
 ////@end calib_frame content construction
@@ -190,9 +192,18 @@ void calib_frame::OnDoCalibButtonClick( wxCommandEvent& event )
 
 void calib_frame::OnStopButtonClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_STOP_BUTTON in calib_frame.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_STOP_BUTTON in calib_frame. 
+  gaze_->save_calib();
+}
+
+
+/*!
+ * wxEVT_CLOSE_WINDOW event handler for ID_CALIB_FRAME
+ */
+
+void calib_frame::OnCloseWindow( wxCloseEvent& event )
+{
+  gaze_->cancel();
+  core::BOOST_SLEEP(200);
+  Destroy();
 }
 

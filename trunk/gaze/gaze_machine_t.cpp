@@ -17,6 +17,7 @@ gaze_machine_t::gaze_machine_t():
                       , running_(true)
                       , logname_("gazelog.bin")
                       , is_opened_(false)
+                      , bsavecalib(false)
 {
   process_gaze_data = boost::bind(&gaze_machine_t::null_op_, this);
 
@@ -282,9 +283,15 @@ void gaze_machine_t::calib_()
       imagscene.display(viewscene);
 
       ///
-      if (viewscene.key == cimg::keySPACE) 
+      //if (viewscene.key == cimg::keySPACE) 
+      if (bsavecalib)
       {
-        imagecnt++;
+        //
+        bsavecalib = false;
+
+        //viewscene.key&=0;
+        imagecnt++;        
+        printf("Saving %d calib file.\n", imagecnt);
         ////////////////////////////////////////////////////////////////////////
         //MATLAB --------------------------------------------------------------+
         //
@@ -339,7 +346,9 @@ void gaze_machine_t::calib_()
       }
 
       //
-      cimg::wait(100);
+      //viewscene.wait(100);
+
+      core::BOOST_SLEEP(100);
       //
       boost::thread::yield();
     }
@@ -368,7 +377,7 @@ void gaze_machine_t::run_machine(binlog_t const&)
 void gaze_machine_t::run_machine(calib_t const&)
 {
   gaze_loop_ = boost::bind(&gaze_machine_t::calib_,      this);
-  thread_ptr.reset( new boost::thread(boost::bind(&gaze_machine_t::gaze_loop, this) ) );
+  thread_ptr.reset( new boost::thread(boost::bind(&gaze_machine_t::calib_, this) ) );
 }
 //-------------------------------------------------------------------------++
 void gaze_machine_t::gaze_loop()
