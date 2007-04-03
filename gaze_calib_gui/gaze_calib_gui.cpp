@@ -31,7 +31,6 @@
 #include "gaze_calib_gui.h"
 
 ////@begin XPM images
-
 ////@end XPM images
 
 /*!
@@ -84,21 +83,24 @@ void Gaze_calib_gui_App::Init()
 bool Gaze_calib_gui_App::OnInit()
 {    
 ////@begin Gaze_calib_gui_App initialisation
-    // Remove the comment markers above and below this block
-    // to make permanent changes to the code.
+	// Remove the comment markers above and below this block
+	// to make permanent changes to the code.
 
 #if wxUSE_XPM
-    wxImage::AddHandler(new wxXPMHandler);
+	wxImage::AddHandler(new wxXPMHandler);
 #endif
 #if wxUSE_LIBPNG
-    wxImage::AddHandler(new wxPNGHandler);
+	wxImage::AddHandler(new wxPNGHandler);
 #endif
 #if wxUSE_LIBJPEG
-    wxImage::AddHandler(new wxJPEGHandler);
+	wxImage::AddHandler(new wxJPEGHandler);
 #endif
 #if wxUSE_GIF
-    wxImage::AddHandler(new wxGIFHandler);
+	wxImage::AddHandler(new wxGIFHandler);
 #endif
+	calib_frame* mainWindow = new calib_frame;
+	mainWindow->Create( NULL, calib_frame::ID_CALIB_FRAME );
+	mainWindow->Show(true);
 ////@end Gaze_calib_gui_App initialisation
 
     return true;
@@ -110,7 +112,7 @@ bool Gaze_calib_gui_App::OnInit()
 int Gaze_calib_gui_App::OnExit()
 {    
 ////@begin Gaze_calib_gui_App cleanup
-    return wxApp::OnExit();
+	return wxApp::OnExit();
 ////@end Gaze_calib_gui_App cleanup
 }
 

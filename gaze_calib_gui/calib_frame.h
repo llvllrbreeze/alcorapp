@@ -16,6 +16,9 @@
 #pragma interface "calib_frame.h"
 #endif
 
+#include "alcor.apps/gaze/gaze_machine_t.h"
+using namespace all;
+
 /*!
  * Includes
  */
@@ -77,6 +80,9 @@ public:
     void CreateControls();
 
 ////@begin calib_frame event handler declarations
+
+    /// wxEVT_CLOSE_WINDOW event handler for ID_CALIB_FRAME
+    void OnCloseWindow( wxCloseEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_DO_CALIB_BUTTON
     void OnDoCalibButtonClick( wxCommandEvent& event );

@@ -22,6 +22,7 @@
 
 ////@begin includes
 #include "wx/image.h"
+#include "calib_frame.h"
 ////@end includes
 
 /*!
@@ -61,9 +62,11 @@ public:
     virtual int OnExit();
 
 ////@begin Gaze_calib_gui_App event handler declarations
+
 ////@end Gaze_calib_gui_App event handler declarations
 
 ////@begin Gaze_calib_gui_App member function declarations
+
 ////@end Gaze_calib_gui_App member function declarations
 
 ////@begin Gaze_calib_gui_App member variables

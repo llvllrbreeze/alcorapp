@@ -215,7 +215,7 @@
           <string name="proxy-Implementation filename">"gaze_calib_gui.cpp"</string>
           <string name="proxy-Header filename">"gaze_calib_gui.h"</string>
           <string name="proxy-Event sources">""</string>
-          <string name="proxy-Main window">""</string>
+          <string name="proxy-Main window">"ID_CALIB_FRAME"</string>
         </document>
         <document>
           <string name="title">"calib_frame"</string>
@@ -234,6 +234,7 @@
           <bool name="use-id-suffix">0</bool>
           <string name="id-suffix">""</string>
           <long name="use-xrc">0</long>
+          <string name="event-handler-0">"wxEVT_CLOSE_WINDOW|OnCloseWindow|NONE||"</string>
           <string name="proxy-Id name">"ID_CALIB_FRAME"</string>
           <long name="proxy-Id value">10000</long>
           <string name="proxy-Class">"calib_frame"</string>
@@ -412,7 +413,7 @@
               <string name="proxy-Implementation filename">""</string>
               <string name="proxy-Header filename">""</string>
               <string name="proxy-Member variable name">""</string>
-              <string name="proxy-Label">"Stop"</string>
+              <string name="proxy-Label">"Save"</string>
               <bool name="proxy-Default">0</bool>
               <string name="proxy-Help text">""</string>
               <string name="proxy-Tooltip text">""</string>
