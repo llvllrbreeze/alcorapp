@@ -15,6 +15,7 @@ int main()
 		splam.lock();
 		splam.get_splam_data(data);
 		std::cout << "posa corrente: " << data.get_current_position()<< " --- premere 'q' per uscire!" << std::endl;
+		data.save_og_pgm("mappa.pgm");
 		if(esc=='d')
 			splam.set_display(!splam.get_display());
 		splam.unlock();
