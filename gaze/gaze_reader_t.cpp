@@ -4,6 +4,8 @@
 #include "alcor.extern/CImg/CImg.h"
 using namespace cimg_library;
 //-------------------------------------------------------------------------++
+#define WRITESTRUCTS_
+//-------------------------------------------------------------------------++
 namespace all { namespace gaze {
 //-------------------------------------------------------------------------++
   gaze_reader_t::gaze_reader_t():
@@ -83,45 +85,70 @@ void gaze_reader_t::allocate_()
   ieye.reset  ( new core::uint8_t  [ eye_offset_ ]  );
   iscene.reset( new core::uint8_t  [ scene_offset_] );
   idepth.reset( new core::single_t [ depth_offset_] );  
+  current_sample_ = 0;
 }
 //-------------------------------------------------------------------------++
-void gaze_reader_t::sample_()
-{
-  //elapsed time .. in seconds
-  gazelog_.read((char*)&elapsed_,  elapsed_offset_);
+bool gaze_reader_t::sample()
+{ 
+  if(!eof())
+  {
+    current_sample_++;
+    //elapsed time .. in seconds
+    gazelog_.read((char*)&elapsed_,  elapsed_offset_);
 
-  //eye buffer
-  gazelog_.read((char*)&ieye[0],  eye_offset_);
+    //eye buffer
+    gazelog_.read((char*)&ieye[0],  eye_offset_);
 
-  //rgb scene buffer
-  gazelog_.read((char*)&iscene[0],  scene_offset_);
+    //rgb scene buffer
+    gazelog_.read((char*)&iscene[0],  scene_offset_);
 
-  //xyz depth
-  gazelog_.read((char*)&idepth[0],  depth_offset_);
+    //xyz depth
+    gazelog_.read((char*)&idepth[0],  depth_offset_);
 
-  ///Orientation
-  gazelog_.read((char*)&ihead,  rpy_offset_);
+    ///Orientation
+    gazelog_.read((char*)&ihead,  rpy_offset_);
+  }
+  else
+    return false;
+  return true;
+
 }
 //-------------------------------------------------------------------------++
 void gaze_reader_t::reset()
 {
   gazelog_.seekg(header_offset_);
+  current_sample_ = 0;
 }
 //-------------------------------------------------------------------------++
 ///
-void gaze_reader_t::next()
+bool gaze_reader_t::next()
 {
-
+  return sample();
+}
+//-------------------------------------------------------------------------++
+  ///jump at num sample
+bool gaze_reader_t::peek(size_t num)
+{
+  if(num < nsamples_)
+    {
+    gazelog_.seekg(header_offset_ + ((num-1) * per_sample_offset_));
+    current_sample_ = num-1;
+    return sample();
+    }
+  else 
+    return false;
 }
 //-------------------------------------------------------------------------++
 ///
-void gaze_reader_t::play(bool savemat)
+void gaze_reader_t::play(bool bshow, bool bsavemat)
 {
   reset();
 
   double last_elapsed = 0;
   unsigned int timeroffset;
 
+  //if(bshow)
+  //{
   CImgDisplay view (  eyedims_.col_,  eyedims_.row_, "Eye");
   CImg<core::uint8_t> imag;
 
@@ -133,58 +160,72 @@ void gaze_reader_t::play(bool savemat)
 
   const unsigned char color  [3] = {215,  240,  60};
   const unsigned char blue   [3] = {0,  0,  255};
+  //}
 
   ///
-  for(size_t i=0 ; i < nsamples_; i++)
+  while(sample())
   {
-    //EXTRACT
-    sample_();
     //TIME
     timeroffset = static_cast<unsigned int> ( (elapsed_- last_elapsed) * 1000.0);
-    //printf("\nDelta T: %d\n", timeroffset);
     core::BOOST_SLEEP( timeroffset );
 
-    //DRAW
-    imag.assign( ieye.get(),  eyedims_.col_, eyedims_.row_, 1, eyedims_.depth_);
-    //DRAW
-    imagscene.assign( iscene.get(),  scenedims_.col_, scenedims_.row_, 1, scenedims_.depth_);
-    //
-    imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
-    imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll.deg());
-    imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch.deg());
-    imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw.deg());
-    imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", i+1);
+    if(bshow)
+      {
+      //DRAW
+      imag.assign( ieye.get(),  eyedims_.col_, eyedims_.row_, 1, eyedims_.depth_);
+      //DRAW
+      imagscene.assign( iscene.get(),  scenedims_.col_, scenedims_.row_, 1, scenedims_.depth_);
+      //
+      imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
+      imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll.deg());
+      imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch.deg());
+      imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw.deg());
+      imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", current_sample_);
 
-    imag.draw_rectangle(1, 1, 120, 150, color, 0.2);
-    imag.draw_line(1,1, 120,1, color);
-    imag.draw_line(1,1, 0,150, color);
-    imag.draw_line(120,1, 120,150, color);
-    imag.draw_line(1,150, 120,150, color);
+      imag.draw_rectangle(1, 1, 120, 150, color, 0.2);
+      imag.draw_line(1,1, 120,1, color);
+      imag.draw_line(1,1, 0,150, color);
+      imag.draw_line(120,1, 120,150, color);
+      imag.draw_line(1,150, 120,150, color);
 
-    /////3D
-    threedscene.assign(
-      (core::single_ptr)idepth.get() + (scenedims_.col_*scenedims_.row_)
-         ,  scenedims_.col_
-         ,  scenedims_.row_
-         ,  1);
+      /////3D
+      threedscene.assign(
+        (core::single_ptr)idepth.get() + (scenedims_.col_*scenedims_.row_)
+           ,  scenedims_.col_
+           ,  scenedims_.row_
+           ,  1);
 
-    ///----------------------------+
-    imag.display(view) ;
-    ///----------------------------+
-    imagscene.display(viewscene);
-    ///----------------------------+
-    threedscene.display(threedview);
-    ///----------------------------+
-    if (savemat)
-    {
+      ///----------------------------+
+      imag.display(view) ;
+      ///----------------------------+
+      imagscene.display(viewscene);
+      ///----------------------------+
+      threedscene.display(threedview);
+      ///----------------------------+
+    }
+
+    ////////////////////////////////////////////////////////////////////////
+    if (bsavemat) 
+      matlab_dump();
+    ////////////////////////////////////////////////////////////////////////
+
+    //for next loop
+    last_elapsed = elapsed_;
+  }
+}
+//-------------------------------------------------------------------------++
+  ///
+void gaze_reader_t::matlab_dump()
+{
     ////////////////////////////////////////////////////////////////////////
     //MATLAB --------------------------------------------------------------+
     //
     MATFile *pmat = 0;
     //MATLAB
-    std::string namebase = "cameralog_";
+    std::string namebase = "gazelog_";
     //
-    namebase += boost::lexical_cast<std::string>(i+1);
+    namebase += boost::lexical_cast<std::string>(current_sample_);
+
     namebase += ".mat";
     //
     pmat = matOpen(namebase.c_str(), "w");
@@ -226,6 +267,75 @@ void gaze_reader_t::play(bool savemat)
     mxArray* mx_yaw = 
       mxCreateScalarDouble(ihead.yaw.deg());
     //------------------
+#ifdef WRITESTRUCTS_
+     const char *field_names[] = {  "elapsed",
+                                    "scene"  ,
+                                    "depth"    ,
+                                    "imeye"   ,
+                                    "roll"   ,
+                                    "pitch"  ,
+                                    "yaw" };
+      mwSize dims[2] = {1, 1};
+
+      mxArray* ostruct= mxCreateStructArray(2, dims, 7, field_names);
+
+      int elapsed_field
+        , scene_field
+        , depth_field
+        , imeye_field
+        , roll_field
+        , pitch_field
+        , yaw_field;
+
+      elapsed_field = mxGetFieldNumber(ostruct,   "elapsed");
+      scene_field   = mxGetFieldNumber(ostruct,   "scene");
+      depth_field   = mxGetFieldNumber(ostruct,   "depth");
+      imeye_field   = mxGetFieldNumber(ostruct,   "imeye");
+      roll_field    = mxGetFieldNumber(ostruct,   "roll");
+      pitch_field   = mxGetFieldNumber(ostruct,   "pitch");
+      yaw_field     = mxGetFieldNumber(ostruct,   "yaw");
+
+      //time
+      mxSetFieldByNumber( ostruct
+                        , 0
+                        , elapsed_field
+                        , mx_time);
+      //scene
+      mxSetFieldByNumber( ostruct
+                        , 0
+                        , scene_field
+                        , mx_rgb);
+      //depth
+      mxSetFieldByNumber( ostruct
+                        , 0
+                        , depth_field
+                        , mx_depth);
+      //imeye
+      mxSetFieldByNumber( ostruct
+                        , 0
+                        , imeye_field
+                        , mx_eye);
+      //roll
+      mxSetFieldByNumber( ostruct
+                        , 0
+                        , roll_field
+                        , mx_roll);
+      //pitch
+      mxSetFieldByNumber( ostruct
+                        , 0
+                        , pitch_field
+                        , mx_pitch);
+      //yaw
+      mxSetFieldByNumber( ostruct
+                        , 0
+                        , yaw_field
+                        , mx_yaw);
+
+      //write to matfile
+      matPutVariable(pmat, "gazelog", ostruct);
+#else
+
+    //------------------
     //printf("Write to mat\n");
     //add to file
     matPutVariable(pmat, "elapsed", mx_time);
@@ -236,6 +346,7 @@ void gaze_reader_t::play(bool savemat)
     matPutVariable(pmat, "pitch"  , mx_pitch);
     matPutVariable(pmat, "yaw"    , mx_yaw);
     //------------------
+#endif
     //  
     //printf("Close mat\n");
     matClose(pmat);  
@@ -249,14 +360,12 @@ void gaze_reader_t::play(bool savemat)
     mxDestroyArray(mx_roll);
     mxDestroyArray(mx_pitch);
     mxDestroyArray(mx_yaw);
-    }//savemat -- matlab section code
-    ////////////////////////////////////////////////////////////////////////
 
-    //for next loop
-    last_elapsed = elapsed_;
-    //printf("Roll: %.2f Pitch: %.2f Yaw: %.2f\n"
-    //  , ihead.roll.deg(), ihead.pitch.deg(), ihead.yaw.deg());
-  }
+}
+//-------------------------------------------------------------------------++
+bool gaze_reader_t::eof()
+{
+  return current_sample_ == nsamples_;
 }
 //-------------------------------------------------------------------------++
 }}//all::gaze
