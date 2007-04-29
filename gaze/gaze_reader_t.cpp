@@ -110,8 +110,8 @@ bool gaze_reader_t::sample()
   }
   else
     return false;
-  return true;
 
+  return true;
 }
 //-------------------------------------------------------------------------++
 void gaze_reader_t::reset()
@@ -222,7 +222,7 @@ void gaze_reader_t::matlab_dump()
     //
     MATFile *pmat = 0;
     //MATLAB
-    std::string namebase = "gazelog_";
+    std::string namebase = "./gazelog_";
     //
     namebase += boost::lexical_cast<std::string>(current_sample_);
 

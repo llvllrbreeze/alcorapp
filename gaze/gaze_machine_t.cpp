@@ -18,6 +18,7 @@ gaze_machine_t::gaze_machine_t():
                       , logname_("gazelog.bin")
                       , is_opened_(false)
                       , bsavecalib(false)
+                      , b_enabled_views(false)
 {
   process_gaze_data = boost::bind(&gaze_machine_t::null_op_, this);
 
@@ -232,6 +233,7 @@ void gaze_machine_t::calib_()
   printf("->boot_machine_ .. \n");
   if(boot_machine_())
   {  
+
     //
     CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
     CImg<core::uint8_t> imag;
@@ -253,7 +255,7 @@ void gaze_machine_t::calib_()
     {
       //nsamples_++;
       sample_gaze_();
-      //write_gaze_();
+
 
       //EYE
       imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
@@ -281,7 +283,6 @@ void gaze_machine_t::calib_()
 
       ///
       imagscene.display(viewscene);
-
       ///
       //if (viewscene.key == cimg::keySPACE) 
       if (bsavecalib)
@@ -408,6 +409,8 @@ void gaze_machine_t::gaze_loop()
       nsamples_++;
       sample_gaze_();
       write_gaze_();
+      if(b_enabled_views)
+      {
       //////
       imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
       //
@@ -434,7 +437,7 @@ void gaze_machine_t::gaze_loop()
 
       ///
       imagscene.display(viewscene);
-
+      }
       /////
       // threedscene.assign(
       //   idepth.get()+ (bee_->ncols()*bee_->nrows()*2)

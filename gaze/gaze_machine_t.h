@@ -40,6 +40,10 @@ public:
   void cancel(){running_=false;};
 
   ///
+  void enable_views(bool b_enable=true)
+      {b_enabled_views = b_enable;}
+
+  ///
   void set_logname(std::string&);
   ///
   void sample_gaze_(); 
@@ -130,6 +134,8 @@ private:
   volatile bool running_;
   ///
   volatile bool bsavecalib;
+  ///
+  volatile bool b_enabled_views;
   ///
   //volatile bool enabled_;
   //
