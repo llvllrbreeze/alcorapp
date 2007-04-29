@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
   gazelog.load(binlogname);
 
   getchar();
-  gazelog.play(true, true);
+  gazelog.play(false, true);
 
   return 0;
 }
