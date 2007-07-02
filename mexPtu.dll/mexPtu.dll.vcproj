@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="mexBee"
-	ProjectGUID="{9F2B8AF6-9240-43C8-9C55-8AEDDA113BDD}"
-	RootNamespace="matlab_ipc_bumblebee"
+	Name="mexPtu.dll"
+	ProjectGUID="{6D244FF9-59AA-44A2-9603-6182180EA887}"
+	RootNamespace="mexPtudll"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -17,11 +17,10 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,10 +40,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;MATLAB_IPC_BUMBLEBEE_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -61,13 +60,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/matlab_ipc_bumblebee.dll"
 				LinkIncremental="2"
-				ModuleDefinitionFile="ipcBee.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/matlab_ipc_bumblebee.pdb"
-				SubSystem="2"
-				ImportLibrary="$(OutDir)/matlab_ipc_bumblebee.lib"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -100,8 +95,8 @@
 			OutputDirectory="..\..\obj\$(ProjectName)"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -121,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;MATLAB_MEX_FILE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;MATLAB_MEX_FILE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -139,19 +134,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies=" libmx.lib libmex.lib libmat.lib digiclops.lib triclops.lib"
-				OutputFile="..\..\alcor.bin\$(ProjectName).dll"
+				AdditionalDependencies="libmx.lib libmex.lib libmat.lib"
+				OutputFile="..\..\alcor.bin\$(ProjectName)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\alcor.lib"
-				GenerateManifest="false"
-				ModuleDefinitionFile="mexBee.def"
-				DelayLoadDLLs=""
+				AdditionalLibraryDirectories="../../alcor.lib"
+				ModuleDefinitionFile="mexPtu.def"
 				GenerateDebugInformation="false"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				LinkTimeCodeGeneration="1"
-				ImportLibrary="$(OutDir)/matlab_ipc_bumblebee.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -185,47 +176,31 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\alcor\matlab\mexBee\bee_cam_close.cpp"
+				RelativePath="..\..\alcor\matlab\mexPtu\mex_directed_perception.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\mexBee\bee_cam_create.cpp"
+				RelativePath=".\mexPtu.def"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\mexBee\bee_cam_grab_color.cpp"
+				RelativePath="..\..\alcor\matlab\mexPtu\ptu_close.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\mexBee\bee_cam_open.cpp"
+				RelativePath="..\..\alcor\matlab\mexPtu\ptu_create.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\mexBee\bee_grab_all.cpp"
+				RelativePath="..\..\alcor\matlab\mexPtu\ptu_open.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\mexBee\bee_grab_color_and_depth.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\sense\detail\bumblebee_driver_impl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\sense\bumblebee_driver_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\mexBee\mex_bumblebee.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\mexBee.def"
+				RelativePath="..\..\alcor\matlab\mexPtu\ptu_pantilt.cpp"
 				>
 			</File>
 		</Filter>
@@ -235,47 +210,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\alcor\matlab\mexBee\matlab_bee_inc.h"
+				RelativePath="..\..\alcor\matlab\mexPtu\matlab_ptu_inc.h"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-		</Filter>
-		<Filter
-			Name="matlab"
-			>
-			<File
-				RelativePath="..\..\alcor\matlab\@beeobject\beeobject.m"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\@beeobject\private\close.m"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\@beeobject\private\grab_all.m"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\@beeobject\private\grab_color.m"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\@beeobject\private\grab_color_and_depth.m"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\@beeobject\private\open.m"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\@beeobject\subsref.m"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -149,7 +149,7 @@ void tracking_machine::setup_cb()
   centro_r = r_roi + h_2;
   centro_c = c_roi + w_2;
 
-  //forst, center the ptu on the target/roi
+  //first, center the ptu on the target/roi
   move_ptu_to_screen_rc(centro_r, centro_c, 2.0);
 
   //then grab again and launch model setup
