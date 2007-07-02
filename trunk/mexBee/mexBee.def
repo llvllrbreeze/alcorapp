@@ -1,6 +1,6 @@
 ; mexFunction.def : Declares the module parameters for the DLL.
-LIBRARY      mexBee
-EXPORTS
+LIBRARY         mexBee
+EXPORTS         mexFunction
     ; Explicit exports can go here
-    mexFunction
+    
 
