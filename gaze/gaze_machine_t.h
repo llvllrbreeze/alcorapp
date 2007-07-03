@@ -8,8 +8,11 @@ namespace all { namespace gaze{
 //-------------------------------------------------------------------------++
 struct calib_t {};
 struct binlog_t{};
-static const calib_t calib = calib_t();
-static const binlog_t binlog = binlog_t();
+struct show_t{};
+//-------------------------------------------------------------------------++
+static const calib_t  calib   = calib_t();
+static const binlog_t binlog  = binlog_t();
+static const show_t   show    = show_t();
 //-------------------------------------------------------------------------++
 ///
 class  gaze_machine_t
@@ -32,9 +35,14 @@ public:
   void reset_mti();
 
   ///
+  void run_gaze_machine();
+
+  ///
   void run_machine(calib_t const&);
   ///
   void run_machine(binlog_t const&);
+  ///
+  void run_machine(show_t const&);
 
   ///
   void cancel(){running_=false;};
@@ -65,8 +73,15 @@ private:
   void write_gaze_();
   ///
   void null_op_();
-  ///
-  void calib_();
+
+  ///calib loop
+  void calib_loop();
+
+  ///sampling loop
+  void gaze_loop();
+
+  ///sampling loop
+  void show_loop();
   /////////////////////////////////////////////////
   ///
   boost::function<void (void)> process_gaze_data;
@@ -87,8 +102,6 @@ private:
   void allocate_();
   void write_header_();
 
-  ///sampling loop
-  void gaze_loop();
 
   ///generic gaze_loop
   boost::function<void (void)> gaze_loop_;
@@ -137,8 +150,8 @@ private:
   ///
   volatile bool b_enabled_views;
   ///
-  //volatile bool enabled_;
-  //
+  int m_mode;
+  ///
   unsigned int msecspause;
   ///
   boost::shared_ptr<boost::thread> thread_ptr;

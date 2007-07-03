@@ -64,8 +64,28 @@ bool gaze_machine_t::boot_machine_()
     std::string mticonf = config.get<std::string>("config.mti", "config/mti_config.ini");
     std::string eyeconf = config.get<std::string>("config.reye","config/eyecamera.ini");
     std::string beeconf = config.get<std::string>("config.bee", "config/bumblebeeB.ini");
+    m_mode              = config.get<int>("config.mode",0);
+
     //    
     msecspause          = config.get<unsigned int>("config.msecspause", 50);
+
+    ///
+    std::cout << "msec loop pause: " << msecspause << std::endl;
+
+    ///
+    switch(m_mode)
+    {
+      case 0:
+            std::cout << "MODe: show" << std::endl;
+            break;
+      case 1: 
+            std::cout << "MODe: calib" << std::endl;
+            break;
+      case 2:
+            std::cout << "MODe: acuire" << std::endl;
+            break;
+    }
+
 
     ////
     std::cout << "<Eye Camera ...>"; 
@@ -227,7 +247,7 @@ void gaze_machine_t::write_gaze_()
   gazelog_.write((char*)&ihead,         head_sz);
 }
 //-------------------------------------------------------------------------++
-void gaze_machine_t::calib_()
+void gaze_machine_t::calib_loop()
 {
   printf("->in the thread loop!\n");
   printf("->boot_machine_ .. \n");
@@ -360,28 +380,92 @@ void gaze_machine_t::calib_()
       printf("devices not started!\n"); 
 }
 //-------------------------------------------------------------------------++
-void gaze_machine_t::null_op_()
-{
-}
-//-------------------------------------------------------------------------++
-int gaze_machine_t::nsamples() const
-{
-return nsamples_;
-}
-//-------------------------------------------------------------------------++
-void gaze_machine_t::run_machine(binlog_t const&)
-{
-  gaze_loop_ = boost::bind(&gaze_machine_t::gaze_loop,      this);
-  thread_ptr.reset( new boost::thread(boost::bind(&gaze_machine_t::gaze_loop, this) ) );
-}
-//-------------------------------------------------------------------------++
-void gaze_machine_t::run_machine(calib_t const&)
-{
-  gaze_loop_ = boost::bind(&gaze_machine_t::calib_,      this);
-  thread_ptr.reset( new boost::thread(boost::bind(&gaze_machine_t::calib_, this) ) );
-}
-//-------------------------------------------------------------------------++
 void gaze_machine_t::gaze_loop()
+{
+  printf("->in the thread loop!\n");
+  printf("->boot_machine_ .. \n");
+  if(boot_machine_())
+  { 
+    ////
+    //CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
+    //CImg<core::uint8_t> imag;
+    ////
+    //CImgDisplay viewscene (  bee_->ncols(), bee_->nrows(), "Scene");
+    //CImg<core::uint8_t> imagscene;
+
+    ////
+    //CImgDisplay threedview (  bee_->ncols(),  bee_->nrows(), "3D");
+    //CImg<core::single_t> threedscene;
+
+    reset_mti();
+    start_timing();
+    printf("->machine booted ...starting loop\n");
+    //const unsigned char color  [3] = {215,  240,  60};
+    //const unsigned char blue   [3] = {0,  0,  255};
+    while (running_)
+    {
+      ///
+      nsamples_++;
+      sample_gaze_();
+      write_gaze_();
+      //if(b_enabled_views)
+      //{
+      ////////
+      //imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
+      ////
+      //imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
+      //imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
+      //imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
+      //imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
+      //imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
+
+      //imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
+      //imag.draw_line(1,1, 200,1, color);
+      //imag.draw_line(1,1, 0,200, color);
+      //imag.draw_line(200,1, 200,200, color);
+      //imag.draw_line(1,200, 200,200, color);
+      //imag.display(view) ;
+
+      ////DRAW
+      //imagscene.assign( 
+      //      iscene.get()
+      //  ,   bee_->ncols()
+      //  ,   bee_->nrows()
+      //  ,   1
+      //  ,   3);
+
+      /////
+      //imagscene.display(viewscene);
+      //}
+      /////
+      // threedscene.assign(
+      //   idepth.get()+ (bee_->ncols()*bee_->nrows()*2)
+      //   ,  bee_->ncols()
+      //   ,  bee_->nrows()
+      //   ,  1);
+
+      //threedscene.display(threedview);
+
+      boost::thread::yield();
+      all::core::BOOST_SLEEP(msecspause);
+    }
+    printf("Thread Canceled\n");
+    elapsed_ = elapsed();
+    //go beginning
+    gazelog_.seekp(std::ios::beg);
+    //save info
+    //numsamples
+    gazelog_.write((char*)&nsamples_, sizeof(nsamples_)); 
+    //time spent
+    gazelog_.write((char*)&elapsed_, sizeof(elapsed_)); 
+    //and then close
+    gazelog_.close(); 
+  }
+  else
+      printf("devices not started!\n"); 
+}
+//-------------------------------------------------------------------------++
+void gaze_machine_t::show_loop()
 {
   printf("->in the thread loop!\n");
   printf("->boot_machine_ .. \n");
@@ -407,10 +491,9 @@ void gaze_machine_t::gaze_loop()
     {
       ///
       nsamples_++;
+
       sample_gaze_();
-      write_gaze_();
-      if(b_enabled_views)
-      {
+
       //////
       imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
       //
@@ -437,7 +520,6 @@ void gaze_machine_t::gaze_loop()
 
       ///
       imagscene.display(viewscene);
-      }
       /////
       // threedscene.assign(
       //   idepth.get()+ (bee_->ncols()*bee_->nrows()*2)
@@ -449,22 +531,55 @@ void gaze_machine_t::gaze_loop()
 
       boost::thread::yield();
       all::core::BOOST_SLEEP(msecspause);
-    }
+  }
     printf("Thread Canceled\n");
     elapsed_ = elapsed();
-    //go beginning
-    gazelog_.seekp(std::ios::beg);
-    //save info
-    //numsamples
-    gazelog_.write((char*)&nsamples_, sizeof(nsamples_)); 
-    //time spent
-    gazelog_.write((char*)&elapsed_, sizeof(elapsed_)); 
-    //
-    gazelog_.close(); 
+    ////go beginning
+    //gazelog_.seekp(std::ios::beg);
+    ////save info
+    ////numsamples
+    //gazelog_.write((char*)&nsamples_, sizeof(nsamples_)); 
+    ////time spent
+    //gazelog_.write((char*)&elapsed_, sizeof(elapsed_)); 
+    ////and then close
+    //gazelog_.close(); 
   }
   else
       printf("devices not started!\n"); 
 }
+//-------------------------------------------------------------------------++
+void gaze_machine_t::null_op_()
+{
+}
+//-------------------------------------------------------------------------++
+int gaze_machine_t::nsamples() const
+{
+return nsamples_;
+}
+//-------------------------------------------------------------------------++
+void gaze_machine_t::run_gaze_machine()
+{
+
+}
+//-------------------------------------------------------------------------++
+void gaze_machine_t::run_machine(binlog_t const&)
+{
+  gaze_loop_ = boost::bind(&gaze_machine_t::gaze_loop,      this);
+  thread_ptr.reset( new boost::thread(boost::bind(&gaze_machine_t::gaze_loop, this) ) );
+}
+//-------------------------------------------------------------------------++
+void gaze_machine_t::run_machine(calib_t const&)
+{
+  gaze_loop_ = boost::bind(&gaze_machine_t::calib_loop,      this);
+  thread_ptr.reset( new boost::thread(boost::bind(&gaze_machine_t::calib_loop, this) ) );
+}
+//-------------------------------------------------------------------------++
+void gaze_machine_t::run_machine(show_t const&)
+{
+  gaze_loop_ = boost::bind(&gaze_machine_t::show_loop,      this);
+  thread_ptr.reset( new boost::thread(boost::bind(&gaze_machine_t::show_loop, this) ) );
+}
+
 //-------------------------------------------------------------------------++
 /////////////////////////////////////////////////////////////////////////////
 }}///all::sense::detail
