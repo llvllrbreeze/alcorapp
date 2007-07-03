@@ -9,7 +9,7 @@ int main()
   printf("\nPress Return to start\n");
   getchar();
   gaze_machine.enable_views(false);
-  gaze_machine.run_machine(gaze::binlog);
+  gaze_machine.run_machine(gaze::show);
   printf("\nPress Return to stop\n");
   getchar();
   gaze_machine.cancel();
