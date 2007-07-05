@@ -65,6 +65,7 @@ bool gaze_machine_t::boot_machine_()
     std::string eyeconf = config.get<std::string>("config.reye","config/eyecamera.ini");
     std::string beeconf = config.get<std::string>("config.bee", "config/bumblebeeB.ini");
     m_mode              = config.get<int>("config.mode",0);
+    calib_samples_cnt   = config.get<int>("config.calibcount", 9);
 
     //    
     msecspause          = config.get<unsigned int>("config.msecspause", 50);
@@ -110,13 +111,10 @@ bool gaze_machine_t::boot_machine_()
     if( !bee_->open(beeconf) ) return false;
     std::cout << "<Done>" << std::endl<< std::endl;
 #endif
-
     //
-    gazelog_.open(logname_.c_str(),std::ios::out|std::ios::binary);
-    
     allocate_();
-    
-    write_header_();
+    //
+    get_dims_();
 
     timer_.restart();
     return true;
@@ -190,11 +188,10 @@ void gaze_machine_t::sample_gaze_()
 
 }
 /////////////////////////////////////////////////////////////////////////////
-void gaze_machine_t::write_header_()
+void gaze_machine_t::get_dims_()
 {
-  printf("Writing Header!\n");
-
-  size_t sample_sz = sizeof(nsamples_);
+  printf("Getting image dimension!\n"); 
+  sample_sz = sizeof(nsamples_);
   
   elapsed_sz = sizeof(double);
   eye_sz     = eye_->size();
@@ -206,21 +203,28 @@ void gaze_machine_t::write_header_()
 
   head_sz    = sizeof(math::rpy_angle_t);
 
+  //eye dimensions
+  eyedims_.row_ = eye_->height();
+  eyedims_.col_ = eye_->width();
+  eyedims_.depth_= eye_->channels();
+  ////scene dimensions
+  scenedims_.row_ = bee_->nrows();
+  scenedims_.col_ = bee_->ncols();
+  scenedims_.depth_ = 3; //always
+
+}
+/////////////////////////////////////////////////////////////////////////////
+void gaze_machine_t::write_header_()
+{
+  printf("Writing Header!\n");
   //skip  ... this position will hold the number of frames.
   gazelog_.seekp(sample_sz);
   //skip .... this will hold the total time elapsed.
   gazelog_.seekp(sample_sz+elapsed_sz);
 
-  //eye dimensions
-  eyedims_.row_ = eye_->height();
-  eyedims_.col_ = eye_->width();
-  eyedims_.depth_= eye_->channels();
+
   gazelog_.write((char*)&eyedims_, sizeof(eyedims_));
 
-  ////scene dimensions
-  scenedims_.row_ = bee_->nrows();
-  scenedims_.col_ = bee_->ncols();
-  scenedims_.depth_ = 3; //always
   gazelog_.write((char*)&scenedims_, sizeof(scenedims_) );  
 
   gazelog_.write((char*)&elapsed_sz, sizeof(size_t)); 
@@ -267,7 +271,7 @@ void gaze_machine_t::calib_loop()
     const unsigned char color  [3] = {215,  240,  60};
     const unsigned char blue   [3] = {0,  0,  255};
 
-    const int imagestosave = 9;
+    const int imagestosave = calib_samples_cnt;
     int imagecnt = 0;
     //in the furious loop!
     ///////////////////////////////////////////
@@ -279,18 +283,7 @@ void gaze_machine_t::calib_loop()
 
       //EYE
       imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
-      //
-      //imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
-      //imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
-      //imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
-      //imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
-      //imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
 
-      //imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
-      //imag.draw_line(1,1, 200,1, color);
-      //imag.draw_line(1,1, 0,200, color);
-      //imag.draw_line(200,1, 200,200, color);
-      //imag.draw_line(1,200, 200,200, color);
       imag.display(view) ;
 
       //SCENE
@@ -386,66 +379,21 @@ void gaze_machine_t::gaze_loop()
   printf("->boot_machine_ .. \n");
   if(boot_machine_())
   { 
-    ////
-    //CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
-    //CImg<core::uint8_t> imag;
-    ////
-    //CImgDisplay viewscene (  bee_->ncols(), bee_->nrows(), "Scene");
-    //CImg<core::uint8_t> imagscene;
-
-    ////
-    //CImgDisplay threedview (  bee_->ncols(),  bee_->nrows(), "3D");
-    //CImg<core::single_t> threedscene;
+    ///
+    gazelog_.open(logname_.c_str(),std::ios::out|std::ios::binary);
+    
+    write_header_();
 
     reset_mti();
     start_timing();
     printf("->machine booted ...starting loop\n");
-    //const unsigned char color  [3] = {215,  240,  60};
-    //const unsigned char blue   [3] = {0,  0,  255};
+
     while (running_)
     {
       ///
       nsamples_++;
       sample_gaze_();
       write_gaze_();
-      //if(b_enabled_views)
-      //{
-      ////////
-      //imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
-      ////
-      //imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
-      //imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
-      //imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
-      //imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
-      //imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
-
-      //imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
-      //imag.draw_line(1,1, 200,1, color);
-      //imag.draw_line(1,1, 0,200, color);
-      //imag.draw_line(200,1, 200,200, color);
-      //imag.draw_line(1,200, 200,200, color);
-      //imag.display(view) ;
-
-      ////DRAW
-      //imagscene.assign( 
-      //      iscene.get()
-      //  ,   bee_->ncols()
-      //  ,   bee_->nrows()
-      //  ,   1
-      //  ,   3);
-
-      /////
-      //imagscene.display(viewscene);
-      //}
-      /////
-      // threedscene.assign(
-      //   idepth.get()+ (bee_->ncols()*bee_->nrows()*2)
-      //   ,  bee_->ncols()
-      //   ,  bee_->nrows()
-      //   ,  1);
-
-      //threedscene.display(threedview);
-
       boost::thread::yield();
       all::core::BOOST_SLEEP(msecspause);
     }
@@ -534,15 +482,7 @@ void gaze_machine_t::show_loop()
   }
     printf("Thread Canceled\n");
     elapsed_ = elapsed();
-    ////go beginning
-    //gazelog_.seekp(std::ios::beg);
-    ////save info
-    ////numsamples
-    //gazelog_.write((char*)&nsamples_, sizeof(nsamples_)); 
-    ////time spent
-    //gazelog_.write((char*)&elapsed_, sizeof(elapsed_)); 
-    ////and then close
-    //gazelog_.close(); 
+ 
   }
   else
       printf("devices not started!\n"); 

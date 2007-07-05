@@ -100,6 +100,7 @@ private:
 
   ///allocate enough space .. 
   void allocate_();
+  void get_dims_();
   void write_header_();
 
 
@@ -128,7 +129,10 @@ private:
   ///image sizes:
   all::math::size3d_t eyedims_;
   all::math::size3d_t scenedims_;
-  
+
+  ///
+  size_t sample_sz   ;
+
   ///per samples sizes ...
   size_t  elapsed_sz ;
   size_t  eye_sz     ;
