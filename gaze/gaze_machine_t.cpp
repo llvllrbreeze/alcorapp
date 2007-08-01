@@ -397,6 +397,7 @@ void gaze_machine_t::gaze_loop()
       boost::thread::yield();
       all::core::BOOST_SLEEP(msecspause);
     }
+
     printf("Thread Canceled\n");
     elapsed_ = elapsed();
     //go beginning
