@@ -26,11 +26,10 @@ int main ()
                             <<std::endl;
 
   all::sense::opencv_grabber_t cam;
-  cam.open("config/cmoscam.ini");
+  cam.open("config/opencvcam.ini");
 
   CImgDisplay view ( cam.width(), cam.height(), "Camera");
   CImg<core::uint8_t> imag;
-  //cvNamedWindow( "Ocv");
   
   core::uint8_sarr imag_sptr
     ( new core::uint8_t[cam.width()*cam.height()*cam.channels()] );
