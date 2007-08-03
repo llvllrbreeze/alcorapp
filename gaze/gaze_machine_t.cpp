@@ -339,16 +339,95 @@ void gaze_machine_t::calib_loop()
           , matlab::row_major
           , scenedims_.row_
           , scenedims_.col_);
+
         //-----------------
         mxArray* mx_num = mxCreateDoubleScalar(imagecnt);
         //-----------------
+        //MTI
+        mxArray* mx_roll = 
+          mxCreateScalarDouble(ihead.roll.deg());
+        mxArray* mx_pitch = 
+          mxCreateScalarDouble(ihead.pitch.deg());
+        mxArray* mx_yaw = 
+          mxCreateScalarDouble(ihead.yaw.deg());
 
+        //
+       const char *field_names[] = {  "count"  ,
+                                      "scene"  ,
+                                      "depth"  ,
+                                      "imeye"  ,
+                                      "roll"   ,
+                                      "pitch"  ,
+                                      "yaw" };
+        //
+        mwSize dims[2] = {1, 1};
+
+        //
+        mxArray* ostruct= mxCreateStructArray(2, dims, 7, field_names);
+
+        //
+        int count_field
+          , scene_field
+          , depth_field
+          , imeye_field
+          , roll_field
+          , pitch_field
+          , yaw_field;
+
+        //
+        count_field   = mxGetFieldNumber(ostruct,   "count" );
+        scene_field   = mxGetFieldNumber(ostruct,   "scene" );
+        depth_field   = mxGetFieldNumber(ostruct,   "depth" );
+        imeye_field   = mxGetFieldNumber(ostruct,   "imeye" );
+        roll_field    = mxGetFieldNumber(ostruct,   "roll"  );
+        pitch_field   = mxGetFieldNumber(ostruct,   "pitch" );
+        yaw_field     = mxGetFieldNumber(ostruct,   "yaw"   );
+
+        //count
+        mxSetFieldByNumber( ostruct
+                          , 0
+                          , count_field
+                          , mx_num);
+        //scene
+        mxSetFieldByNumber( ostruct
+                          , 0
+                          , scene_field
+                          , mx_rgb);
+        //depth
+        mxSetFieldByNumber( ostruct
+                          , 0
+                          , depth_field
+                          , mx_depth);
+        //imeye
+        mxSetFieldByNumber( ostruct
+                          , 0
+                          , imeye_field
+                          , mx_eye);
+        //roll
+        mxSetFieldByNumber( ostruct
+                          , 0
+                          , roll_field
+                          , mx_roll);
+        //pitch
+        mxSetFieldByNumber( ostruct
+                          , 0
+                          , pitch_field
+                          , mx_pitch);
+        //yaw
+        mxSetFieldByNumber( ostruct
+                          , 0
+                          , yaw_field
+                          , mx_yaw);
+        //-----------------
         //add to file
-        matPutVariable(pmat, "calib_rgb", mx_rgb);
-        matPutVariable(pmat, "calib_xyz", mx_depth);
-        matPutVariable(pmat, "calib_eye", mx_eye);
-        matPutVariable(pmat, "calib_num", mx_num);
-        
+        //matPutVariable(pmat, "calib_rgb", mx_rgb);
+        //matPutVariable(pmat, "calib_xyz", mx_depth);
+        //matPutVariable(pmat, "calib_eye", mx_eye);
+        //matPutVariable(pmat, "calib_num", mx_num);
+
+        //write to matfile
+        matPutVariable(pmat, "calibrazione", ostruct);
+
         //  
         matClose(pmat);  
 
@@ -357,6 +436,9 @@ void gaze_machine_t::calib_loop()
         mxDestroyArray(mx_depth);
         mxDestroyArray(mx_eye);
         mxDestroyArray(mx_num);
+        mxDestroyArray(mx_roll);
+        mxDestroyArray(mx_pitch);
+        mxDestroyArray(mx_yaw);
       }
 
       //
