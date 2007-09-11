@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wsock32.lib"
-				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
+				OutputFile="..\..\alcor.bin\p3_server.exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
 				GenerateDebugInformation="false"
