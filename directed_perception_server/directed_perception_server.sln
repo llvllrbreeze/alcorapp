@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "directed_perception_server", "directed_perception_server.vcproj", "{004D5855-E6BE-4453-9AFA-3E37A010F162}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "directed_perception_server", "directed_perception_server.vcproj", "{54264168-BD9E-4CE5-81C0-845352551D58}"
 	ProjectSection(ProjectDependencies) = postProject
 		{69E1DA5C-EBC4-49BD-9C9D-218810431E35} = {69E1DA5C-EBC4-49BD-9C9D-218810431E35}
 		{270583B9-D68A-4451-9BFC-105825682CBE} = {270583B9-D68A-4451-9BFC-105825682CBE}
@@ -19,10 +19,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.ActiveCfg = Debug|Win32
-		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.Build.0 = Debug|Win32
-		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.ActiveCfg = Release|Win32
-		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.Build.0 = Release|Win32
+		{54264168-BD9E-4CE5-81C0-845352551D58}.Debug|Win32.ActiveCfg = Debug|Win32
+		{54264168-BD9E-4CE5-81C0-845352551D58}.Debug|Win32.Build.0 = Debug|Win32
+		{54264168-BD9E-4CE5-81C0-845352551D58}.Release|Win32.ActiveCfg = Release|Win32
+		{54264168-BD9E-4CE5-81C0-845352551D58}.Release|Win32.Build.0 = Release|Win32
 		{270583B9-D68A-4451-9BFC-105825682CBE}.Debug|Win32.ActiveCfg = Debug|Win32
 		{270583B9-D68A-4451-9BFC-105825682CBE}.Debug|Win32.Build.0 = Debug|Win32
 		{270583B9-D68A-4451-9BFC-105825682CBE}.Release|Win32.ActiveCfg = Release|Win32
