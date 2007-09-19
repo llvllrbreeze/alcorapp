@@ -177,6 +177,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\alcor\matlab\cvmex\cv_create.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\matlab\cvmex\cv_laplace.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\mxcv.cpp"
 				>
 			</File>
