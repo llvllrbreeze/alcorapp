@@ -6,13 +6,17 @@
 #include <boost/function.hpp>
 #include <map>
 #include <boost/assign/list_inserter.hpp>
-//--------------------------------------------------------------------++
-#include "cv.h"
-#include "highgui.h"
+//#include "highgui.h"
 //--------------------------------------------------------------------++
 using namespace all;
 //--------------------------------------------------------------------++
-
+////--------------------------------------------------------------------++
+//a nop function ...
+extern void cv_create( int nlhs, mxArray *plhs[], int nrhs, const mxArray 
+ *prhs[]); 
+////--------------------------------------------------------------------++
+extern void cv_laplace( int nlhs, mxArray *plhs[], int nrhs, const mxArray 
+ *prhs[]); 
 //--------------------------------------------------------------------++
 /// The "real" mex function.
 /// Basically 'routes' the control to a specific external routine.
@@ -27,12 +31,12 @@ typedef std::map<int,func_t> function_table_t;
 static		function_table_t*	p_function_table	= 0;
 //--------------------------------------------------------------------++
 //--------------------------------------------------------------------++
-static	boool	myStaticDataInitialized	= false;
+static	int	myStaticDataInitialized	= 0;
 static  std::size_t myFuncTableSize	= 0;
 //--------------------------------------------------------------------++
 void exitFcn() 
 {
-	if(myStaticDataInitialized)
+	if(myStaticDataInitialized==0)
 	{
 		printf("exitFun Invoked ...Cleaning\n");
 		if(p_function_table !=  0)
@@ -42,7 +46,7 @@ void exitFcn()
       printf("deleted function table!!!!\n");
 			p_function_table = 0;
 		}	
-		myStaticDataInitialized	= false;
+		myStaticDataInitialized	= 1;
 		myFuncTableSize			= 0;
 	}
 
@@ -50,13 +54,15 @@ void exitFcn()
 //--------------------------------------------------------------------++
 static void init_function_table()
 {
-	if(!myStaticDataInitialized)
+	if(myStaticDataInitialized == 0)
 	{
 		//
 		p_function_table = new function_table_t;
 
-    //boost::assign::insert(*p_function_table) 
-    //  (0, &bee_cam_create)//self.CREATE = 0;
+    boost::assign::insert(*p_function_table) 
+      (0, &cv_create)//self.CREATE = 0;
+      (1, &cv_laplace)//self.LAPLACE_5 = 1;
+      ;
     //  (1, &bee_cam_open)//self.OPEN =1
     //  (2, &bee_cam_close)//self.CLOSE =2
     //  (3, &bee_cam_grab_color)//self.GRABCOLOR =3
@@ -64,7 +70,7 @@ static void init_function_table()
     //  (5, &bee_grab_all);//self.GRABALL =5
        
 
-		myStaticDataInitialized = true;
+		myStaticDataInitialized = 1;
 		myFuncTableSize = static_cast<int> (p_function_table->size());
 
 		mexMakeMemoryPersistent(&myStaticDataInitialized);
@@ -82,7 +88,7 @@ void mexFunction( int nlhs, mxArray* plhs[], int nrhs, const mxArray
 {
 	if(nrhs >0)
 	{
-		if(!myStaticDataInitialized)
+		if(myStaticDataInitialized == 0)
 		{
 			printf("Initializing  mex file\n");
 			init_function_table();
