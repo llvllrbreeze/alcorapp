@@ -196,6 +196,10 @@
 				RelativePath="..\gaze\gaze_machine2_t.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\alcor\core\image_utils.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
