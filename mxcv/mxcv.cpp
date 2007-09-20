@@ -17,6 +17,9 @@ extern void cv_create( int nlhs, mxArray *plhs[], int nrhs, const mxArray
 ////--------------------------------------------------------------------++
 extern void cv_laplace( int nlhs, mxArray *plhs[], int nrhs, const mxArray 
  *prhs[]); 
+////--------------------------------------------------------------------++
+extern void cv_pyrdown2( int nlhs, mxArray *plhs[], int nrhs, const mxArray 
+ *prhs[]); 
 //--------------------------------------------------------------------++
 /// The "real" mex function.
 /// Basically 'routes' the control to a specific external routine.
@@ -62,6 +65,7 @@ static void init_function_table()
     boost::assign::insert(*p_function_table) 
       (0, &cv_create)//self.CREATE = 0;
       (1, &cv_laplace)//self.LAPLACE_5 = 1;
+      (2, &cv_pyrdown2)//self.PYRDOWN = 2;
       ;
     //  (1, &bee_cam_open)//self.OPEN =1
     //  (2, &bee_cam_close)//self.CLOSE =2

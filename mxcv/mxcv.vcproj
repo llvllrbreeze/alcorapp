@@ -185,6 +185,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\matlab\cvmex\cv_pyrdown2.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\matlab\cvmex\cvpyrdown4.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\mxcv.cpp"
 				>
 			</File>
@@ -200,6 +208,10 @@
 			>
 			<File
 				RelativePath="..\..\alcor\matlab\opencv_matlab_utils.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\opencv_utils.hpp"
 				>
 			</File>
 		</Filter>

@@ -187,6 +187,10 @@
 				RelativePath="..\..\alcor\matlab\opencv_matlab_utils.hpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\alcor\core\opencv_utils.hpp"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
