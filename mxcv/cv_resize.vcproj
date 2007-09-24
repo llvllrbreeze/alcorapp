@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="mxcv"
-	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
+	Name="cv_resize"
+	ProjectGUID="{32F0ADCF-D772-4ED6-812C-DAFEAC72AF0B}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
@@ -112,7 +112,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;MATLAB_MEX_FILE"
+				PreprocessorDefinitions="NDEBUG;WIN32;MATLAB_MEX_FILE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -129,11 +129,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libmx.lib libmex.lib libmat.lib cxcore.lib cv.lib highgui.lib"
+				AdditionalDependencies="libmx.lib libmex.lib libmat.lib cxcore.lib cv.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
-				ModuleDefinitionFile="mxcv.def"
+				ModuleDefinitionFile="cv_resize.def"
 				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -177,31 +177,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\alcor\matlab\cvmex\cv_create.cpp"
+				RelativePath=".\cv_resize.def"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\cvmex\cv_laplace.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\cvmex\cv_pyrdown2.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\cvmex\cv_resize.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\cvmex\cvpyrdown4.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\mxcv.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\mxcv.def"
+				RelativePath="..\..\alcor\matlab\cvmex\cv_resize_mex.cpp"
 				>
 			</File>
 		</Filter>
@@ -210,14 +190,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\alcor\matlab\opencv_matlab_utils.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\opencv_utils.hpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
