@@ -529,32 +529,35 @@ void gaze_machine2_t::gaze_loop()
 //-------------------------------------------------------------------------++
 void gaze_machine2_t::show_loop()
 {
-  //printf("->in the thread loop!\n");
-  //printf("->boot_machine_ .. \n");
-  //if(boot_machine_())
-  //{ 
-  //  //
-  //  CImgDisplay view (  eye_->width(),  eye_->height(), "Camera");
-  //  CImg<core::uint8_t> imag;
-  //  //
-  //  CImgDisplay viewscene (  bee_->ncols(), bee_->nrows(), "Scene");
-  //  CImg<core::uint8_t> imagscene;
+  printf("->in the thread loop!\n");
+  printf("->boot_machine_ .. \n");
+  if(boot_machine_())
+  { 
+    //
+    CImgDisplay viewleft_eye (  eye_[left]->width(),  eye_[left]->height(), "EYE::LEFT");
+    CImg<core::uint8_t> imleft_eye;
+    //
+    CImgDisplay viewright_eye (  eye_[right]->width(),  eye_[right]->height(), "EYE::RIGHT");
+    CImg<core::uint8_t> imright_eye;
+    
+    //
+    CImgDisplay viewleft_scene (  scene_[left]->width(),  scene_[left]->height(), "SCENE::LEFT");
+    CImg<core::uint8_t> imleft_scene;
+    //
+    CImgDisplay viewright_scene (  scene_[right]->width(),  scene_[right]->height(), "SCENE::RIGHT");
+    CImg<core::uint8_t> imright_scene;
 
-  //  ////
-  //  //CImgDisplay threedview (  bee_->ncols(),  bee_->nrows(), "3D");
-  //  //CImg<core::single_t> threedscene;
+  
+    start_timing();
+    printf("->machine booted ...starting loop\n");
+    const unsigned char color  [3] = {215,  240,  60};
+    const unsigned char blue   [3] = {0,  0,  255};
+    while (running_)
+    {
+      ///
+      nsamples_++;
 
-  //  reset_mti();
-  //  start_timing();
-  //  printf("->machine booted ...starting loop\n");
-  //  const unsigned char color  [3] = {215,  240,  60};
-  //  const unsigned char blue   [3] = {0,  0,  255};
-  //  while (running_)
-  //  {
-  //    ///
-  //    nsamples_++;
-
-  //    sample_gaze_();
+      sample_gaze_();
 
   //    //////
   //    imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
@@ -591,15 +594,15 @@ void gaze_machine2_t::show_loop()
 
   //    //threedscene.display(threedview);
 
-  //    boost::thread::yield();
-  //    all::core::BOOST_SLEEP(msecspause);
-  //}
-  //  printf("Thread Canceled\n");
-  //  elapsed_ = elapsed();
+      boost::thread::yield();
+      all::core::BOOST_SLEEP(msecspause_);
+  }
+    printf("Thread Canceled\n");
+    elapsed_ = elapsed();
  
-  //}
-  //else
-  //    printf("devices not started!\n"); 
+  }
+  else
+      printf("devices not started!\n"); 
 }
 //-------------------------------------------------------------------------++
 void gaze_machine2_t::null_op_()
