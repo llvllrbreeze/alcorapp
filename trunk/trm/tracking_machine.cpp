@@ -51,9 +51,9 @@ tracking_machine::tracking_machine():running_(true)
   tasklistener->run_async();
 
   //bumblebee
-  //bee.reset(new sense::bumblebee_driver_t());
   bee = sense::bumblebee_driver_t::create();
   bee->open(beeconfigfile);
+
   //PTU
   ptu.reset (new act::directed_perception_ptu_t);
   ptu->open("config/dpptu_conf.ini");
@@ -62,6 +62,7 @@ tracking_machine::tracking_machine():running_(true)
   pinhole.focal = bee->focal();
   pinhole.ncols = bee->ncols();
   pinhole.nrows = bee->nrows();
+
   //
   half_rows = bee->nrows()/2;
   half_cols = bee->ncols()/2;
