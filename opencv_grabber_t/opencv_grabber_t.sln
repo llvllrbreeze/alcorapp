@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mxcv", "..\mxcv\mxcv.vcproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mexBee", "..\mexBee\mexBee.vcproj", "{9F2B8AF6-9240-43C8-9C55-8AEDDA113BDD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cv_resize", "..\mxcv\cv_resize.vcproj", "{32F0ADCF-D772-4ED6-812C-DAFEAC72AF0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -34,6 +36,10 @@ Global
 		{9F2B8AF6-9240-43C8-9C55-8AEDDA113BDD}.Debug|Win32.Build.0 = Debug|Win32
 		{9F2B8AF6-9240-43C8-9C55-8AEDDA113BDD}.Release|Win32.ActiveCfg = Release|Win32
 		{9F2B8AF6-9240-43C8-9C55-8AEDDA113BDD}.Release|Win32.Build.0 = Release|Win32
+		{32F0ADCF-D772-4ED6-812C-DAFEAC72AF0B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{32F0ADCF-D772-4ED6-812C-DAFEAC72AF0B}.Debug|Win32.Build.0 = Debug|Win32
+		{32F0ADCF-D772-4ED6-812C-DAFEAC72AF0B}.Release|Win32.ActiveCfg = Release|Win32
+		{32F0ADCF-D772-4ED6-812C-DAFEAC72AF0B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
