@@ -10,16 +10,13 @@
 //--------------------------------------------------------------------++
 using namespace all;
 //--------------------------------------------------------------------++
+#define MX_CALL_FUNCTION(_funcname_) extern void _funcname_ \
+  ( int nlhs, mxArray *plhs[], int nrhs, const mxArray  *prhs[]); 
 ////--------------------------------------------------------------------++
-//a nop function ...
-extern void cv_create( int nlhs, mxArray *plhs[], int nrhs, const mxArray 
- *prhs[]); 
-////--------------------------------------------------------------------++
-extern void cv_laplace( int nlhs, mxArray *plhs[], int nrhs, const mxArray 
- *prhs[]); 
-////--------------------------------------------------------------------++
-extern void cv_pyrdown2( int nlhs, mxArray *plhs[], int nrhs, const mxArray 
- *prhs[]); 
+MX_CALL_FUNCTION(cv_create)
+MX_CALL_FUNCTION(cv_laplace)
+MX_CALL_FUNCTION(cv_pyrdown2)
+MX_CALL_FUNCTION(cv_resize)
 //--------------------------------------------------------------------++
 /// The "real" mex function.
 /// Basically 'routes' the control to a specific external routine.
@@ -66,14 +63,9 @@ static void init_function_table()
       (0, &cv_create)//self.CREATE = 0;
       (1, &cv_laplace)//self.LAPLACE_5 = 1;
       (2, &cv_pyrdown2)//self.PYRDOWN = 2;
+      (3, &cv_resize)//self.RESIZE = 4
       ;
-    //  (1, &bee_cam_open)//self.OPEN =1
-    //  (2, &bee_cam_close)//self.CLOSE =2
-    //  (3, &bee_cam_grab_color)//self.GRABCOLOR =3
-    //  (4, &bee_cam_grab_color_and_depth)//self.GRABRGBXYZ =4
-    //  (5, &bee_grab_all);//self.GRABALL =5
-       
-
+    //
 		myStaticDataInitialized = 1;
 		myFuncTableSize = static_cast<int> (p_function_table->size());
 
