@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\core\i_binary_serializable.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\core\image_utils.h"
 				>
 			</File>
