@@ -7,11 +7,13 @@
 #include "alcor/sense/bumblebee_driver_t.h"
 #include "alcor/matlab/matlab_mx_utils.hpp"
 //-----------------------------------------------
-#include <boost\thread\mutex.hpp> 
+#include <boost/thread/mutex.hpp> 
 //-----------------------------------------------
 #include "alcor/core/memory_stream_source_t.hpp"
 #include <alcor/core/stream_server_t.hpp>
+
 //-----------------------------------------------
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #pragma comment (lib,"AriaStatic.lib")
 #pragma comment (lib,"ArNetworkingStatic.lib")
 //-----------------------------------------------
@@ -25,6 +27,7 @@
 #pragma comment (lib,"bumblebee_driver_t.lib")
 #pragma comment (lib, "libmat.lib")
 #pragma comment (lib, "libmx.lib")
+#endif
 //-----------------------------------------------
 #include <boost/lexical_cast.hpp>
 //-----------------------------------------------
