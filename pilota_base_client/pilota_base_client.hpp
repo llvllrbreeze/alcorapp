@@ -15,9 +15,18 @@ public:
   void reset();
 
   ///p3
+  ///mmperserc? ... controllare..
   void set_vel(float);
+  ///gradi .. relativi
   void set_dheading(float);
+  ///stops everything!
   void stop();
+
+  ///p3 actions!
+  ///wandering
+  void enable_wander();
+  ///todo
+  void enable_wander_special();
 
   //trigger (take a  picture)
   void trigger_operation();
@@ -63,6 +72,17 @@ inline void pilota_base_client::set_dheading(float dheading)
 //-------------------------------------------------------------------
 inline void pilota_base_client::stop()
 {
+  p3->enable_stop_mode();
+}
+//-------------------------------------------------------------------
+inline void pilota_base_client::enable_wander()
+{
+
+}
+//-------------------------------------------------------------------
+inline void pilota_base_client::enable_wander_special()
+{
+
 }
 //-------------------------------------------------------------------
 inline void pilota_base_client::trigger_operation()
