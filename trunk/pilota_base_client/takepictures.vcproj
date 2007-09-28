@@ -194,6 +194,14 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\alcor\core\image_core.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\image_utils.h"
+				>
+			</File>
+			<File
 				RelativePath=".\pilota_base_client.hpp"
 				>
 			</File>
