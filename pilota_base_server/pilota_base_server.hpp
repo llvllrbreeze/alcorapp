@@ -11,7 +11,8 @@
 //-----------------------------------------------
 #include "alcor/core/memory_stream_source_t.hpp"
 #include <alcor/core/stream_server_t.hpp>
-
+//-----------------------------------------------
+//#define _USE_MATLAB_
 //-----------------------------------------------
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #pragma comment (lib,"AriaStatic.lib")
@@ -25,13 +26,19 @@
 #pragma comment (lib, "jpeg_codec.lib")
 //-----------------------------------------------
 #pragma comment (lib,"bumblebee_driver_t.lib")
+//-----------------------------------------------
+#if defined(_USE_MATLAB_)
 #pragma comment (lib, "libmat.lib")
 #pragma comment (lib, "libmx.lib")
 #endif
 //-----------------------------------------------
+#endif
+//-----------------------------------------------
 #include <boost/lexical_cast.hpp>
 //-----------------------------------------------
+#if defined(_USE_MATLAB_)
 #include "mat.h"
+#endif
 //-----------------------------------------------
 #define ARIA_STATIC
 //-----------------------------------------------
@@ -146,6 +153,8 @@ inline void pilota_base_server::threadloop()
 //-----------------------------------------------
 inline void pilota_base_server::take_picture()
 {
+  #if defined(_USE_MATLAB_)
+
   boost::mutex::scoped_lock lock (mutex);
   //grab() and save mat file
   if (bee->grab())
@@ -188,6 +197,7 @@ inline void pilota_base_server::take_picture()
     printf("Saved: %d mat\n\n", nshot);
 
   }
+#endif
 }
 
 //-----------------------------------------------

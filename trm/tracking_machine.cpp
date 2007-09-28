@@ -248,6 +248,7 @@ void tracking_machine::tracking_cb()
   #ifdef TIMEDEBUG_
     profile.restart();
   #endif
+
   if( ::fabs((double) centro_r - (double)half_rows ) < tilt_threshold)
   {
     //compensate only pan ...
