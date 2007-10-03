@@ -112,7 +112,7 @@ inline pilota_base_server::pilota_base_server()
   //bee
     //bumblebee
   bee.reset(new sense::bumblebee_driver_t());
-  bee->open("config/bumblebeeB.ini");
+  bee->open("config/bumblebeeA.ini");
 
   //callback
   p3_server_->set_on_trigger_cb(boost::bind(&pilota_base_server::take_picture, this) );
