@@ -163,6 +163,8 @@ private: //routines
   void taskreceived(int);
   ///
   void setup_roi(int r, int c, int h, int w, int scala);
+  ///
+  void on_disconnect();
 
 private:
   ///MATLAB
