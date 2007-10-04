@@ -144,7 +144,7 @@ inline void pilota_base_server::threadloop()
       {
         core::uint8_sarr rgb = bee->get_color_buffer(core::right_img);
         stream_source_ptr->update_image(rgb);
-        BOOST_SLEEP(250);
+        BOOST_SLEEP(100);
         boost::thread::yield();
       }
     }
