@@ -3,6 +3,9 @@
 //-------------------------------------------------------------------
 #include "alcor/act/directed_perception_client_t.h"
 #include "alcor/act/p3_client_t.h"
+//-----------------------------------------------------------------------++
+#include "alcor/math/pinhole_utils.hpp"
+#include "alcor/core/pantilt_angle_t.hpp"
 //-------------------------------------------------------------------
 class pilota_base_client
 {
@@ -28,11 +31,17 @@ public:
   ///todo
   void enable_wander_special();
 
+  //
+  void move_ptu_to_XY(int x, int y);
+
   //trigger (take a  picture)
   void trigger_operation();
 
   all::act::directed_perception_client_sptr ptu;
   all::act::p3_client_ptr_t p3;
+
+private:
+  all::math::pinhole_t pinhole_;
 };
 //-------------------------------------------------------------------
 //
@@ -48,6 +57,12 @@ inline pilota_base_client::pilota_base_client()
   ptu.reset(new all::act::directed_perception_client_t("config/ptu_server.ini"));
   ptu->run_async();
   printf("Ptu connected!\n");
+
+  //pinhole. hardcoded info.
+    //PINHOLE
+  pinhole_.focal = 253.07296;
+  pinhole_.ncols = 240;
+  pinhole_.nrows = 320;
 }
 //-------------------------------------------------------------------
 inline void pilota_base_client::set_pantilt(float pan, float tilt)
@@ -82,6 +97,15 @@ inline void pilota_base_client::enable_wander()
 //-------------------------------------------------------------------
 inline void pilota_base_client::enable_wander_special()
 {
+
+}
+//-------------------------------------------------------------------
+inline void pilota_base_client::move_ptu_to_XY(int x, int y)
+{
+  all::core::pantilt_angle_t ptangle;
+
+  pinhole_.pantilt_from_pixel(x,y, ptangle);
+  ptu->set_pantilt(ptangle.get_pan_deg(),ptangle.get_tilt_deg());
 
 }
 //-------------------------------------------------------------------

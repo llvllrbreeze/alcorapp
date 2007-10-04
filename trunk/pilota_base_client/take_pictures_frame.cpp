@@ -255,10 +255,7 @@ void take_pictures_frame::OnLeftDown( wxMouseEvent& event )
 
   if (event.ControlDown())
   {
-    float pan  = -xoffset * 110;
-    float tilt = -yoffset * 30;
-
-    pilota.set_pantilt(pan, tilt);
+    pilota.move_ptu_to_XY(event.GetX(),event.GetY());
   }
   else
   {

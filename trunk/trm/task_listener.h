@@ -18,16 +18,24 @@ namespace all { namespace trm {
     typedef boost::function<void (int)> notify_callback_t;
     ///
     typedef boost::function<void (int, int, int, int, int)> notify_setup_t;
+    ///
+    typedef boost::function<void (void)> on_disconnect_cb_t;
 
     ///The actual notify callback
-    notify_callback_t       notify_evt;
+    notify_callback_t   notify_evt;
     ///
-    notify_setup_t   notify_roi;
+    notify_setup_t      notify_roi;
+    ///
+    on_disconnect_cb_t  on_disconnect;
 
     ///
     void taskset(core::client_connection_ptr_t, core::net_packet_ptr_t);
     ///
     void setup_roi(core::client_connection_ptr_t, core::net_packet_ptr_t);
+
+  private:
+    ///
+    void on_disconnect_internal(int nclients);
 
   };
 //---------------------------------------------------------------------------

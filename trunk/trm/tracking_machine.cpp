@@ -48,6 +48,9 @@ tracking_machine::tracking_machine():running_(true)
   tasklistener->notify_roi = 
     boost::bind(&tracking_machine::setup_roi, this, ::_1,::_2,::_3,::_4, ::_5);
 
+  tasklistener->on_disconnect = 
+    boost::bind(&tracking_machine::on_disconnect, this);
+
   tasklistener->run_async();
 
   //bumblebee
@@ -625,6 +628,13 @@ void tracking_machine::setup_roi(int r, int c, int h, int w, int scala)
  boost::mutex::scoped_lock lock(process_guard);
  //
  process_event(trm::tracking_machine::setup_event() );
+}
+//---------------------------------------------------------------------------
+void tracking_machine::on_disconnect()
+{
+ boost::mutex::scoped_lock lock(process_guard);
+ //
+ process_event(trm::tracking_machine::reset_event());
 }
 //---------------------------------------------------------------------------
 }}//all::trm
