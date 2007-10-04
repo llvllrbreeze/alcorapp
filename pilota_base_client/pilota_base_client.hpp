@@ -77,7 +77,7 @@ inline void pilota_base_client::stop()
 //-------------------------------------------------------------------
 inline void pilota_base_client::enable_wander()
 {
-
+  p3->enable_wander_mode();
 }
 //-------------------------------------------------------------------
 inline void pilota_base_client::enable_wander_special()

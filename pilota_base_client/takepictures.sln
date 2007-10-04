@@ -2,6 +2,12 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pilota_base_client", "takepictures.vcproj", "{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8DA0931F-F64C-4B69-8853-3F25978EA44F} = {8DA0931F-F64C-4B69-8853-3F25978EA44F}
+		{63ADBA61-DAD3-445C-B06E-5618A24D63CD} = {63ADBA61-DAD3-445C-B06E-5618A24D63CD}
+		{69E1DA5C-EBC4-49BD-9C9D-218810431E35} = {69E1DA5C-EBC4-49BD-9C9D-218810431E35}
+		{004D5855-E6BE-4453-9AFA-3E37A010F162} = {004D5855-E6BE-4453-9AFA-3E37A010F162}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "p3_client_server", "..\p3_client_server\p3_client_server.vcproj", "{004D5855-E6BE-4453-9AFA-3E37A010F162}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -10,8 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "p3_client_server", "..\p3_c
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pilota_base_server", "..\pilota_base_server\pilota_base_server.vcproj", "{3617B035-9A05-42C2-A7C6-349DAA8B5808}"
 	ProjectSection(ProjectDependencies) = postProject
-		{54264168-BD9E-4CE5-81C0-845352551D58} = {54264168-BD9E-4CE5-81C0-845352551D58}
 		{004D5855-E6BE-4453-9AFA-3E37A010F162} = {004D5855-E6BE-4453-9AFA-3E37A010F162}
+		{54264168-BD9E-4CE5-81C0-845352551D58} = {54264168-BD9E-4CE5-81C0-845352551D58}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "directed_perception_client", "..\directed_perception_client\directed_perception_client.vcproj", "{63ADBA61-DAD3-445C-B06E-5618A24D63CD}"

@@ -45,7 +45,10 @@ class wx_img_stream_panel_t;
 #define ID_BUTTON_CENTER 10003
 #define ID_BUTTON_RESET 10004
 #define ID_SLIDER_VEL 10005
+#define ID_BUTTON_SET_WANDERING 10008
+#define ID_BUTTON_SET_WANDERING_SP 10009
 #define ID_BUTTON_STOP_ROBOT 10006
+#define wxID_MSG_LABEL 10007
 #define ID_BUTTON_TAKE_PICTURE 10002
 #define SYMBOL_TAKE_PICTURES_FRAME_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_TAKE_PICTURES_FRAME_TITLE _("Do")
@@ -109,6 +112,12 @@ public:
 
 ////@end take_pictures_frame event handler declarations
 
+/// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SET_WANDERING
+    void OnButtonSetWanderingClick( wxCommandEvent& event );
+
+/// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SET_WANDERING_SP
+    void OnButtonSetWanderingSpClick( wxCommandEvent& event );
+
 ////@begin take_pictures_frame member function declarations
 
     /// Retrieves bitmap resources
@@ -126,6 +135,8 @@ public:
     wxSlider* speed_control;
 ////@end take_pictures_frame member variables
     pilota_base_client pilota;
+
+	wxStaticText* msg_label;
 };
 
 #endif
