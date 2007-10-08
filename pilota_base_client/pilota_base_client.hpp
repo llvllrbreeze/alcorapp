@@ -61,8 +61,8 @@ inline pilota_base_client::pilota_base_client()
   //pinhole. hardcoded info.
     //PINHOLE
   pinhole_.focal = 253.07296;
-  pinhole_.ncols = 240;
-  pinhole_.nrows = 320;
+  pinhole_.ncols = 320;
+  pinhole_.nrows = 240;
 }
 //-------------------------------------------------------------------
 inline void pilota_base_client::set_pantilt(float pan, float tilt)
@@ -103,9 +103,18 @@ inline void pilota_base_client::enable_wander_special()
 inline void pilota_base_client::move_ptu_to_XY(int x, int y)
 {
   all::core::pantilt_angle_t ptangle;
+  pinhole_.pantilt_from_pixel(y,x, ptangle);
+  float current_pan,current_tilt;
+  ptu->get_pantilt(current_pan,current_tilt);
+  all::core::pantilt_angle_t delta;
+  pinhole_.pantilt_from_pixel(y, x, ptangle);
+  float nupan  = ptangle.get_pan_deg() + current_pan;
+  float nutilt = ptangle.get_tilt_deg()+ current_tilt;
+  ptu->set_pantilt(nupan, nutilt);
 
-  pinhole_.pantilt_from_pixel(x,y, ptangle);
-  ptu->set_pantilt(ptangle.get_pan_deg(),ptangle.get_tilt_deg());
+
+
+  //ptu->set_pantilt(ptangle.get_pan_deg()-current_pan,ptangle.get_tilt_deg()-current_tilt);
 
 }
 //-------------------------------------------------------------------
