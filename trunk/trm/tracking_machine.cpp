@@ -430,7 +430,7 @@ void tracking_machine::tracking_cb()
                           ,color
                           , 0.5);
         
-        //send image stream
+        //send image stream 
         stream_source_ptr->update_image(rightim);
       }
 
@@ -632,9 +632,9 @@ void tracking_machine::setup_roi(int r, int c, int h, int w, int scala)
 //---------------------------------------------------------------------------
 void tracking_machine::on_disconnect()
 {
- boost::mutex::scoped_lock lock(process_guard);
- //
- process_event(trm::tracking_machine::reset_event());
+ //boost::mutex::scoped_lock lock(process_guard);
+ ////
+ //process_event(trm::tracking_machine::reset_event());
 }
 //---------------------------------------------------------------------------
 }}//all::trm
