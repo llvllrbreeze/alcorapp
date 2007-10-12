@@ -189,7 +189,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\core\image_utils.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\core\imagestream_reader_t.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\matlab\opencv_matlab_utils.hpp"
 				>
 			</File>
 		</Filter>
