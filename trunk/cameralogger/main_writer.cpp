@@ -5,11 +5,11 @@ int main ()
 {
   //
   all::core::camera_logger_t 
-      camera_logger;
+    camera_logger(e_iplimage);
   //
   camera_logger.begin_loop();
   getchar();
-  camera_logger.end_loop();
+  camera_logger.quit_loop();
 
   getchar();
   return 0 ;

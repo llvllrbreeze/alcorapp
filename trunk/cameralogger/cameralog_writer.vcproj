@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\core\cameralog_inc.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\core\imagestream_logger_t.h"
 				>
 			</File>
