@@ -535,21 +535,30 @@ void gaze_machine2_t::show_loop()
 
     start_timing();
     printf("->machine booted ...starting loop\n");
+  
+    boost::timer profile;
 
     while (running_)
     {
       ///
       nsamples_++;
 
+      profile.restart();
       //
       sample_gaze_();
+      //
+      printf("SAMPLE Time: %.2d\n",profile.elapsed());
 
+      
+      profile.restart();
       ////
       cvShowImage("EyeLEFT",    eye_[left]->retrieve_ipl_image()    );
       cvShowImage("EyeRIGHT",   eye_[right]->retrieve_ipl_image()   );
       cvShowImage("SceneLEFT",  scene_[left]->retrieve_ipl_image()  );
       cvShowImage("SceneRIGHT", scene_[right]->retrieve_ipl_image() );
-      
+      //
+      printf("SHOW Time: %.2d\n\n",profile.elapsed());
+
       //eye_[left]->retrieve_ipl_image()   ;
       //eye_[right]->retrieve_ipl_image()  ;
       //scene_[left]->retrieve_ipl_image() ;
