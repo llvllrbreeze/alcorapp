@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="cameralog_writer"
-	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
+	ProjectGUID="{ED9CFCE2-D0E2-4A51-B8D2-5C1DC81691EC}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
@@ -193,7 +193,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\core\i_binary_serializable_t.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor\core\imagestream_logger_t.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\iplimage_serializable_t.hpp"
 				>
 			</File>
 		</Filter>
