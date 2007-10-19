@@ -86,32 +86,21 @@ bool gaze_machine2_t::boot_machine_()
     ///
     std::cout << "msec loop pause: " << msecspause_ << std::endl;
 
-    /////
-    //switch(m_mode_)
-    //{
-    //  case 0:
-    //        std::cout << "MODe: show" << std::endl;
-    //        break;
-    //  case 1: 
-    //        std::cout << "MODe: calib" << std::endl;
-    //        break;
-    //  case 2:
-    //        std::cout << "MODe: acquire" << std::endl;
-    //        break;
-    //}
-
-
     ////
-    std::cout << "<Eye Camera ...>"; 
-    printf("Config: %s\n", cameraconf.c_str());
+    //std::cout << "<Eye Camera ...>"; 
+    //printf("Config: %s\n", cameraconf.c_str());
 
     //eyes left and right
-    if( !eye_[left]->open(cameraconf,  "eyeleft") ) return false; 
-    if( !eye_[right]->open(cameraconf, "eyeright") ) return false; 
+    printf("--> Select EYE left\n");
+    if( !eye_[left]->open(cameraconf,  "eyeleft",true) ) return false; 
+    printf("--> Select EYE right\n");
+    if( !eye_[right]->open(cameraconf, "eyeright", true) ) return false; 
 
     //scene left and right
-    if( !scene_[left]->open(cameraconf,  "sceneleft") ) return false; 
-    if( !scene_[right]->open(cameraconf, "sceneright") ) return false; 
+    printf("--> Select SCENE left\n");
+    if( !scene_[left]->open(cameraconf,  "sceneleft", true) ) return false; 
+    printf("--> Select SCENE right\n");
+    if( !scene_[right]->open(cameraconf, "sceneright", true) ) return false; 
 
     //
     //if (!is_opened_) is_opened_ = true;
@@ -164,7 +153,7 @@ void gaze_machine2_t::sample_gaze_()
   //eye
   eye_[left]->grab_ipl_image();
   eye_[right]->grab_ipl_image();
-  //scene
+  ////scene
   scene_[left]->grab_ipl_image();
   scene_[right]->grab_ipl_image();
   //rpy
@@ -533,34 +522,20 @@ void gaze_machine2_t::show_loop()
   printf("->boot_machine_ .. \n");
   if(boot_machine_())
   { 
-    ////
-    //CImgDisplay viewleft_eye (  eye_[left]->width(),  eye_[left]->height(), "EYE::LEFT");
-    //CImg<core::uint8_t> imleft_eye;
-    ////
-    //CImgDisplay viewright_eye (  eye_[right]->width(),  eye_[right]->height(), "EYE::RIGHT");
-    //CImg<core::uint8_t> imright_eye;
     //
+    cvNamedWindow("EyeLEFT");
+    cvNamedWindow("EyeRIGHT");
+    cvNamedWindow("SceneLEFT");
+    cvNamedWindow("SceneRIGHT");
     ////
-    //CImgDisplay viewleft_scene (  scene_[left]->width(),  scene_[left]->height(), "SCENE::LEFT");
-    //CImg<core::uint8_t> imleft_scene;
-    ////
-    //CImgDisplay viewright_scene (  scene_[right]->width(),  scene_[right]->height(), "SCENE::RIGHT");
-    //CImg<core::uint8_t> imright_scene;
-    //
-    cvNamedWindow("Eye LEFT");
-    cvNamedWindow("Eye Right");
-    cvNamedWindow("Scene LEFT");
-    cvNamedWindow("Scene Right");
-    //
-    IplImage* my_left_eye = 0;
-    IplImage* my_right_eye = 0;  
-    IplImage* my_left_scene = 0;  
-    IplImage* my_right_scene = 0;  
+    //IplImage* my_left_eye = 0;
+    //IplImage* my_right_eye = 0;  
+    //IplImage* my_left_scene = 0;  
+    //IplImage* my_right_scene = 0;  
 
     start_timing();
     printf("->machine booted ...starting loop\n");
-    //const unsigned char color  [3] = {215,  240,  60};
-    //const unsigned char blue   [3] = {0,  0,  255};
+
     while (running_)
     {
       ///
@@ -569,64 +544,30 @@ void gaze_machine2_t::show_loop()
       //
       sample_gaze_();
 
-      //
-      cvConvertImage(eye_[left]->retrieve_ipl_image(),    my_left_eye,    CV_CVTIMG_FLIP);
-      cvConvertImage(eye_[right]->retrieve_ipl_image(),   my_right_eye,   CV_CVTIMG_FLIP);
-      cvConvertImage(scene_[left]->retrieve_ipl_image(),  my_left_scene,  CV_CVTIMG_FLIP);
-      cvConvertImage(scene_[right]->retrieve_ipl_image(), my_right_scene, CV_CVTIMG_FLIP);
+      ////
+      cvShowImage("EyeLEFT",    eye_[left]->retrieve_ipl_image()    );
+      cvShowImage("EyeRIGHT",   eye_[right]->retrieve_ipl_image()   );
+      cvShowImage("SceneLEFT",  scene_[left]->retrieve_ipl_image()  );
+      cvShowImage("SceneRIGHT", scene_[right]->retrieve_ipl_image() );
+      
+      //eye_[left]->retrieve_ipl_image()   ;
+      //eye_[right]->retrieve_ipl_image()  ;
+      //scene_[left]->retrieve_ipl_image() ;
+      //scene_[right]->retrieve_ipl_image();
 
       //
-      cvShowImage("Eye LEFT",    my_left_eye);
-      cvShowImage("Eye RIGHT",   my_right_eye);
-      cvShowImage("Scene LEFT",  my_left_scene);
-      cvShowImage("Scene RIGHT", my_right_scene);
-
-  //    //////
-  //    imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
-  //    //
-  //    imag.draw_text(10,20,  blue, 0, 16, 1, "Elapsed: %.2f", elapsed_);
-  //    imag.draw_text(10,40,  blue, 0, 16, 1, "Roll: %.2f", ihead.roll);
-  //    imag.draw_text(10,60,  blue, 0, 16, 1, "Pitch: %.2f", ihead.pitch);
-  //    imag.draw_text(10,80,  blue, 0, 16, 1, "Yaw: %.2f", ihead.yaw);
-  //    imag.draw_text(10,120, blue, 0, 16, 1, "#: %d", nsamples_);
-
-  //    imag.draw_rectangle(1, 1, 200, 200,color, 0.2);
-  //    imag.draw_line(1,1, 200,1, color);
-  //    imag.draw_line(1,1, 0,200, color);
-  //    imag.draw_line(200,1, 200,200, color);
-  //    imag.draw_line(1,200, 200,200, color);
-  //    imag.display(view) ;
-
-  //    //DRAW
-  //    imagscene.assign( 
-  //          iscene.get()
-  //      ,   bee_->ncols()
-  //      ,   bee_->nrows()
-  //      ,   1
-  //      ,   3);
-
-  //    ///
-  //    imagscene.display(viewscene);
-  //    /////
-  //    // threedscene.assign(
-  //    //   idepth.get()+ (bee_->ncols()*bee_->nrows()*2)
-  //    //   ,  bee_->ncols()
-  //    //   ,  bee_->nrows()
-  //    //   ,  1);
-
-  //    //threedscene.display(threedview);
-
-      boost::thread::yield();
-      all::core::BOOST_SLEEP(msecspause_);
+      cvWaitKey(1);
+      //boost::thread::yield();
+      //all::core::BOOST_SLEEP(msecspause_);
   }
 
     printf("Thread Canceled\n");
     elapsed_ = elapsed();
-    //
-    cvReleaseImage(&my_left_eye);
-    cvReleaseImage(&my_right_eye);  
-    cvReleaseImage(&my_left_scene);  
-    cvReleaseImage(&my_right_scene);  
+    ////
+    //cvReleaseImage(&my_left_eye);
+    //cvReleaseImage(&my_right_eye);  
+    //cvReleaseImage(&my_left_scene);  
+    //cvReleaseImage(&my_right_scene);  
   }
   else
       printf("devices not started!\n"); 
@@ -648,19 +589,19 @@ void gaze_machine2_t::run_gaze_machine()
 //-------------------------------------------------------------------------++
 void gaze_machine2_t::run_machine(binlog_t const&)
 {
-  gaze_loop_ = boost::bind(&gaze_machine2_t::gaze_loop,      this);
+  //gaze_loop_ = boost::bind(&gaze_machine2_t::gaze_loop,      this);
   thread_ptr_.reset( new boost::thread(boost::bind(&gaze_machine2_t::gaze_loop, this) ) );
 }
 //-------------------------------------------------------------------------++
 void gaze_machine2_t::run_machine(calib_t const&)
 {
-  gaze_loop_ = boost::bind(&gaze_machine2_t::calib_loop,      this);
+  //gaze_loop_ = boost::bind(&gaze_machine2_t::calib_loop,      this);
   thread_ptr_.reset( new boost::thread(boost::bind(&gaze_machine2_t::calib_loop, this) ) );
 }
 //-------------------------------------------------------------------------++
 void gaze_machine2_t::run_machine(show_t const&)
 {
-  gaze_loop_ = boost::bind(&gaze_machine2_t::show_loop,      this);
+  //gaze_loop_ = boost::bind(&gaze_machine2_t::show_loop,      this);
   thread_ptr_.reset( new boost::thread(boost::bind(&gaze_machine2_t::show_loop, this) ) );
 }
 
