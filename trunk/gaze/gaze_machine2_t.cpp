@@ -301,17 +301,17 @@ void gaze_machine2_t::calib_loop()
       sample_gaze_();
 
       //EYE LEFT
-      core::uint8_sarr lefteye = 
-        core::cvutils::iplimage_to_planar(eye_[left]->retrieve_ipl_image());
+      all::core::uint8_sarr lefteye = 
+        all::core::ocv::iplimage_to_planar(eye_[left]->retrieve_ipl_image());
       //EYE RIGHT
-      core::uint8_sarr righteye = 
-        core::cvutils::iplimage_to_planar(eye_[right]->retrieve_ipl_image());
+      all::core::uint8_sarr righteye = 
+        all::core::ocv::iplimage_to_planar(eye_[right]->retrieve_ipl_image());
       //SCENE LEFT
-      core::uint8_sarr leftscene = 
-        core::cvutils::iplimage_to_planar(scene_[left]->retrieve_ipl_image());
+      all::core::uint8_sarr leftscene = 
+        all::core::ocv::iplimage_to_planar(scene_[left]->retrieve_ipl_image());
       //SCENE RIGHT
-      core::uint8_sarr rightscene = 
-        core::cvutils::iplimage_to_planar(scene_[right]->retrieve_ipl_image());
+      all::core::uint8_sarr rightscene = 
+        all::core::ocv::iplimage_to_planar(scene_[right]->retrieve_ipl_image());
 
       //assign
       imleft_eye.assign( lefteye.get(),  eye_[left]->width(), eye_[left]->height(), 1,eye_[left]->channels());
@@ -533,31 +533,53 @@ void gaze_machine2_t::show_loop()
   printf("->boot_machine_ .. \n");
   if(boot_machine_())
   { 
+    ////
+    //CImgDisplay viewleft_eye (  eye_[left]->width(),  eye_[left]->height(), "EYE::LEFT");
+    //CImg<core::uint8_t> imleft_eye;
+    ////
+    //CImgDisplay viewright_eye (  eye_[right]->width(),  eye_[right]->height(), "EYE::RIGHT");
+    //CImg<core::uint8_t> imright_eye;
     //
-    CImgDisplay viewleft_eye (  eye_[left]->width(),  eye_[left]->height(), "EYE::LEFT");
-    CImg<core::uint8_t> imleft_eye;
+    ////
+    //CImgDisplay viewleft_scene (  scene_[left]->width(),  scene_[left]->height(), "SCENE::LEFT");
+    //CImg<core::uint8_t> imleft_scene;
+    ////
+    //CImgDisplay viewright_scene (  scene_[right]->width(),  scene_[right]->height(), "SCENE::RIGHT");
+    //CImg<core::uint8_t> imright_scene;
     //
-    CImgDisplay viewright_eye (  eye_[right]->width(),  eye_[right]->height(), "EYE::RIGHT");
-    CImg<core::uint8_t> imright_eye;
-    
+    cvNamedWindow("Eye LEFT");
+    cvNamedWindow("Eye Right");
+    cvNamedWindow("Scene LEFT");
+    cvNamedWindow("Scene Right");
     //
-    CImgDisplay viewleft_scene (  scene_[left]->width(),  scene_[left]->height(), "SCENE::LEFT");
-    CImg<core::uint8_t> imleft_scene;
-    //
-    CImgDisplay viewright_scene (  scene_[right]->width(),  scene_[right]->height(), "SCENE::RIGHT");
-    CImg<core::uint8_t> imright_scene;
+    IplImage* my_left_eye = 0;
+    IplImage* my_right_eye = 0;  
+    IplImage* my_left_scene = 0;  
+    IplImage* my_right_scene = 0;  
 
-  
     start_timing();
     printf("->machine booted ...starting loop\n");
-    const unsigned char color  [3] = {215,  240,  60};
-    const unsigned char blue   [3] = {0,  0,  255};
+    //const unsigned char color  [3] = {215,  240,  60};
+    //const unsigned char blue   [3] = {0,  0,  255};
     while (running_)
     {
       ///
       nsamples_++;
 
+      //
       sample_gaze_();
+
+      //
+      cvConvertImage(eye_[left]->retrieve_ipl_image(),    my_left_eye,    CV_CVTIMG_FLIP);
+      cvConvertImage(eye_[right]->retrieve_ipl_image(),   my_right_eye,   CV_CVTIMG_FLIP);
+      cvConvertImage(scene_[left]->retrieve_ipl_image(),  my_left_scene,  CV_CVTIMG_FLIP);
+      cvConvertImage(scene_[right]->retrieve_ipl_image(), my_right_scene, CV_CVTIMG_FLIP);
+
+      //
+      cvShowImage("Eye LEFT",    my_left_eye);
+      cvShowImage("Eye RIGHT",   my_right_eye);
+      cvShowImage("Scene LEFT",  my_left_scene);
+      cvShowImage("Scene RIGHT", my_right_scene);
 
   //    //////
   //    imag.assign( ieye.get(),  eye_->width(), eye_->height(), 1,eye_->channels());
@@ -597,9 +619,14 @@ void gaze_machine2_t::show_loop()
       boost::thread::yield();
       all::core::BOOST_SLEEP(msecspause_);
   }
+
     printf("Thread Canceled\n");
     elapsed_ = elapsed();
- 
+    //
+    cvReleaseImage(&my_left_eye);
+    cvReleaseImage(&my_right_eye);  
+    cvReleaseImage(&my_left_scene);  
+    cvReleaseImage(&my_right_scene);  
   }
   else
       printf("devices not started!\n"); 
