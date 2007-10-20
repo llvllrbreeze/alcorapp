@@ -23,6 +23,12 @@ int main() {
 		//wait that all grabbers retrieve image (internally they sync for grab and retrieve)
 		sync_data.retrieve_barrier.wait();
 
+    //get data
+    first_grabber.do_op();
+    second_grabber.do_op();
+    third_grabber.do_op();
+    fourth_grabber.do_op();
+
 		//all grabbers return to wait on grab barrier so data access is safe (without mutex)
 		printf("main: get data\n");
 	}

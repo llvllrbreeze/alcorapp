@@ -17,6 +17,8 @@ public:
 
 	void grab_loop();
 
+  void do_op();
+
 private:
 	sync_data_t* _sync_data;
 	volatile bool _running;
