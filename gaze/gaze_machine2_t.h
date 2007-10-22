@@ -28,9 +28,6 @@ public:
   void reset_mti();
 
   ///
-  void run_gaze_machine();
-
-  ///
   void run_machine(calib_t const&);
   ///
   void run_machine(binlog_t const&);
@@ -39,10 +36,6 @@ public:
 
   ///invoke this to stop the thread
   void cancel(){running_=false;};
-
-  ///
-  void enable_views(bool b_enable=true)
-      {b_enabled_views_ = b_enable;}
 
   ///
   void set_logname(std::string&);
@@ -62,7 +55,7 @@ private:
   ///
   void print_welcome();
   ///
-  void reset_devices_();
+  void create_devices_();
   ///
   bool boot_machine_();  
 
@@ -81,32 +74,26 @@ private:
 
   ///sampling loop
   void show_loop();
-  /////////////////////////////////////////////////
-  ///
-  boost::function<void (void)> f_process_gaze_data;
 
   ///
   boost::timer timer_;
+  ///
+  all::core::parallel_worker_sync_t sync_grabber_;
     ///Eye Camera
-  all::sense::opencv_grabber_ptr    eye_[2];
+  all::core::opencv_lightweight_grabber_ptr    eye_[2];
     ///Scene Camera
-  all::sense::opencv_grabber_ptr    scene_[2];
+  all::core::opencv_lightweight_grabber_ptr    scene_[2];
 
   ///
   all::sense::MTi_driver_ptr        mti_;
 
-  //all::sense::bumblebee_sptr        bee_; 
-
-  ///
-  bool is_opened_;
+  /////
+  //bool is_opened_;
 
   ///allocate enough space .. 
-  void allocate_();
+  //void allocate_();
   void get_dims_();
   void write_header_();
-
-  ///generic gaze_loop
-  boost::function<void (void)> gaze_loop_;
 
   ///Binary Data Stream
   std::fstream gazelog_;
@@ -116,11 +103,6 @@ private:
   //[GAZE DATA]
   ///elapsed time .. in seconds
   double elapsed_;
-
-  /////eye buffer
-  //all::core::uint8_sarr   eye_img_[2];
-  /////rgb scene buffer
-  //all::core::uint8_sarr   scene_img_[2];
 
     ///eye buffer
   IplImage*   ipl_eye_img_[2];
@@ -156,20 +138,22 @@ private:
   ///loop control
   volatile bool running_;
 
-  //useful?
   ///
   volatile bool bsavecalib_;
-  ///
-  volatile bool b_enabled_views_;
 
-  //what?
-  ///what operation... obsolete?
-  int m_mode_;
   ///
   unsigned int msecspause_;
 
-  ///the thread!
+  ///the MAIN thread!
   boost::shared_ptr<boost::thread> thread_ptr_;
+  /////left
+  //boost::shared_ptr<boost::thread> eleft_;
+  /////right
+  //boost::shared_ptr<boost::thread> eright_;
+  /////left
+  //boost::shared_ptr<boost::thread> sleft_;
+  /////right
+  //boost::shared_ptr<boost::thread> sright_;
 };
 //-------------------------------------------------------------------------++
 typedef boost::shared_ptr<gaze_machine2_t> gaze_machine_sptr;

@@ -4,13 +4,13 @@
 #define WIN32_LEAN_AND_MEAN
 
 //-------------------------------------------------------------------------++
-#include "alcor/sense/opencv_grabber_t.h"
+#include "alcor/core/opencv_lightweight_grabber_t.h"
+//-------------------------------------------------------------------------++
 #include "alcor/sense/MTi_driver_t.h"
 //-------------------------------------------------------------------------++
 #include <boost/timer.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/bind.hpp>
-//#include <boost/shared_ptr.hpp>
 //-------------------------------------------------------------------------++
 #include <iostream>
 #include <fstream>
@@ -28,12 +28,11 @@ static const show_t   show    = show_t();
 }}
 //-------------------------------------------------------------------------++
 #pragma comment (lib, "MTi_driver_t.lib")
-#pragma comment (lib, "opencv_grabber_t.lib")
 #pragma comment (lib, "libmat.lib")
 #pragma comment (lib, "libmx.lib")
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze {
-const char VERSION_INFORMATION[] = "Gaze Machine 2.0";
+const char VERSION_INFORMATION[] = "Gaze Machine 2.5";
 const char AUTHOR_INFORMATION[]  = "Andrea Carbone & Stefano Marra";
 }}
 
