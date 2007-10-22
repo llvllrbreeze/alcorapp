@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
   {
     char* mode = argv[1];
     if     (strcmp("log",mode)==0)    gaze_machine.run_machine(gaze::binlog);
-    else if(strcmp("view",mode)==0)   gaze_machine.run_machine(gaze::show);
+    else if(strcmp("show",mode)==0)   gaze_machine.run_machine(gaze::show);
     else if(strcmp("calib",mode)==0)  gaze_machine.run_machine(gaze::show);
   }
   else                              

@@ -182,6 +182,10 @@
 				RelativePath=".\main-2.0.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\alcor\core\opencv_lightweight_grabber_t.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -202,6 +206,14 @@
 			</File>
 			<File
 				RelativePath="..\..\alcor\core\image_utils.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\opencv_lightweight_grabber_t.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\core\parallel_worker_sync_t.hpp"
 				>
 			</File>
 		</Filter>
