@@ -1,4 +1,4 @@
-#include "alcor.extern/videoinput/include/videoinput.h"
+#include "alcor.extern/videoinput/videoinput.h"
 #include <cv.h>
 #include <highgui.h>
 
