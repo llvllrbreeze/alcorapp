@@ -216,6 +216,10 @@
 				RelativePath="..\..\alcor\core\parallel_worker_sync_t.hpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\alcor\sense\videoinput_simple_grabber_t.hpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
