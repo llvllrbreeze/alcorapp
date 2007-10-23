@@ -129,8 +129,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/NODEFAULTLIB:&quot;atlthunk&quot;"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
-				AdditionalLibraryDirectories="..\..\alcor.lib"
+				AdditionalLibraryDirectories="..\..\alcor.lib;&quot;C:\Documents and Settings\ALCORLAB\Documenti\Visual Studio 2005\Projects\alcor.extern\videoinput&quot;"
 				GenerateManifest="false"
 				GenerateDebugInformation="false"
 				OptimizeReferences="2"

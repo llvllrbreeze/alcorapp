@@ -2,6 +2,8 @@
 #include <cv.h>
 #include <highgui.h>
 
+//#include "stdafx.h"
+
 //giusto per disegnare ...
 #pragma comment (lib, "highgui.lib")
 #pragma comment (lib, "cv.lib")
@@ -27,7 +29,7 @@ int main()
   //
 	int width 	= VI.getWidth(device1);
 	int height 	= VI.getHeight(device1);
-	int size	= VI.getSize(device1);
+	int size	  = VI.getSize(device1);
 
   //
   unsigned char* frame = new unsigned char[VI.getSize(device1)];
