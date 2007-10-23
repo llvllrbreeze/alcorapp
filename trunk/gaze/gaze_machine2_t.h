@@ -130,8 +130,7 @@ private:
 
   ///Samples num
   size_t nsamples_;
-  ///
-  BOOST_STATIC_CONSTANT(int, calibsamples = 9);
+
   ///
   int calib_samples_cnt_;
 

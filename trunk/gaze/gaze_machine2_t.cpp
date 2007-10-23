@@ -72,7 +72,7 @@ bool gaze_machine2_t::boot_machine_()
     //
     //logname_ = config.get<std::string>("config.binfile", "gazelog.bin");
     std::string mticonf     = config.get<std::string>("config.mti", "config/mti_config.ini");
-    std::string cameraconf  = config.get<std::string>("config.gazecamera","config/gazecamera.ini");
+    //std::string cameraconf  = config.get<std::string>("config.gazecamera","config/gazecamera.ini");
     //
     calib_samples_cnt_   = config.get<int>("config.calibcount", 9);
     //    
