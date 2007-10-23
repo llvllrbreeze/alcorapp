@@ -8,7 +8,7 @@
 //display
 #include "alcor.extern/CImg/CImg.h"
 using namespace cimg_library;
-//#define NOBEE_
+#define TIMERDBG
 //-------------------------------------------------------------------------++
 #include <boost/lexical_cast.hpp>
 //matlab
@@ -510,34 +510,42 @@ void gaze_machine2_t::show_loop()
     cvNamedWindow("SceneLEFT");
     cvNamedWindow("SceneRIGHT");
     ////
-    printf("->machine booted ...starting loop\n");
+    printf("->machine booted ...starting loop\n"); 
   
-    boost::timer profile;
+#if defined (TIMERDBG) 
+    boost::timer profile; 
+#endif
+
    start_timing();
     while (running_)
     {
       ///
       nsamples_++;
 
+#if defined (TIMERDBG) 
       profile.restart();
+#endif
       //
       sample_gaze_();
       //
-      printf("SAMPLE Time: %.2d\n",profile.elapsed());
-
-      
-      profile.restart();
+#if defined (TIMERDBG) 
+      printf("SAMPLE Time: %.2d\n",profile.elapsed()); 
+      //profile.restart();
+#endif
       ////
       cvShowImage("EyeLEFT",    ipl_eye_img_[left]     );
       cvShowImage("EyeRIGHT",   ipl_eye_img_[right]    );
       cvShowImage("SceneLEFT",  ipl_scene_img_[left]   );
       cvShowImage("SceneRIGHT", ipl_scene_img_[right]  );
-      //
-      printf("SHOW Time: %.2d\n\n",profile.elapsed());
 
       //
+//#if defined (TIMERDBG) 
+//      printf("SHOW Time: %.2d\n\n",profile.elapsed()); 
+//#endif
+      //
+      boost::thread::yield();
+      //
       cvWaitKey(1);
-      //boost::thread::yield();
       //all::core::BOOST_SLEEP(msecspause_);
   }
 
