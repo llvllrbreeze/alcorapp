@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="gaze_machine-2.0"
+	Name="gaze_machine_VI"
 	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
@@ -129,10 +129,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cv.lib highgui.lib cvaux.lib"
+				AdditionalDependencies="jpeg_codec.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
+				IgnoreDefaultLibraryNames="atlthunk.lib"
 				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -176,15 +177,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\gaze\gaze_machine2_t.cpp"
+				RelativePath="..\gaze\gaze_machine_VI_t.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\main-2.0.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\opencv_lightweight_grabber_t.cpp"
+				RelativePath=".\main-VI.cpp"
 				>
 			</File>
 		</Filter>
@@ -194,31 +191,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\gaze\gaze_machine2_inc.h"
+				RelativePath="..\gaze\gaze_machine_VI_inc.h"
 				>
 			</File>
 			<File
-				RelativePath="..\gaze\gaze_machine2_t.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\i_binary_serializable_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\image_utils.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\opencv_lightweight_grabber_t.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\parallel_worker_sync_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\sense\videoinput_simple_grabber_t.hpp"
+				RelativePath="..\gaze\gaze_machine_VI_t.h"
 				>
 			</File>
 		</Filter>
