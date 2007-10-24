@@ -139,8 +139,8 @@ bool gaze_machine_VI_t::boot_machine_()
 	eye_encoder.reset(all::core::gray_tag, eyedims_[left].row_, eyedims_[left].col_);
 	sarr_eye_img_[left].reset(new all::core::uint8_t[eyedims_[left].row_ * eyedims_[left].col_]);
 	sarr_eye_img_[right].reset(new all::core::uint8_t[eyedims_[right].row_ * eyedims_[right].col_]);
-	sarr_scene_img_[left].reset(new all::core::uint8_t[scenedims_[left].row_ * scenedims_[left].col_]);
-	sarr_scene_img_[right].reset(new all::core::uint8_t[scenedims_[right].row_ * scenedims_[right].col_]);
+	sarr_scene_img_[left].reset(new all::core::uint8_t[scenedims_[left].row_ * scenedims_[left].col_ * 3]);
+	sarr_scene_img_[right].reset(new all::core::uint8_t[scenedims_[right].row_ * scenedims_[right].col_ * 3]);
 
     return true;
 }
@@ -249,16 +249,34 @@ void gaze_machine_VI_t::write_gaze_()
   cvCvtColor(ipl_eye_img_[left], ipl_eye_bw_img_[left], CV_BGR2GRAY);
   cvCvtColor(ipl_eye_img_[right], ipl_eye_bw_img_[right], CV_BGR2GRAY);
 
-  //write eyes
-  gazelog_.write(ipl_eye_bw_img_[left]->imageData,    eye_bw_sz_[left]);
-  gazelog_.write(ipl_eye_bw_img_[right]->imageData,   eye_bw_sz_[right]);
+  cvCvtColor(ipl_scene_img_[left], ipl_scene_img_[left], CV_BGR2RGB);
+  cvCvtColor(ipl_scene_img_[right], ipl_scene_img_[right], CV_BGR2RGB);
 
-  //gazelog_.write(ipl_eye_img_[left]->imageData,    eye_sz_[left]);
-  //gazelog_.write(ipl_eye_img_[right]->imageData,   eye_sz_[right]);
+  memcpy(sarr_eye_img_[left].get(), ipl_eye_bw_img_[left]->imageData, eye_bw_sz_[left]);
+  memcpy(sarr_eye_img_[right].get(), ipl_eye_bw_img_[right]->imageData, eye_bw_sz_[right]);
+  memcpy(sarr_scene_img_[left].get(), ipl_scene_img_[left]->imageData, scene_sz_[left]);
+  memcpy(sarr_scene_img_[right].get(), ipl_scene_img_[right]->imageData, scene_sz_[right]);
 
-  //write scene
-  gazelog_.write(ipl_scene_img_[left]->imageData,   scene_sz_[left]);
-  gazelog_.write(ipl_scene_img_[right]->imageData,  scene_sz_[right]);
+  jpeg_scene_data_[left] = scene_encoder.encode(sarr_scene_img_[left], 75);
+  jpeg_scene_data_[right] = scene_encoder.encode(sarr_scene_img_[right], 75);
+  jpeg_eye_data_[left] = eye_encoder.encode(sarr_eye_img_[left], 75);
+  jpeg_eye_data_[right] = eye_encoder.encode(sarr_eye_img_[right], 75);
+
+  gazelog_.write(reinterpret_cast<char*> (jpeg_eye_data_[left].data.get()), jpeg_eye_data_[left].size);
+  gazelog_.write(reinterpret_cast<char*> (jpeg_eye_data_[right].data.get()), jpeg_eye_data_[right].size);
+  gazelog_.write(reinterpret_cast<char*> (jpeg_scene_data_[left].data.get()), jpeg_scene_data_[left].size);
+  gazelog_.write(reinterpret_cast<char*> (jpeg_scene_data_[right].data.get()), jpeg_scene_data_[right].size);
+
+  ////write eyes
+  //gazelog_.write(ipl_eye_bw_img_[left]->imageData,    eye_bw_sz_[left]);
+  //gazelog_.write(ipl_eye_bw_img_[right]->imageData,   eye_bw_sz_[right]);
+
+  ////gazelog_.write(ipl_eye_img_[left]->imageData,    eye_sz_[left]);
+  ////gazelog_.write(ipl_eye_img_[right]->imageData,   eye_sz_[right]);
+
+  ////write scene
+  //gazelog_.write(ipl_scene_img_[left]->imageData,   scene_sz_[left]);
+  //gazelog_.write(ipl_scene_img_[right]->imageData,  scene_sz_[right]);
 
   //write mti
   gazelog_.write((char*)&heading_,   heading_sz_);
