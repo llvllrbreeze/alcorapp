@@ -135,13 +135,6 @@ bool gaze_machine_VI_t::boot_machine_()
 
     timer_.restart();
 
-	scene_encoder.reset(all::core::rgb_tag, all::core::interleaved_tag, scenedims_[left].row_, scenedims_[left].col_);
-	eye_encoder.reset(all::core::gray_tag, eyedims_[left].row_, eyedims_[left].col_);
-	sarr_eye_img_[left].reset(new all::core::uint8_t[eyedims_[left].row_ * eyedims_[left].col_]);
-	sarr_eye_img_[right].reset(new all::core::uint8_t[eyedims_[right].row_ * eyedims_[right].col_]);
-	sarr_scene_img_[left].reset(new all::core::uint8_t[scenedims_[left].row_ * scenedims_[left].col_ * 3]);
-	sarr_scene_img_[right].reset(new all::core::uint8_t[scenedims_[right].row_ * scenedims_[right].col_ * 3]);
-
     return true;
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -170,9 +163,9 @@ bool gaze_machine_VI_t::sample_gaze_()
 	VI->getPixels(eye_[right], reinterpret_cast <unsigned char*> (ipl_eye_img_[right]->imageData), false);
 	VI->getPixels(scene_[left], reinterpret_cast <unsigned char*> (ipl_scene_img_[left]->imageData), false);
 	VI->getPixels(scene_[right], reinterpret_cast <unsigned char*> (ipl_scene_img_[right]->imageData), false);
+	heading_ = mti_->get_euler();
 	return true;
   }
-
   return false;
 
 }
@@ -183,12 +176,6 @@ void gaze_machine_VI_t::get_dims_()
   sample_sz_ = sizeof(nsamples_);
   
   elapsed_sz_ = sizeof(double);
-  //eye_sz_[left]  = VI->getSize(eye_[left]);
-  //eye_sz_[right] = VI->getSize(eye_[right]);
-
-  ////
-  //scene_sz_[left] = VI->getSize(scene_[left]);
-  //scene_sz_[right] = VI->getSize(scene_[right]);
 
   heading_sz_    = sizeof(math::rpy_angle_t);
 
@@ -212,7 +199,7 @@ void gaze_machine_VI_t::get_dims_()
   scenedims_[right].depth_ = 3;
 }
 /////////////////////////////////////////////////////////////////////////////
-void gaze_machine_VI_t::write_header_()
+void gaze_machine_VI_t::write_header_bin_()
 {
   printf("Writing Header!\n");
   //skip  ... this position will hold the number of frames.
@@ -239,7 +226,7 @@ void gaze_machine_VI_t::write_header_()
   gazelog_.write((char*)&heading_sz_  ,   sizeof(heading_sz_));
 }
 //-------------------------------------------------------------------------++
-void gaze_machine_VI_t::write_gaze_()
+void gaze_machine_VI_t::write_gaze_bin_()
 {
   //write time
   gazelog_.write((char*)&elapsed_,  elapsed_sz_); 
@@ -252,21 +239,46 @@ void gaze_machine_VI_t::write_gaze_()
   cvCvtColor(ipl_scene_img_[left], ipl_scene_img_[left], CV_BGR2RGB);
   cvCvtColor(ipl_scene_img_[right], ipl_scene_img_[right], CV_BGR2RGB);
 
+  //jpeg write
   memcpy(sarr_eye_img_[left].get(), ipl_eye_bw_img_[left]->imageData, eye_bw_sz_[left]);
   memcpy(sarr_eye_img_[right].get(), ipl_eye_bw_img_[right]->imageData, eye_bw_sz_[right]);
   memcpy(sarr_scene_img_[left].get(), ipl_scene_img_[left]->imageData, scene_sz_[left]);
   memcpy(sarr_scene_img_[right].get(), ipl_scene_img_[right]->imageData, scene_sz_[right]);
 
-  jpeg_scene_data_[left] = scene_encoder.encode(sarr_scene_img_[left], 75);
-  jpeg_scene_data_[right] = scene_encoder.encode(sarr_scene_img_[right], 75);
-  jpeg_eye_data_[left] = eye_encoder.encode(sarr_eye_img_[left], 75);
-  jpeg_eye_data_[right] = eye_encoder.encode(sarr_eye_img_[right], 75);
+  //jpeg_scene_data_[left] = scene_encoder.encode(sarr_scene_img_[left], 100);
+  //jpeg_scene_data_[right] = scene_encoder.encode(sarr_scene_img_[right], 100);
+  //jpeg_eye_data_[left] = eye_encoder.encode(sarr_eye_img_[left], 100);
+  //jpeg_eye_data_[right] = eye_encoder.encode(sarr_eye_img_[right], 100);
 
+  gaze_jpeg_encoder_t::encode();
+
+  //all::core::uint8_ptr buffer_ptr = log_buffer.get();
+  //std::size_t buffer_pos = 0;
+  //memcpy(buffer_ptr, jpeg_eye_data_[left].data.get(), jpeg_eye_data_[left].size);
+  //buffer_pos += jpeg_eye_data_[left].size;
+  //buffer_ptr += jpeg_eye_data_[left].size;
+  //memcpy(buffer_ptr, jpeg_eye_data_[right].data.get(), jpeg_eye_data_[right].size);
+  //buffer_pos += jpeg_eye_data_[right].size;
+  //buffer_ptr += jpeg_eye_data_[right].size;
+  //memcpy(buffer_ptr, jpeg_scene_data_[left].data.get(), jpeg_scene_data_[left].size);
+  //buffer_pos += jpeg_scene_data_[left].size;
+  //buffer_ptr += jpeg_scene_data_[left].size;
+  //memcpy(buffer_ptr, jpeg_scene_data_[right].data.get(), jpeg_scene_data_[right].size);
+  //buffer_pos += jpeg_scene_data_[right].size;
+  //buffer_ptr += jpeg_scene_data_[right].size;
+
+  //gazelog_.write(reinterpret_cast<char*> (log_buffer.get()), buffer_pos);
+
+  gazelog_.write((char*)&jpeg_eye_data_[left].size, sizeof(std::size_t));
   gazelog_.write(reinterpret_cast<char*> (jpeg_eye_data_[left].data.get()), jpeg_eye_data_[left].size);
+  gazelog_.write((char*)&jpeg_eye_data_[right].size, sizeof(std::size_t));
   gazelog_.write(reinterpret_cast<char*> (jpeg_eye_data_[right].data.get()), jpeg_eye_data_[right].size);
+  gazelog_.write((char*)&jpeg_scene_data_[left].size, sizeof(std::size_t));
   gazelog_.write(reinterpret_cast<char*> (jpeg_scene_data_[left].data.get()), jpeg_scene_data_[left].size);
+  gazelog_.write((char*)&jpeg_scene_data_[right].size, sizeof(std::size_t));
   gazelog_.write(reinterpret_cast<char*> (jpeg_scene_data_[right].data.get()), jpeg_scene_data_[right].size);
 
+  ////raw write
   ////write eyes
   //gazelog_.write(ipl_eye_bw_img_[left]->imageData,    eye_bw_sz_[left]);
   //gazelog_.write(ipl_eye_bw_img_[right]->imageData,   eye_bw_sz_[right]);
@@ -278,9 +290,34 @@ void gaze_machine_VI_t::write_gaze_()
   //gazelog_.write(ipl_scene_img_[left]->imageData,   scene_sz_[left]);
   //gazelog_.write(ipl_scene_img_[right]->imageData,  scene_sz_[right]);
 
+
   //write mti
   gazelog_.write((char*)&heading_,   heading_sz_);
+
 }
+
+
+void gaze_machine_VI_t::write_gaze_avi_() {
+  //write time
+  //gazelog_.write((char*)&elapsed_,  elapsed_sz_); 
+  
+
+  //BW conversion
+  cvCvtColor(ipl_eye_img_[left], ipl_eye_bw_img_[left], CV_BGR2GRAY);
+  cvCvtColor(ipl_eye_img_[right], ipl_eye_bw_img_[right], CV_BGR2GRAY);
+
+  //avi write
+  cvWriteFrame(eye_avi_[left], ipl_eye_bw_img_[left]);
+  cvWriteFrame(eye_avi_[right], ipl_eye_bw_img_[right]);
+  cvWriteFrame(scene_avi_[left], ipl_scene_img_[left]);
+  cvWriteFrame(scene_avi_[right], ipl_scene_img_[right]);
+
+
+  //txt_log_ << make_string(heading_.yaw.deg(), 3) << " " << make_string(heading_.pitch.deg(), 3) << " " << make_string(heading_.roll.deg(), 3) << std::endl;
+  //write mti
+  //gazelog_.write((char*)&heading_,   heading_sz_);
+}
+
 //-------------------------------------------------------------------------++
 void gaze_machine_VI_t::calib_loop()
 {
@@ -510,16 +547,39 @@ void gaze_machine_VI_t::calib_loop()
   //    printf("devices not started!\n"); 
 }
 //-------------------------------------------------------------------------++
-void gaze_machine_VI_t::gaze_loop()
+void gaze_machine_VI_t::log_loop()
 {
   printf("->in the thread loop!\n");
   printf("->boot_machine_ .. \n");
   if(boot_machine_())
   { 
+    //jpeg init
+	//scene_encoder.reset(all::core::rgb_tag, all::core::interleaved_tag, scenedims_[left].row_, scenedims_[left].col_);
+	//eye_encoder.reset(all::core::gray_tag, eyedims_[left].row_, eyedims_[left].col_);
+	sarr_eye_img_[left].reset(new all::core::uint8_t[eyedims_[left].row_ * eyedims_[left].col_]);
+	sarr_eye_img_[right].reset(new all::core::uint8_t[eyedims_[right].row_ * eyedims_[right].col_]);
+	sarr_scene_img_[left].reset(new all::core::uint8_t[scenedims_[left].row_ * scenedims_[left].col_ * 3]);
+	sarr_scene_img_[right].reset(new all::core::uint8_t[scenedims_[right].row_ * scenedims_[right].col_ * 3]);
+
+	//std::size_t buffer_size = (eyedims_[left].row_ * eyedims_[left].col_ * 2) + (scenedims_[left].row_ * scenedims_[left].col_ * 6);
+	//log_buffer.reset(new all::core::uint8_t[buffer_size]);
+	  
+	//jpeg barrier test
+	enc_sync_data = new all::core::enc_sync_data_t(4);
+
+	gaze_jpeg_encoder_t::start(enc_sync_data);
+
+	eye_enc_[left] = new all::core::gaze_jpeg_encoder_t(sarr_eye_img_[left], &jpeg_eye_data_[left], true, eyedims_[left].col_, eyedims_[left].row_);
+	eye_enc_[right] = new all::core::gaze_jpeg_encoder_t(sarr_eye_img_[right], &jpeg_eye_data_[right], true, eyedims_[right].col_, eyedims_[right].row_);
+	scene_enc_[left] = new all::core::gaze_jpeg_encoder_t(sarr_scene_img_[left], &jpeg_scene_data_[left], false, scenedims_[left].col_, scenedims_[left].row_);
+	scene_enc_[right] = new all::core::gaze_jpeg_encoder_t(sarr_scene_img_[right], &jpeg_scene_data_[right], false, scenedims_[right].col_, scenedims_[right].row_);
+
+	///
+	gazelog_.open(logname_.c_str(),std::ios::out|std::ios::binary);
     ///
-    gazelog_.open(logname_.c_str(),std::ios::out|std::ios::binary);
-    ///
-    write_header_();
+    write_header_bin_();
+
+	//txt_log_.open("mti.txt", std::ios::out);
 
     //reset_mti();
     printf("->machine booted ...starting loop\n");
@@ -531,7 +591,7 @@ void gaze_machine_VI_t::gaze_loop()
       ///
 		if (sample_gaze_()) {
 			nsamples_++;
-			write_gaze_();
+			write_gaze_bin_();
 		}
       boost::thread::yield();
       all::core::BOOST_SLEEP(msecspause_);
@@ -548,10 +608,102 @@ void gaze_machine_VI_t::gaze_loop()
     gazelog_.write((char*)&elapsed_, sizeof(elapsed_)); 
     //and then close
     gazelog_.close(); 
+
+	VI->stopDevice(eye_[left]);
+	VI->stopDevice(eye_[right]);
+	VI->stopDevice(scene_[left]);
+	VI->stopDevice(scene_[right]);
+
+    cvReleaseImage(&ipl_eye_img_[left]);
+    cvReleaseImage(&ipl_eye_img_[right]);  
+    cvReleaseImage(&ipl_scene_img_[left]);  
+    cvReleaseImage(&ipl_scene_img_[right]); 
+	cvReleaseImage(&ipl_eye_bw_img_[left]);
+	cvReleaseImage(&ipl_eye_bw_img_[right]);
+
+	//eye_enc_[left]->stop();
+	//eye_enc_[right]->stop();
+	//scene_enc_[left]->stop();
+	//scene_enc_[right]->stop();
+
+	//enc_sync_data->enc_barrier.wait();
+ //   enc_sync_data->get_barrier.wait();
+
+	gaze_jpeg_encoder_t::stop();
+
   }
   else
       printf("devices not started!\n"); 
 }
+
+void gaze_machine_VI_t::avi_loop() {
+  printf("->in the thread loop!\n");
+  printf("->boot_machine_ .. \n");
+  if(boot_machine_())
+  { 
+
+    //avi init
+	eye_avi_[left] = cvCreateVideoWriter ("eye_left.avi", -1, 15, cvSize(eyedims_[left].col_, eyedims_[left].row_));
+	eye_avi_[right] = cvCreateVideoWriter ("eye_right.avi", -1, 15, cvSize(eyedims_[right].col_, eyedims_[right].row_));
+	scene_avi_[left] = cvCreateVideoWriter ("scene_left.avi", -1, 15, cvSize(scenedims_[left].col_, scenedims_[left].row_));
+	scene_avi_[right] = cvCreateVideoWriter ("scene_right.avi", -1, 15, cvSize(scenedims_[right].col_, scenedims_[right].row_));
+
+    ///
+    gazelog_.open(logname_.c_str(),std::ios::out|std::ios::binary);
+    ///
+    write_header_bin_();
+
+	txt_log_.open("mti.txt", std::ios::out);
+
+    //reset_mti();
+    printf("->machine booted ...starting loop\n");
+    //reset timer
+    start_timing();
+    //entering the loop
+    while (running_)
+    {
+      ///
+		if (sample_gaze_()) {
+			nsamples_++;
+			write_gaze_avi_();
+		}
+      boost::thread::yield();
+      all::core::BOOST_SLEEP(msecspause_);
+    }
+
+    printf("Thread Canceled\n");
+    elapsed_ = elapsed();
+    //go beginning
+    gazelog_.seekp(std::ios::beg);
+    //save info
+    //numsamples
+    gazelog_.write((char*)&nsamples_, sizeof(nsamples_)); 
+    //time spent
+    gazelog_.write((char*)&elapsed_, sizeof(elapsed_)); 
+    //and then close
+    gazelog_.close(); 
+
+	cvReleaseVideoWriter(&eye_avi_[left] );
+	cvReleaseVideoWriter(&eye_avi_[right] );
+	cvReleaseVideoWriter(&scene_avi_[left] );
+	cvReleaseVideoWriter(&scene_avi_[right] );
+
+	VI->stopDevice(eye_[left]);
+	VI->stopDevice(eye_[right]);
+	VI->stopDevice(scene_[left]);
+	VI->stopDevice(scene_[right]);
+
+    cvReleaseImage(&ipl_eye_img_[left]);
+    cvReleaseImage(&ipl_eye_img_[right]);  
+    cvReleaseImage(&ipl_scene_img_[left]);  
+    cvReleaseImage(&ipl_scene_img_[right]); 
+	cvReleaseImage(&ipl_eye_bw_img_[left]);
+	cvReleaseImage(&ipl_eye_bw_img_[right]);
+  }
+  else
+      printf("devices not started!\n"); 
+}
+
 //-------------------------------------------------------------------------++
 void gaze_machine_VI_t::show_loop()
 {
@@ -576,6 +728,11 @@ void gaze_machine_VI_t::show_loop()
     //boost::timer profile; 
 
    start_timing();
+   IplImage* eye_left = cvCreateImage(cvSize(eyedims_[left].col_, eyedims_[left].row_),IPL_DEPTH_8U, 3);
+   IplImage* eye_right = cvCreateImage(cvSize(eyedims_[right].col_, eyedims_[right].row_),IPL_DEPTH_8U, 3);
+   IplImage* scene_left = cvCreateImage(cvSize(scenedims_[left].col_, scenedims_[left].row_),IPL_DEPTH_8U, 3); 
+   IplImage* scene_right = cvCreateImage(cvSize(scenedims_[right].col_, scenedims_[right].row_),IPL_DEPTH_8U, 3); 
+
     while (running_)
     {
 
@@ -587,16 +744,22 @@ void gaze_machine_VI_t::show_loop()
       //
       //printf("SAMPLE Time: %.2f\n",profile.elapsed());
 
-	  //cvConvertImage(ipl_eye_img_[left], ipl_eye_img_[left], CV_CVTIMG_FLIP);
-	  //cvConvertImage(ipl_eye_img_[right], ipl_eye_img_[right], CV_CVTIMG_FLIP);
-	  //cvConvertImage(ipl_scene_img_[left], ipl_scene_img_[left], CV_CVTIMG_FLIP);
-	  //cvConvertImage(ipl_scene_img_[right], ipl_scene_img_[right], CV_CVTIMG_FLIP);
+	  cvConvertImage(ipl_eye_img_[left], eye_left, CV_CVTIMG_FLIP);
+	  cvConvertImage(ipl_eye_img_[right], eye_right, CV_CVTIMG_FLIP);
+	  cvConvertImage(ipl_scene_img_[left], scene_left, CV_CVTIMG_FLIP);
+	  cvConvertImage(ipl_scene_img_[right], scene_right, CV_CVTIMG_FLIP);
 
       ////
-		cvShowImage("EyeLEFT",    ipl_eye_img_[left]     );
-		cvShowImage("EyeRIGHT",   ipl_eye_img_[right]    );
-		cvShowImage("SceneLEFT",  ipl_scene_img_[left]   );
-		cvShowImage("SceneRIGHT", ipl_scene_img_[right]  );
+		//cvShowImage("EyeLEFT",    ipl_eye_img_[left]     );
+		//cvShowImage("EyeRIGHT",   ipl_eye_img_[right]    );
+		//cvShowImage("SceneLEFT",  ipl_scene_img_[left]   );
+		//cvShowImage("SceneRIGHT", ipl_scene_img_[right]  );
+
+	  	cvShowImage("EyeLEFT",    eye_left);
+		cvShowImage("EyeRIGHT",   eye_right);
+		cvShowImage("SceneLEFT",  scene_left);
+		cvShowImage("SceneRIGHT", scene_right);
+
 	  }
 	  //
       //printf("SHOW Time: %.2f\n\n",profile.elapsed());
@@ -636,7 +799,7 @@ return nsamples_;
 void gaze_machine_VI_t::run_machine(binlog_t const&)
 {
   //gaze_loop_ = boost::bind(&gaze_machine_VI_t::gaze_loop,      this);
-  thread_ptr_.reset( new boost::thread(boost::bind(&gaze_machine_VI_t::gaze_loop, this) ) );
+  thread_ptr_.reset( new boost::thread(boost::bind(&gaze_machine_VI_t::log_loop, this) ) );
 }
 //-------------------------------------------------------------------------++
 void gaze_machine_VI_t::run_machine(calib_t const&)
@@ -651,6 +814,10 @@ void gaze_machine_VI_t::run_machine(show_t const&)
   thread_ptr_.reset( new boost::thread(boost::bind(&gaze_machine_VI_t::show_loop, this) ) );
 }
 
+void gaze_machine_VI_t::run_machine(avilog_t const&)
+{
+  thread_ptr_.reset( new boost::thread(boost::bind(&gaze_machine_VI_t::avi_loop, this) ) );
+}
 //-------------------------------------------------------------------------++
 /////////////////////////////////////////////////////////////////////////////
 }}///all::sense::detail

@@ -15,6 +15,7 @@ int main(int argc, char* argv[])
     if     (strcmp("log",mode)==0)    gaze_machine.run_machine(gaze::binlog);
     else if(strcmp("show",mode)==0)   gaze_machine.run_machine(gaze::show);
     else if(strcmp("calib",mode)==0)  gaze_machine.run_machine(gaze::show);
+	else if(strcmp("avi",mode)==0) gaze_machine.run_machine(gaze::avilog);
   }
   else                              
     gaze_machine.run_machine(gaze::show);

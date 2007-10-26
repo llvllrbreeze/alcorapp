@@ -34,6 +34,8 @@ public:
   ///
   void run_machine(show_t const&);
 
+  void run_machine(avilog_t const&);
+
   ///invoke this to stop the thread
   void cancel(){running_=false;};
 
@@ -61,20 +63,25 @@ private:
 
   /////////////////////////////////////////////////
   //routines
-  ///
-  void write_gaze_();
+  
+  //jpeg log
+  void write_gaze_bin_();
   ///unuseful
   void null_op_();
+
+  //avi log
+  void write_gaze_avi_();
 
   ///calib loop
   void calib_loop();
 
-  ///sampling loop
-  void gaze_loop();
+  ///logging loop
+  void log_loop();
 
   ///sampling loop
   void show_loop();
 
+  void avi_loop();
   ///
   boost::timer timer_;
 
@@ -93,7 +100,8 @@ private:
   ///allocate enough space .. 
   //void allocate_();
   void get_dims_();
-  void write_header_();
+  void write_header_bin_();
+  void write_header_avi_();
 
   ///Binary Data Stream
   std::fstream gazelog_;
@@ -154,17 +162,29 @@ private:
   /////right
   //boost::shared_ptr<boost::thread> sright_;
 
+  //BW eye_image
   IplImage* ipl_eye_bw_img_[2];
   size_t eye_bw_sz_[2];
 
-  //jpeg encode test
+  //jpeg logging
   all::core::uint8_sarr sarr_eye_img_[2];
   all::core::uint8_sarr sarr_scene_img_[2];
 
-  all::core::jpeg_encoder_t eye_encoder;
-  all::core::jpeg_encoder_t scene_encoder;
+  //all::core::jpeg_encoder_t eye_encoder;
+  //all::core::jpeg_encoder_t scene_encoder;
   all::core::jpeg_data_t jpeg_eye_data_[2];
   all::core::jpeg_data_t jpeg_scene_data_[2];
+
+  all::core::gaze_jpeg_encoder_t* eye_enc_[2];
+  all::core::gaze_jpeg_encoder_t* scene_enc_[2];
+  all::core::enc_sync_data_t* enc_sync_data;
+  all::core::uint8_sarr log_buffer;
+
+  //avi logging
+  CvVideoWriter* eye_avi_[2];
+  CvVideoWriter* scene_avi_[2];
+
+  std::fstream txt_log_;
 
 };
 //-------------------------------------------------------------------------++
