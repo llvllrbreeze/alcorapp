@@ -10,6 +10,7 @@
 //-------------------------------------------------------------------------++
 #include "alcor/sense/MTi_driver_t.h"
 #include "alcor/core/jpeg_encoder_t.h"
+#include "gaze_jpeg_encoder_t.hpp"
 //-------------------------------------------------------------------------++
 #include <boost/timer.hpp>
 #include <boost/thread/thread.hpp>
@@ -23,11 +24,13 @@
 struct calib_t {};
 struct binlog_t{};
 struct show_t{};
+struct avilog_t{};
 //-------------------------------------------------------------------------++
 namespace all { namespace gaze {
 static const calib_t  calib   = calib_t();
 static const binlog_t binlog  = binlog_t();
 static const show_t   show    = show_t();
+static const avilog_t avilog = avilog_t();
 }}
 //-------------------------------------------------------------------------++
 #pragma comment (lib, "highgui.lib")

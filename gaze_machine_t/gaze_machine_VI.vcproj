@@ -177,6 +177,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\gaze\gaze_jpeg_encoder_t.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\gaze\gaze_machine_VI_t.cpp"
 				>
 			</File>
@@ -190,6 +194,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\gaze\gaze_jpeg_encoder_t.hpp"
+				>
+			</File>
 			<File
 				RelativePath="..\gaze\gaze_machine_VI_inc.h"
 				>
