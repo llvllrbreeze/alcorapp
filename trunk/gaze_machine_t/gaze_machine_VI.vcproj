@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="gaze_machine_VI"
-	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
+	ProjectGUID="{9AEBFBE4-9D05-4EF8-B566-B3C8B585C4C8}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
