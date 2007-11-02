@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="gaze_calib_gui"
-	ProjectGUID="{9784755B-6E47-48EB-9273-3FE7A5F45315}"
+	Name="gaze_reader_VI"
+	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
@@ -129,11 +129,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28.lib wxzlib.lib wxpng.lib wxjpeg.lib jpeg_codec.lib"
+				AdditionalDependencies="jpeg_codec.lib cv.lib highgui.lib cxcore.lib cvaux.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
-				IgnoreDefaultLibraryNames="atlthunk.lib"
 				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -177,19 +176,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\calib_frame.cpp"
+				RelativePath="..\gaze\gaze_reader_VI_t.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\gaze_calib_gui.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\gaze\gaze_jpeg_encoder_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\gaze\gaze_machine_VI_t.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 		</Filter>
@@ -199,19 +190,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\calib_frame.h"
-				>
-			</File>
-			<File
-				RelativePath=".\gaze_calib_gui.h"
-				>
-			</File>
-			<File
-				RelativePath="..\gaze\gaze_machine_inc.h"
-				>
-			</File>
-			<File
-				RelativePath="..\gaze\gaze_machine_t.h"
+				RelativePath="..\gaze\gaze_reader_VI_t.h"
 				>
 			</File>
 		</Filter>
@@ -220,10 +199,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-			<File
-				RelativePath=".\gaze_calib_gui.rc"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

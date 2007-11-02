@@ -125,6 +125,8 @@ bool gaze_machine_VI_t::boot_machine_()
 	eye_bw_sz_[left] = ipl_eye_bw_img_[left]->imageSize;
 	eye_bw_sz_[right] = ipl_eye_bw_img_[right]->imageSize;
 
+	ipl_scene_rgb_img_[left] = cvCreateImage(cvSize(scenedims_[left].col_, scenedims_[left].row_), IPL_DEPTH_8U, 3);
+	ipl_scene_rgb_img_[right] = cvCreateImage(cvSize(scenedims_[right].col_, scenedims_[right].row_), IPL_DEPTH_8U, 3);
 
 	eye_sz_[left]  = ipl_eye_img_[left]->imageSize;
 	eye_sz_[right] = ipl_eye_img_[right]->imageSize;
@@ -155,10 +157,11 @@ void gaze_machine_VI_t::reset_mti()
 bool gaze_machine_VI_t::sample_gaze_()
 {  
 
-  elapsed_ = timer_.elapsed(); 
 
   //actually get images.
   if (VI->isFrameNew(eye_[left]) || VI->isFrameNew(eye_[right]) || VI->isFrameNew(scene_[left]) || VI->isFrameNew(scene_[right])) {
+	elapsed_ = timer_.elapsed();
+
 	VI->getPixels(eye_[left], reinterpret_cast <unsigned char*> (ipl_eye_img_[left]->imageData), false);
 	VI->getPixels(eye_[right], reinterpret_cast <unsigned char*> (ipl_eye_img_[right]->imageData), false);
 	VI->getPixels(scene_[left], reinterpret_cast <unsigned char*> (ipl_scene_img_[left]->imageData), false);
@@ -182,12 +185,12 @@ void gaze_machine_VI_t::get_dims_()
   //eye dimensions
   eyedims_[left].row_   = VI->getHeight(eye_[left]);
   eyedims_[left].col_   = VI->getWidth(eye_[left]);
-  eyedims_[left].depth_ = 3;
+  eyedims_[left].depth_ = 1;
 
   //
   eyedims_[right].row_   = VI->getHeight(eye_[right]);
   eyedims_[right].col_   = VI->getWidth(eye_[right]);
-  eyedims_[right].depth_ = 3;
+  eyedims_[right].depth_ = 1;
 
   ///scene dimensions
   scenedims_[left].row_   = VI->getHeight(scene_[left]);
@@ -208,6 +211,8 @@ void gaze_machine_VI_t::write_header_bin_()
   //skip .... this will hold the total time elapsed.
   gazelog_.seekp(sample_sz_ + elapsed_sz_);
 
+  int log_type_ = 0;
+  gazelog_.write((char*)&log_type_, sizeof(log_type_));
 
   gazelog_.write((char*)&eyedims_[left], sizeof(eyedims_[left]));
   gazelog_.write((char*)&eyedims_[right], sizeof(eyedims_[right]));
@@ -215,29 +220,59 @@ void gaze_machine_VI_t::write_header_bin_()
   gazelog_.write((char*)&scenedims_[left], sizeof(scenedims_[left]) );  
   gazelog_.write((char*)&scenedims_[right], sizeof(scenedims_[right]) );  
 
-  gazelog_.write((char*)&elapsed_sz_, sizeof(size_t)); 
+  gazelog_.write((char*)&elapsed_sz_, sizeof(size_t));
 
-  gazelog_.write((char*)&eye_sz_[left]  , sizeof(eye_sz_[left]));
-  gazelog_.write((char*)&eye_sz_[right] , sizeof(eye_sz_[right]));
+  gazelog_.write((char*)&eye_bw_sz_[left]  , sizeof(eye_bw_sz_[left]));
+  gazelog_.write((char*)&eye_bw_sz_[right] , sizeof(eye_bw_sz_[right]));
 
   gazelog_.write((char*)&scene_sz_[left]  ,   sizeof(scene_sz_[left]  ));
   gazelog_.write((char*)&scene_sz_[right] ,   sizeof(scene_sz_[right] ));
 
   gazelog_.write((char*)&heading_sz_  ,   sizeof(heading_sz_));
 }
+
+void gaze_machine_VI_t::write_header_avi_() {
+  
+  printf("Writing Header!\n");
+  //skip  ... this position will hold the number of frames.
+  gazelog_.seekp(sample_sz_);
+
+  //skip .... this will hold the total time elapsed.
+  gazelog_.seekp(sample_sz_ + elapsed_sz_);
+
+  int log_type_ = 1;
+  gazelog_.write((char*)&log_type_, sizeof(log_type_));
+
+  gazelog_.write((char*)&eyedims_[left], sizeof(eyedims_[left]));
+  gazelog_.write((char*)&eyedims_[right], sizeof(eyedims_[right]));
+
+  gazelog_.write((char*)&scenedims_[left], sizeof(scenedims_[left]) );  
+  gazelog_.write((char*)&scenedims_[right], sizeof(scenedims_[right]) );  
+
+  gazelog_.write((char*)&elapsed_sz_, sizeof(size_t));
+
+  gazelog_.write((char*)&eye_bw_sz_[left]  , sizeof(eye_bw_sz_[left]));
+  gazelog_.write((char*)&eye_bw_sz_[right] , sizeof(eye_bw_sz_[right]));
+
+  gazelog_.write((char*)&scene_sz_[left]  ,   sizeof(scene_sz_[left]  ));
+  gazelog_.write((char*)&scene_sz_[right] ,   sizeof(scene_sz_[right] ));
+
+  gazelog_.write((char*)&heading_sz_  ,   sizeof(heading_sz_));
+
+}
 //-------------------------------------------------------------------------++
 void gaze_machine_VI_t::write_gaze_bin_()
 {
   //write time
   gazelog_.write((char*)&elapsed_,  elapsed_sz_); 
-  
 
   //BW conversion
   cvCvtColor(ipl_eye_img_[left], ipl_eye_bw_img_[left], CV_BGR2GRAY);
   cvCvtColor(ipl_eye_img_[right], ipl_eye_bw_img_[right], CV_BGR2GRAY);
 
-  cvCvtColor(ipl_scene_img_[left], ipl_scene_img_[left], CV_BGR2RGB);
-  cvCvtColor(ipl_scene_img_[right], ipl_scene_img_[right], CV_BGR2RGB);
+  //cvCvtColor(ipl_scene_img_[left], ipl_scene_rgb_img_[left], CV_BGR2RGB);
+  //cvCvtColor(ipl_scene_img_[right], ipl_scene_rgb_img_[right], CV_BGR2RGB);
+
 
   //jpeg write
   memcpy(sarr_eye_img_[left].get(), ipl_eye_bw_img_[left]->imageData, eye_bw_sz_[left]);
@@ -283,9 +318,6 @@ void gaze_machine_VI_t::write_gaze_bin_()
   //gazelog_.write(ipl_eye_bw_img_[left]->imageData,    eye_bw_sz_[left]);
   //gazelog_.write(ipl_eye_bw_img_[right]->imageData,   eye_bw_sz_[right]);
 
-  ////gazelog_.write(ipl_eye_img_[left]->imageData,    eye_sz_[left]);
-  ////gazelog_.write(ipl_eye_img_[right]->imageData,   eye_sz_[right]);
-
   ////write scene
   //gazelog_.write(ipl_scene_img_[left]->imageData,   scene_sz_[left]);
   //gazelog_.write(ipl_scene_img_[right]->imageData,  scene_sz_[right]);
@@ -299,7 +331,7 @@ void gaze_machine_VI_t::write_gaze_bin_()
 
 void gaze_machine_VI_t::write_gaze_avi_() {
   //write time
-  //gazelog_.write((char*)&elapsed_,  elapsed_sz_); 
+  gazelog_.write((char*)&elapsed_,  elapsed_sz_); 
   
 
   //BW conversion
@@ -312,15 +344,222 @@ void gaze_machine_VI_t::write_gaze_avi_() {
   cvWriteFrame(scene_avi_[left], ipl_scene_img_[left]);
   cvWriteFrame(scene_avi_[right], ipl_scene_img_[right]);
 
-
-  //txt_log_ << make_string(heading_.yaw.deg(), 3) << " " << make_string(heading_.pitch.deg(), 3) << " " << make_string(heading_.roll.deg(), 3) << std::endl;
   //write mti
-  //gazelog_.write((char*)&heading_,   heading_sz_);
+  gazelog_.write((char*)&heading_,   heading_sz_);
 }
 
 //-------------------------------------------------------------------------++
 void gaze_machine_VI_t::calib_loop()
 {
+  
+
+	if (boot_machine_()) {
+		
+		start_timing();
+		const int imagestosave = calib_samples_cnt_;
+		int imagecnt = 0;
+
+		cvNamedWindow("EyeLEFT");
+		cvNamedWindow("EyeRIGHT");
+		cvNamedWindow("SceneLEFT");
+		cvNamedWindow("SceneRIGHT");
+
+		IplImage* eye_left = cvCreateImage(cvSize(eyedims_[left].col_, eyedims_[left].row_),IPL_DEPTH_8U, 3);
+		IplImage* eye_right = cvCreateImage(cvSize(eyedims_[right].col_, eyedims_[right].row_),IPL_DEPTH_8U, 3);
+		IplImage* scene_left = cvCreateImage(cvSize(scenedims_[left].col_, scenedims_[left].row_),IPL_DEPTH_8U, 3); 
+		IplImage* scene_right = cvCreateImage(cvSize(scenedims_[right].col_, scenedims_[right].row_),IPL_DEPTH_8U, 3);
+
+		all::core::uint8_sarr ieye[2];
+		all::core::uint8_sarr iscene[2];
+
+		ieye[left].reset(new all::core::uint8_t[eye_bw_sz_[left]]);
+		ieye[right].reset(new all::core::uint8_t[eye_bw_sz_[right]]);
+		iscene[left].reset(new all::core::uint8_t[scene_sz_[left]]);
+		iscene[right].reset(new all::core::uint8_t[scene_sz_[right]]);
+
+		while (running_ && imagecnt < imagestosave) {
+			    sample_gaze_();
+				
+				cvConvertImage(ipl_eye_img_[left], eye_left, CV_CVTIMG_FLIP);
+				cvConvertImage(ipl_eye_img_[right], eye_right, CV_CVTIMG_FLIP);
+				cvConvertImage(ipl_scene_img_[left], scene_left, CV_CVTIMG_FLIP);
+				cvConvertImage(ipl_scene_img_[right], scene_right, CV_CVTIMG_FLIP);
+
+	  			cvShowImage("EyeLEFT",    eye_left);
+				cvShowImage("EyeRIGHT",   eye_right);
+				cvShowImage("SceneLEFT",  scene_left);
+				cvShowImage("SceneRIGHT", scene_right);
+
+				
+
+				if (bsavecalib_) {
+
+					
+					bsavecalib_ = false;
+					imagecnt++;
+					printf("Saving %d calib file.\n", imagecnt);
+
+					//BW conversion
+					cvCvtColor(eye_left, ipl_eye_bw_img_[left], CV_BGR2GRAY);
+					cvCvtColor(eye_right, ipl_eye_bw_img_[right], CV_BGR2GRAY);
+
+					cvCvtColor(scene_left, ipl_scene_rgb_img_[left], CV_BGR2RGB);
+					cvCvtColor(scene_right, ipl_scene_rgb_img_[right], CV_BGR2RGB);
+
+					memcpy(ieye[left].get(), ipl_eye_bw_img_[left]->imageData, eye_bw_sz_[left]);
+					memcpy(ieye[right].get(), ipl_eye_bw_img_[right]->imageData, eye_bw_sz_[right]);
+					memcpy(iscene[left].get(), scene_left->imageData, scene_sz_[left]);
+					memcpy(iscene[right].get(), scene_right->imageData, scene_sz_[right]);
+
+					////////////////////////////////////////////////////////////////////////
+					//MATLAB --------------------------------------------------------------+
+			  //      //
+					MATFile *pmat = 0;
+			  //      //MATLAB
+					std::string namebase = "calib_";
+			  //      //
+					namebase += boost::lexical_cast<std::string>(imagecnt);
+					namebase += ".mat";
+			  //      //
+					pmat = matOpen(namebase.c_str(), "w");
+
+					//-----------------
+					mxArray* mx_lefteye = 
+					  matlab::buffer2array<core::uint8_t>::create_from_planar(ieye[left].get()
+																	  , matlab::row_major
+																	  , eyedims_[left].row_
+																	  , eyedims_[left].col_
+																	  , 1);
+					mxArray* mx_righteye = 
+					  matlab::buffer2array<core::uint8_t>::create_from_planar(ieye[right].get()
+																	  , matlab::row_major
+																	  , eyedims_[right].row_
+																	  , eyedims_[right].col_
+																	  , 1);
+					//-----------------
+					//mxArray!
+					mxArray* mx_leftscene = 
+					  matlab::buffer2array<core::uint8_t>::create_from_interleaved(iscene[left].get()
+																	  , matlab::row_major
+																	  , scenedims_[left].row_
+																	  , scenedims_[left].col_);
+					mxArray* mx_rightscene = 
+					  matlab::buffer2array<core::uint8_t>::create_from_interleaved(iscene[right].get()
+																	  , matlab::row_major
+																	  , scenedims_[right].row_
+																	  , scenedims_[right].col_);
+
+
+					//-----------------
+					mxArray* mx_num = mxCreateDoubleScalar(imagecnt);
+					//-----------------
+					//MTI
+					mxArray* mx_roll = 
+					  mxCreateScalarDouble(heading_.roll.deg());
+					mxArray* mx_pitch = 
+					  mxCreateScalarDouble(heading_.pitch.deg());
+					mxArray* mx_yaw = 
+					  mxCreateScalarDouble(heading_.yaw.deg());
+
+					//
+				   const char *field_names[] = {  "count"  ,
+												  "sceneleft"  ,
+												  "sceneright"  ,
+												  "eyeleft"  ,
+												  "eyeright"  ,
+												  "roll"   ,
+												  "pitch"  ,
+												  "yaw" };
+			  //      //
+					mwSize dims[2] = {1, 1};
+
+			  //      //
+					mxArray* ostruct= mxCreateStructArray(2, dims, 8, field_names);
+
+			  //      //
+					int count_field
+					  , scene_L_field
+					  , scene_R_field
+					  , eye_L_field
+					  , eye_R_field
+					  , roll_field
+					  , pitch_field
+					  , yaw_field;
+
+			  //      //
+					count_field     = mxGetFieldNumber(ostruct,   "count" );
+					scene_L_field   = mxGetFieldNumber(ostruct,   "sceneleft" );
+					scene_R_field     = mxGetFieldNumber(ostruct, "sceneright" );
+					eye_L_field     = mxGetFieldNumber(ostruct,   "eyeleft" );
+					eye_R_field     = mxGetFieldNumber(ostruct,   "eyeright" );
+					roll_field      = mxGetFieldNumber(ostruct,   "roll"  );
+					pitch_field     = mxGetFieldNumber(ostruct,   "pitch" );
+					yaw_field       = mxGetFieldNumber(ostruct,   "yaw"   );
+
+					//count
+					mxSetFieldByNumber( ostruct
+									  , 0
+									  , count_field
+									  , mx_num);
+					//scene
+					mxSetFieldByNumber( ostruct
+									  , 0
+									  , scene_L_field
+									  , mx_leftscene);
+					//depth
+					mxSetFieldByNumber( ostruct
+									  , 0
+									  , scene_R_field
+									  , mx_rightscene);
+					//imeye
+					mxSetFieldByNumber( ostruct
+									  , 0
+									  , eye_L_field
+									  , mx_lefteye);
+					//imeye
+					mxSetFieldByNumber( ostruct
+									  , 0
+									  , eye_R_field
+									  , mx_righteye);
+					//roll
+					mxSetFieldByNumber( ostruct
+									  , 0
+									  , roll_field
+									  , mx_roll);
+					//pitch
+					mxSetFieldByNumber( ostruct
+									  , 0
+									  , pitch_field
+									  , mx_pitch);
+					//yaw
+					mxSetFieldByNumber( ostruct
+									  , 0
+									  , yaw_field
+									  , mx_yaw);
+			  //      //-----------------
+					//write to matfile
+					matPutVariable(pmat, "calibrazione", ostruct);
+
+			  //      //  
+					matClose(pmat);  
+
+					//
+					mxDestroyArray(mx_leftscene);
+					mxDestroyArray(mx_rightscene);
+					mxDestroyArray(mx_lefteye);
+					mxDestroyArray(mx_righteye);
+					mxDestroyArray(mx_num);
+					mxDestroyArray(mx_roll);
+					mxDestroyArray(mx_pitch);
+					mxDestroyArray(mx_yaw);
+
+			}
+			cvWaitKey(1);
+		}
+	}
+
+
+	
   //printf("CALIB LOOP\n");
   //printf("->in the thread loop!\n");
   //printf("->boot_machine_ .. \n");
@@ -651,9 +890,9 @@ void gaze_machine_VI_t::avi_loop() {
     ///
     gazelog_.open(logname_.c_str(),std::ios::out|std::ios::binary);
     ///
-    write_header_bin_();
+    write_header_avi_();
 
-	txt_log_.open("mti.txt", std::ios::out);
+	//txt_log_.open("mti.txt", std::ios::out);
 
     //reset_mti();
     printf("->machine booted ...starting loop\n");

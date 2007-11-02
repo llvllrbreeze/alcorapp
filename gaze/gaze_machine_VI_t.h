@@ -166,6 +166,8 @@ private:
   IplImage* ipl_eye_bw_img_[2];
   size_t eye_bw_sz_[2];
 
+  IplImage* ipl_scene_rgb_img_[2];
+
   //jpeg logging
   all::core::uint8_sarr sarr_eye_img_[2];
   all::core::uint8_sarr sarr_scene_img_[2];
@@ -183,8 +185,6 @@ private:
   //avi logging
   CvVideoWriter* eye_avi_[2];
   CvVideoWriter* scene_avi_[2];
-
-  std::fstream txt_log_;
 
 };
 //-------------------------------------------------------------------------++

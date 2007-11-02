@@ -21,9 +21,9 @@ void gaze_jpeg_encoder_t::encode_loop_(bool gray, int w, int h) {
 	_encoder.reset(new all::core::jpeg_encoder_t());
 
 	if (gray)
-		_encoder->reset(all::core::gray_tag, w, h);
+		_encoder->reset(all::core::gray_tag, h, w);
 	else
-		_encoder->reset(all::core::rgb_tag, all::core::interleaved_tag, w, h);
+		_encoder->reset(all::core::rgb_tag, all::core::interleaved_tag, h, w);
 
 	while(gaze_jpeg_encoder_t::_running) {
 
