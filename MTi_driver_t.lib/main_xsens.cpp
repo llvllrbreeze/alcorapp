@@ -20,13 +20,7 @@ int main()
 
   mti.stop_mti();
 
-  //int count = 200;
-  //while (count > 0)
-  //{
-  //  mti.print_calibdata();
-  //  core::BOOST_SLEEP(1);
-  //  count--;
-  //}
+  core::SLEEP_MSECS(250);
 
   return 0;
 }
