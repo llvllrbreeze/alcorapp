@@ -17,7 +17,7 @@
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
-#include "alcor.apps/gaze/gaze_machine_t.h"
+#include "alcor.apps/gaze/gaze_machine_VI_t.h"
 using namespace all;
 
 #ifdef __BORLANDC__
@@ -112,7 +112,7 @@ void calib_frame::Init()
 ////@begin calib_frame member initialisation
     go_calib_btn = NULL;
 ////@end calib_frame member initialisation
-  gaze_.reset(new all::gaze::gaze_machine_t);
+  gaze_.reset(new all::gaze::gaze_machine_VI_t);
 
 }
 
