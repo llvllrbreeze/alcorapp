@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="mxcv"
-	ProjectGUID="{A6D3849F-7872-483A-A3C5-8B9B5A44D125}"
+	Name="xsens_mti_driver_t"
+	ProjectGUID="{4D6B9A77-D073-4E9B-A023-21698071BFFF}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
@@ -90,7 +90,7 @@
 			Name="Release|Win32"
 			OutputDirectory="..\..\obj\$(ProjectName)"
 			IntermediateDirectory="$(OutDir)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -112,7 +112,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;MATLAB_MEX_FILE"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -129,11 +129,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libmx.lib libmex.lib libmat.lib cxcore.lib cv.lib highgui.lib"
-				OutputFile="..\..\alcor.bin\$(ProjectName).dll"
+				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
-				ModuleDefinitionFile="mxcv.def"
 				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -177,31 +175,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\alcor\matlab\cvmex\cv_create.cpp"
+				RelativePath=".\main_xsens.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\cvmex\cv_laplace.cpp"
+				RelativePath="..\..\alcor.extern\xsens\MTComm.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\cvmex\cv_pyrdown2.cpp"
+				RelativePath="..\..\alcor\sense\detail\MTi_driver_impl.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\matlab\cvmex\cv_resize.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\cvmex\cvpyrdown4.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\mxcv.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\mxcv.def"
+				RelativePath="..\..\alcor\sense\xsens_mti_driver_t.cpp"
 				>
 			</File>
 		</Filter>
@@ -211,11 +197,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\alcor\matlab\opencv_matlab_utils.hpp"
+				RelativePath="..\..\alcor.extern\xsens\MTComm.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\alcor\core\opencv_utils.hpp"
+				RelativePath="..\..\alcor\sense\xsens_mti_driver_t.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\sense\xsens_mti_inc.hpp"
 				>
 			</File>
 		</Filter>
@@ -224,30 +214,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-		</Filter>
-		<Filter
-			Name="matlab"
-			>
-			<File
-				RelativePath="..\..\alcor\matlab\@cvmex\private\cv_laplace.m"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\@cvmex\private\cv_pyrdown.m"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\@cvmex\private\cv_resize.m"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\@cvmex\cvmex.m"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\matlab\@cvmex\subsref.m"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MTi_driver_t.lib", "MTi_dri
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MTi_test.exe", "..\MTi_test.exe\MTi_test.exe.vcproj", "{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xsens_mti_driver_t", "xsens_mti_driver_t.vcproj", "{4D6B9A77-D073-4E9B-A023-21698071BFFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}.Debug|Win32.Build.0 = Debug|Win32
 		{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}.Release|Win32.ActiveCfg = Release|Win32
 		{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}.Release|Win32.Build.0 = Release|Win32
+		{4D6B9A77-D073-4E9B-A023-21698071BFFF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4D6B9A77-D073-4E9B-A023-21698071BFFF}.Debug|Win32.Build.0 = Debug|Win32
+		{4D6B9A77-D073-4E9B-A023-21698071BFFF}.Release|Win32.ActiveCfg = Release|Win32
+		{4D6B9A77-D073-4E9B-A023-21698071BFFF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
