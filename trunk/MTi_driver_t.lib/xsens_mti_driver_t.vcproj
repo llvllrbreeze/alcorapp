@@ -197,6 +197,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\alcor\math\fast_mti_integral_t.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor.extern\xsens\MTComm.h"
 				>
 			</File>
