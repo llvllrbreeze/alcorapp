@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MTi_test.exe", "..\MTi_test
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xsens_mti_driver_t", "xsens_mti_driver_t.vcproj", "{4D6B9A77-D073-4E9B-A023-21698071BFFF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "moving_average_test", "..\moving_average_test\moving_average_test.vcproj", "{F6FDD61C-540B-4200-B2F3-DAF86D85499F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{4D6B9A77-D073-4E9B-A023-21698071BFFF}.Debug|Win32.Build.0 = Debug|Win32
 		{4D6B9A77-D073-4E9B-A023-21698071BFFF}.Release|Win32.ActiveCfg = Release|Win32
 		{4D6B9A77-D073-4E9B-A023-21698071BFFF}.Release|Win32.Build.0 = Release|Win32
+		{F6FDD61C-540B-4200-B2F3-DAF86D85499F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F6FDD61C-540B-4200-B2F3-DAF86D85499F}.Debug|Win32.Build.0 = Debug|Win32
+		{F6FDD61C-540B-4200-B2F3-DAF86D85499F}.Release|Win32.ActiveCfg = Release|Win32
+		{F6FDD61C-540B-4200-B2F3-DAF86D85499F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
