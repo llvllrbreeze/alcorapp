@@ -201,7 +201,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\alcor\math\moving_average_t.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\alcor.extern\xsens\MTComm.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\alcor\math\mti_kalman_filter_t.hpp"
 				>
 			</File>
 			<File
