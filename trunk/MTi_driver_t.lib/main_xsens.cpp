@@ -1,6 +1,7 @@
 ///////////////////////////////////////////////////////////////////
 #include "alcor/sense/xsens_mti_driver_t.h"
 #include "alcor/core/core.h"
+//#include "AggressiveOptimize.h"
 ///////////////////////////////////////////////////////////////////
 using namespace all;
 #define _STRNG(_some_c_str_) std::string(_some_c_str_)
