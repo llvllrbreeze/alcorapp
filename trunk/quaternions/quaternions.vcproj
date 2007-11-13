@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="xsens_mti_driver_t"
-	ProjectGUID="{4D6B9A77-D073-4E9B-A023-21698071BFFF}"
+	Name="quaternions"
+	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
@@ -111,8 +111,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\ALCORLAB\Documenti\Visual Studio 2005\Projects\alcor.extern&quot;;../.."
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;_MERGE_RDATA_"
+				AdditionalIncludeDirectories="../.."
+				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -135,7 +135,6 @@
 				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				OptimizeForWindows98="1"
 				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
 			/>
@@ -176,23 +175,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\alcor\math\fast_mti_integral_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\main_xsens.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor.extern\xsens\MTComm.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\sense\detail\MTi_driver_impl.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\sense\xsens_mti_driver_t.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 		</Filter>
@@ -202,43 +185,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\alcor\core\core.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\core\core_refact.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\math\fast_mti_integral_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\math\moving_average_t.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor.extern\xsens\MTComm.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\math\mti_kalman_filter_t.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\alcor\math\quaternion_t.hpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\alcor\math\quaternion_t_inl.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\sense\xsens_mti_driver_t.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\alcor\sense\xsens_mti_inc.hpp"
 				>
 			</File>
 		</Filter>
