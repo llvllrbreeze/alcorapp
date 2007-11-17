@@ -19,6 +19,13 @@ int main()
   quat3.normalize();
   quat2.normalize();
 
+  //
+  math::quat64_t::rotation_matrix_type rot;
+  quat2.to_rotation_matrix(rot);
+
+  std::cout << "quaternion: " << quat2.quat() << std::endl;
+  std::cout << "rotation  : " << rot << std::endl << std::endl;
+
   std::cout << "QUAT3 axis: " << quat3.axis() << " scalar " << quat3.scalar()<<  std::endl;
   std::cout <<vquat <<  std::endl;
 
