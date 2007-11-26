@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 
       FL = klt.status();
       printf("MAIN::Tracked %d features\n\n", FL->nFeatures);
-      //klt.log_status();
+      klt.log_status();
 #else
       cvShowImage(to_open,frame);
 #endif
