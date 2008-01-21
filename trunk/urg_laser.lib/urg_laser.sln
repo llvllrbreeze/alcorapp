@@ -2,6 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "urg_laser_LIB", "urg_laser.vcproj", "{004D5855-E6BE-4453-9AFA-3E37A010F162}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4186ECF8-EE08-46A4-96E4-AF4D30145D3E} = {4186ECF8-EE08-46A4-96E4-AF4D30145D3E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxctb", "..\wxctb.lib\wxctb.lib.vcproj", "{4186ECF8-EE08-46A4-96E4-AF4D30145D3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +18,10 @@ Global
 		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Debug|Win32.Build.0 = Debug|Win32
 		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.ActiveCfg = Release|Win32
 		{004D5855-E6BE-4453-9AFA-3E37A010F162}.Release|Win32.Build.0 = Release|Win32
+		{4186ECF8-EE08-46A4-96E4-AF4D30145D3E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4186ECF8-EE08-46A4-96E4-AF4D30145D3E}.Debug|Win32.Build.0 = Debug|Win32
+		{4186ECF8-EE08-46A4-96E4-AF4D30145D3E}.Release|Win32.ActiveCfg = Release|Win32
+		{4186ECF8-EE08-46A4-96E4-AF4D30145D3E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
