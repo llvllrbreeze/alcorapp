@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="wxctb"
-	ProjectGUID="{004D5855-E6BE-4453-9AFA-3E37A010F162}"
+	ProjectGUID="{4186ECF8-EE08-46A4-96E4-AF4D30145D3E}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	>
 	<Platforms>
