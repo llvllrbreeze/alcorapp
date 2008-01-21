@@ -104,8 +104,8 @@ void urg_2d_canvas::Init()
 	
 	
 	//set trigonometric table for circle drawing
-	min_angle = all::sense::urg_laser_t::step2angle(20).rad();
-	max_angle = all::sense::urg_laser_t::step2angle(740).rad();
+	min_angle = all::sense::urg_scan_data_t::step2angle(20).rad();
+	max_angle = all::sense::urg_scan_data_t::step2angle(740).rad();
 
 	m_curr_scan.reset(new all::sense::urg_scan_data_t());
 
@@ -156,8 +156,8 @@ void urg_2d_canvas::reset_scan(all::sense::urg_scan_data_ptr scan) {
 		m_urg_th_sin_table[i] = sin(rad_angle);
 	}
 
-	min_angle = all::sense::urg_laser_t::step2angle(scan->start_step).rad();
-	max_angle = all::sense::urg_laser_t::step2angle(scan->end_step).rad();
+	min_angle = all::sense::urg_scan_data_t::step2angle(scan->start_step).rad();
+	max_angle = all::sense::urg_scan_data_t::step2angle(scan->end_step).rad();
 
 	reset_trig_table();
 	reset_viewport();
