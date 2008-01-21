@@ -4,6 +4,7 @@
 	Version="8,00"
 	Name="urg_2d_plot"
 	ProjectGUID="{9926C1F5-D07F-43FF-959C-7CD14594951D}"
+	RootNamespace="urg_2d_plot"
 	>
 	<Platforms>
 		<Platform
@@ -75,7 +76,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib comctl32.lib wxmsw28_gl.lib urg_laser.lib"
+				AdditionalDependencies="wxmsw28.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib comctl32.lib wxmsw28_gl.lib urg_laser.lib user32.lib gdi32.lib advapi32.lib ole32.lib oleaut32.lib uuid.lib opengl32.lib glu32.lib shell32.lib"
 				OutputFile="../../alcor.bin\urg_2d_plot.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
