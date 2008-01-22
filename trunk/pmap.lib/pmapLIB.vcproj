@@ -111,6 +111,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				WholeProgramOptimization="false"
+				AdditionalIncludeDirectories="D:\andera\develop\alcor.extern\libgsl\include"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
@@ -133,6 +134,7 @@
 				LinkLibraryDependencies="true"
 				AdditionalDependencies="libgslcblas.lib libgsl.lib"
 				OutputFile="..\../alcor.lib/pmap.lib"
+				AdditionalLibraryDirectories="D:\andera\develop\alcor.extern\libgsl\lib"
 			/>
 			<Tool
 				Name="VCALinkTool"

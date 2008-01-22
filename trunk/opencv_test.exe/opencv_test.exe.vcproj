@@ -134,6 +134,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="cxcore.lib cv.lib highgui.lib User32.lib Gdi32.lib comctl32.lib"
 				OutputFile="../../alcor.bin\$(ProjectName)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../alcor.lib"

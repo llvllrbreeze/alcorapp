@@ -129,6 +129,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="iniWrapper.lib"
 				OutputFile="..\..\alcor.lib\$(ProjectName)"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>

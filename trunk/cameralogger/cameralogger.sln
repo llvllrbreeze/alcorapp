@@ -2,9 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cameralog_writer", "cameralog_writer.vcproj", "{ED9CFCE2-D0E2-4A51-B8D2-5C1DC81691EC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969} = {A5DFE0B6-CE78-42F0-8CE9-6E47E87D7969}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cameralog_reader", "cameralog_reader.vcproj", "{222DD168-912A-4229-B96C-4367030C41D2}"
 EndProject
