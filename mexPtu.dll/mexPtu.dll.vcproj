@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libmx.lib libmex.lib libmat.lib"
+				AdditionalDependencies="libmx.lib libmex.lib libmat.lib iniwrapper.lib"
 				OutputFile="..\..\alcor.bin\$(ProjectName)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../alcor.lib"

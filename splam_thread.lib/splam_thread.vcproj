@@ -110,7 +110,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\.."
+				AdditionalIncludeDirectories="D:\andera\develop\alcor.extern\libgsl\include;..\.."
 				PreprocessorDefinitions="NDEBUG;WIN32;_WIN32_WINDOWS;ARIA_STATIC"
 				RuntimeLibrary="0"
 				WarningLevel="3"
