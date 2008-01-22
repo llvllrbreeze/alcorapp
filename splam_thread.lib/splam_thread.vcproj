@@ -129,6 +129,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				LinkLibraryDependencies="false"
+				AdditionalDependencies="winmm.lib"
 				OutputFile="..\..\alcor.lib\splam_thread.lib"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 			/>
