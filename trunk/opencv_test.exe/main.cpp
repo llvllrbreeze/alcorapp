@@ -13,27 +13,58 @@
 //
 //using namespace boost::gregorian;
 //using namespace boost::posix_time;
+#define _ F-->00 || F-OO--;
+long F=00,OO=00;
 
-int main (int argc, char** argv)
+void F_OO()
 {
+            _-_-_-_
+       _-_-_-_-_-_-_-_-_
+    _-_-_-_-_-_-_-_-_-_-_-_
+  _-_-_-_-_-_-_-_-_-_-_-_-_-_
+ _-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+ _-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+ _-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+ _-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+  _-_-_-_-_-_-_-_-_-_-_-_-_-_
+    _-_-_-_-_-_-_-_-_-_-_-_
+       _-_-_-_-_-_-_-_-_
+            _-_-_-_
 
-    IplImage* src;
+}
+//int main (int argc, char** argv)
+//{
 
-    if( argc == 2 )
-    {
-		src= cvLoadImage(argv[1],1);
+int main()
+{
+	F_OO();
+	printf("%1.3f\n", 4.*-F/OO/OO);
 
-        IplImage* dst = cvCreateImage( cvSize(256,256), 8, 3 );
-        IplImage* src2 = cvCreateImage( cvGetSize(src), 8, 3 );
-        cvLogPolar( src, dst, cvPoint2D32f(src->width/2,src->height/2), 40, CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS );
-        cvLogPolar( dst, src2, cvPoint2D32f(src->width/2,src->height/2), 40, CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS+CV_WARP_INVERSE_MAP );
-        cvNamedWindow( "log-polar", 1 );
-        cvShowImage( "log-polar", dst );
-        cvNamedWindow( "inverse log-polar", 1 );
-        cvShowImage( "inverse log-polar", src2 );
-        cvWaitKey();
-    }
-    return 0;
+	getchar();	
+	return 0;
+}
+
+  //  IplImage* src;
+
+  //  if( argc == 2 )
+  //  {
+		//src= cvLoadImage(argv[1],1);
+
+  //      IplImage* dst = cvCreateImage( cvSize(256,256), 8, 3 );
+  //      IplImage* src2 = cvCreateImage( cvGetSize(src), 8, 3 );
+  //      cvLogPolar( src, dst, cvPoint2D32f(src->width/2,src->height/2), 40, CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS );
+  //      cvLogPolar( dst, src2, cvPoint2D32f(src->width/2,src->height/2), 40, CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS+CV_WARP_INVERSE_MAP );
+  //      cvNamedWindow( "log-polar", 1 );
+  //      cvShowImage( "log-polar", dst );
+  //      cvNamedWindow( "inverse log-polar", 1 );
+  //      cvShowImage( "inverse log-polar", src2 );
+  //      cvWaitKey();
+  //  }
+  //  return 0;
 
   //date today = day_clock::local_day();
   //ptime now = second_clock::local_time();
@@ -74,5 +105,5 @@ int main (int argc, char** argv)
   //}
 
 
-  return 0;
-}
+//  return 0;
+//}
