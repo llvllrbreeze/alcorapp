@@ -3,9 +3,9 @@
 
 int main()
 {
-pilota_base_server pilota;
-getchar();
-pilota.cancel();
-getchar();
-return 0;
+	pilota_base_server pilota;
+	getchar();
+	pilota.cancel();
+	getchar();
+	return 0;
 }
