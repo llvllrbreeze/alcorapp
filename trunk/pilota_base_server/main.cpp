@@ -1,3 +1,4 @@
+#define WIN32_LEAN_AND_MEAN
 #include "pilota_base_server.hpp"
 
 

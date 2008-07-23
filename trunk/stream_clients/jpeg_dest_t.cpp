@@ -1,3 +1,4 @@
+#define WIN32_LEAN_AND_MEAN
 #include "jpeg_dest_t.hpp"
 
 jpeg_dest_t::jpeg_dest_t(int width, int height) : m_image(), m_image_disp(width, height, "stream")

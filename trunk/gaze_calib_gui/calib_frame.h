@@ -16,7 +16,7 @@
 #pragma interface "calib_frame.h"
 #endif
 
-#include "alcor.apps/gaze/gaze_machine_VI_t.h"
+#include "alcorApp/gaze/gaze_machine_VI_t.h"
 using namespace all;
 
 /*!

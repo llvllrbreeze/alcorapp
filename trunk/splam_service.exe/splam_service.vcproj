@@ -115,7 +115,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="NDEBUG;WIN32;ARIA_STATIC;_WIN32_WINDOWS"
+				PreprocessorDefinitions="NDEBUG;WIN32;ARIA_STATIC;_WIN32_WINDOWS;WIN32_LEAN_AND_MEAN"
 				RuntimeLibrary="0"
 				FloatingPointExceptions="true"
 				WarningLevel="3"
@@ -133,10 +133,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="splam_data.lib p3_client_server.lib pmap.lib iniwrapper.lib urg_laser.lib AriaStatic.lib ArNetworkingStatic.lib coder.lib winmm.lib wsock32.lib client_server_t.lib"
+				AdditionalDependencies="splam_data.lib p3_client_server.lib pmap.lib iniwrapper.lib urg_laser.lib AriaStatic.lib ArNetworkingStatic.lib coder.lib winmm.lib wsock32.lib client_server_t.lib GDI32.LIB OLE32.LIB ADVAPI32.LIB $(NOINHERIT)"
 				OutputFile="..\..\alcor.bin\splam_service.exe"
 				AdditionalLibraryDirectories="..\..\alcor.lib"
 				GenerateManifest="false"
+				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"

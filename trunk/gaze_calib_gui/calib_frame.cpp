@@ -17,7 +17,7 @@
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
-#include "alcor.apps/gaze/gaze_machine_VI_t.h"
+#include "alcorApp/gaze/gaze_machine_VI_t.h"
 using namespace all;
 
 #ifdef __BORLANDC__
