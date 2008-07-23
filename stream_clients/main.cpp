@@ -1,3 +1,4 @@
+#define WIN32_LEAN_AND_MEAN
 #include <alcor/core/stream_client_t.hpp>
 
 #include "jpeg_dest_t.hpp"

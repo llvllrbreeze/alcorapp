@@ -111,7 +111,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\.."
-				PreprocessorDefinitions="NDEBUG;WIN32;ARIA_STATIC"
+				PreprocessorDefinitions="NDEBUG;WIN32;ARIA_STATIC;WIN32_LEAN_AND_MEAN"
 				RuntimeLibrary="0"
 				FloatingPointExceptions="true"
 				WarningLevel="3"

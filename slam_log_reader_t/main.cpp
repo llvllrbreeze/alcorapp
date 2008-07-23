@@ -24,8 +24,7 @@ int main(int argc, char* argv[]){
 	//	vettore_prova.push_back(1);
 	//}
 	//std::cout << "La dimensione del vettore prova dopo il push back è : " << vettore_prova.size() * sizeof(vettore_prova) << std::endl;
-	getchar();
-	logger.next_sample();
-	getchar();
+	while(getchar() != 'q')
+		logger.next_sample();
 	return 1;
 }

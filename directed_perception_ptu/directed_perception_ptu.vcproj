@@ -108,7 +108,7 @@
 				InlineFunctionExpansion="1"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="..\.."
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;WIN32_LEAN_AND_MEAN"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"

@@ -16,7 +16,7 @@
 #pragma interface "gazemachine_mainframe.h"
 #endif
 
-#include "alcor.apps/gaze/gaze_machine_t.h"
+#include "alcorApp/gaze/gaze_machine_t.h"
 using namespace all;
 /*!
  * Includes
