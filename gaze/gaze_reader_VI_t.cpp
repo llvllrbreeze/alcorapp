@@ -1,6 +1,6 @@
 #include "gaze_reader_VI_t.h"
 #include "alcor/matlab/matlab_mx_utils.hpp"
-//#include "alcor/core/image_utils.h"
+#include "alcor/core/image_utils.h"
 //-------------------------------------------------------------------------++
 //#include "alcor.extern/CImg/CImg.h"
 //using namespace cimg_library;
@@ -20,6 +20,13 @@ gaze_reader_VI_t::~gaze_reader_VI_t()
 {
   if (gazelog_.is_open())
     gazelog_.close();
+  if (log_type_ == 1) {
+	  cvReleaseCapture(&eye_avi_[left]);
+	  cvReleaseCapture(&eye_avi_[right]);
+	  cvReleaseCapture(&scene_avi_[left]);
+	  cvReleaseCapture(&scene_avi_[right]);
+  }
+
 }
 //-------------------------------------------------------------------------++
 void gaze_reader_VI_t::load(std::string& binlog)
@@ -120,13 +127,16 @@ void gaze_reader_VI_t::allocate_()
 		scene_avi_[left] = cvCreateFileCapture("scene_left.avi");
 		scene_avi_[right] = cvCreateFileCapture("scene_right.avi");
 
-		ieye[left].reset(new all::core::uint8_t[eye_offset_[left]]);
-		ieye[right].reset(new all::core::uint8_t[eye_offset_[right]]);
-		iscene[left].reset(new all::core::uint8_t[scene_offset_[left]]);
-		iscene[right].reset(new all::core::uint8_t[scene_offset_[right]]);
-		
 	}
 
+   //for matlab array creation
+   ieye[left].reset(new all::core::uint8_t[eye_offset_[left]]);
+   ieye[right].reset(new all::core::uint8_t[eye_offset_[right]]);
+   iscene[left].reset(new all::core::uint8_t[scene_offset_[left]]);
+   iscene[right].reset(new all::core::uint8_t[scene_offset_[right]]);
+   idepth.reset(new all::core::single_t[scene_offset_[left]]);
+
+   
    eye_img_[left] = cvCreateImage(cvSize(eyedims_[left].col_, eyedims_[left].row_),IPL_DEPTH_8U, 3);
    eye_img_[right] = cvCreateImage(cvSize(eyedims_[right].col_, eyedims_[right].row_),IPL_DEPTH_8U, 3);
    
@@ -134,6 +144,18 @@ void gaze_reader_VI_t::allocate_()
    eye_bw_img_[right] = cvCreateImage(cvSize(eyedims_[right].col_, eyedims_[right].row_),IPL_DEPTH_8U, 1);
    scene_img_[left] = cvCreateImage(cvSize(scenedims_[left].col_, scenedims_[left].row_),IPL_DEPTH_8U, 3); 
    scene_img_[right] = cvCreateImage(cvSize(scenedims_[right].col_, scenedims_[right].row_),IPL_DEPTH_8U, 3);
+
+   eye_img_[left]->origin = IPL_ORIGIN_BL;
+   eye_img_[right]->origin = IPL_ORIGIN_BL;
+   eye_bw_img_[left]->origin = IPL_ORIGIN_BL;
+   eye_bw_img_[right]->origin = IPL_ORIGIN_BL;
+   scene_img_[left]->origin = IPL_ORIGIN_BL;
+   scene_img_[right]->origin = IPL_ORIGIN_BL;
+
+   //stereo_process.init("config/gaze_stereo.ini");
+
+   //_eye_filter[left].LoadCameraParams("cmos2.ini");
+   //_eye_filter[right].LoadCameraParams("cmos2.ini");
 
    current_sample_ = 0;
 }
@@ -160,10 +182,18 @@ bool gaze_reader_VI_t::sample_bin_()
 	jpeg_dec_.decode(dec_scene_data_[left], enc_scene_data_[left].data, enc_scene_data_[left].size);
 	jpeg_dec_.decode(dec_scene_data_[right], enc_scene_data_[right].data, enc_scene_data_[right].size);
 
-	ieye[left] = (dec_eye_data_[left].data);
-	ieye[right] = (dec_eye_data_[right].data);
-	iscene[left] = (dec_scene_data_[left].data);
-	iscene[right] = (dec_scene_data_[right].data);
+	//ieye[left] = (dec_eye_data_[left].data);
+	//ieye[right] = (dec_eye_data_[right].data);
+	//iscene[left] = (dec_scene_data_[left].data);
+	//iscene[right] = (dec_scene_data_[right].data);
+
+	memcpy(eye_bw_img_[left]->imageData, dec_eye_data_[left].data.get(), eye_offset_[left]);
+	memcpy(eye_bw_img_[right]->imageData, dec_eye_data_[right].data.get(), eye_offset_[right]);
+	memcpy(scene_img_[left]->imageData, dec_scene_data_[left].data.get(), scene_offset_[left]);
+	memcpy(scene_img_[right]->imageData, dec_scene_data_[right].data.get(), scene_offset_[right]);
+
+	//cvCvtColor(eye_img_[left], eye_bw_img_[left], CV_BGR2GRAY);
+	//cvCvtColor(eye_img_[right], eye_bw_img_[right], CV_BGR2GRAY);
 
     ///Orientation
     gazelog_.read((char*)&ihead,  rpy_offset_);
@@ -188,10 +218,10 @@ bool gaze_reader_VI_t::sample_avi_() {
 
 	cvCvtColor(eye_img_[left], eye_bw_img_[left], CV_BGR2GRAY);
 	cvCvtColor(eye_img_[right], eye_bw_img_[right], CV_BGR2GRAY);
-	memcpy(ieye[left].get(), eye_bw_img_[left]->imageData, eye_offset_[left]);
-	memcpy(ieye[right].get(), eye_bw_img_[right]->imageData, eye_offset_[right]);
-	memcpy(iscene[left].get(), scene_img_[left]->imageData, scene_offset_[left]);
-	memcpy(iscene[right].get(), scene_img_[right]->imageData, scene_offset_[right]);
+	//memcpy(ieye[left].get(), eye_bw_img_[left]->imageData, eye_offset_[left]);
+	//memcpy(ieye[right].get(), eye_bw_img_[right]->imageData, eye_offset_[right]);
+	//memcpy(iscene[left].get(), scene_img_[left]->imageData, scene_offset_[left]);
+	//memcpy(iscene[right].get(), scene_img_[right]->imageData, scene_offset_[right]);
 
     ///Orientation
     gazelog_.read((char*)&ihead,  rpy_offset_);
@@ -240,43 +270,85 @@ void gaze_reader_VI_t::play(bool bshow, bool bsavemat)
    cvNamedWindow("EyeRIGHT");
    cvNamedWindow("SceneLEFT");
    cvNamedWindow("SceneRIGHT");
+   //cvNamedWindow("Depth");
 
-   IplImage* eye_left = cvCreateImage(cvSize(eyedims_[left].col_, eyedims_[left].row_),IPL_DEPTH_8U, 1);
+ /*  IplImage* eye_left = cvCreateImage(cvSize(eyedims_[left].col_, eyedims_[left].row_),IPL_DEPTH_8U, 1);
    IplImage* eye_right = cvCreateImage(cvSize(eyedims_[right].col_, eyedims_[right].row_),IPL_DEPTH_8U, 1);
    IplImage* scene_left = cvCreateImage(cvSize(scenedims_[left].col_, scenedims_[left].row_),IPL_DEPTH_8U, 3); 
-   IplImage* scene_right = cvCreateImage(cvSize(scenedims_[right].col_, scenedims_[right].row_),IPL_DEPTH_8U, 3);
+   IplImage* scene_right = cvCreateImage(cvSize(scenedims_[right].col_, scenedims_[right].row_),IPL_DEPTH_8U, 3);*/
 
-  const unsigned char color  [3] = {215,  240,  60};
-  const unsigned char blue   [3] = {0,  0,  255};
 
   ///
   while(sample())
   {
     //TIME
-    timeroffset = static_cast<unsigned int> ( (elapsed_- last_elapsed) * 1000.0);
-    core::BOOST_SLEEP( timeroffset );
+    //timeroffset = static_cast<unsigned int> ( (elapsed_- last_elapsed) * 1000.0);
+    //core::BOOST_SLEEP( timeroffset );
+
+	  //idepth = stereo_process.do_stereo(scene_img_[left], scene_img_[right]);
+
+	  //IplImage* stereo_pair[] = {scene_img_[left], scene_img_[right]};
+	  //stereo_process.undistort(stereo_pair, stereo_pair);
+
+	  //_eye_filter[left].Undistort(&eye_bw_img_[left], &eye_bw_img_[left]);
+	  //_eye_filter[right].Undistort(&eye_bw_img_[right], &eye_bw_img_[right]);
+
+	  //memcpy(eye_left->imageData, ieye[left].get(), eye_offset_[left]);
+	  //memcpy(eye_right->imageData, ieye[right].get(), eye_offset_[right]);
+	  //memcpy(scene_left->imageData, iscene[left].get(), scene_offset_[left]);
+	  //memcpy(scene_right->imageData, iscene[right].get(), scene_offset_[right]);
+
+	  //cvConvertImage(scene_left, scene_left, CV_CVTIMG_FLIP);
+	  //cvConvertImage(scene_right, scene_right, CV_CVTIMG_FLIP);
+	  //eye_left->origin = IPL_ORIGIN_BL;
+	  //eye_right->origin = IPL_ORIGIN_BL;
+	  //cvConvertImage(eye_left, eye_img_[left], CV_CVTIMG_FLIP);
+	  //cvConvertImage(eye_right, eye_img_[right], CV_CVTIMG_FLIP);
+
 
     if(bshow)
       {
-		  memcpy(eye_left->imageData, ieye[left].get(), eye_offset_[left]);
-		  memcpy(eye_right->imageData, ieye[right].get(), eye_offset_[right]);
-		  memcpy(scene_left->imageData, iscene[left].get(), scene_offset_[left]);
-		  memcpy(scene_right->imageData, iscene[right].get(), scene_offset_[right]);
+		  //memcpy(eye_left->imageData, ieye[left].get(), eye_offset_[left]);
+		  //memcpy(eye_right->imageData, ieye[right].get(), eye_offset_[right]);
+		  //memcpy(scene_left->imageData, iscene[left].get(), scene_offset_[left]);
+		  //memcpy(scene_right->imageData, iscene[right].get(), scene_offset_[right]);
 
 		  //cvCvtColor(scene_left, scene_left, CV_RGB2BGR);
 		  //cvCvtColor(scene_right, scene_right, CV_RGB2BGR);
 
-		  cvShowImage("EyeLEFT", eye_left);
-		  cvShowImage("EyeRIGHT", eye_right);
-		  cvShowImage("SceneLEFT", scene_left);
-		  cvShowImage("SceneRIGHT", scene_right);
+		  cvShowImage("EyeLEFT", eye_bw_img_[left]);
+		  cvShowImage("EyeRIGHT", eye_bw_img_[right]);
+		  cvShowImage("SceneLEFT", scene_img_[left]);
+		  cvShowImage("SceneRIGHT", scene_img_[right]);
+		  //cvShowImage("Depth", stereo_process.get_disparity());
 
 		  cvWaitKey(1);
     }
 
     ////////////////////////////////////////////////////////////////////////
-    if (bsavemat) 
-      matlab_dump();
+	if (bsavemat) { 
+	
+		//cvFlip(eye_bw_img_[left], eye_bw_img_[left], 0);
+		//cvFlip(eye_bw_img_[right], eye_bw_img_[right], 0);
+		//cvFlip(scene_img_[left], scene_img_[left], 0);
+		//cvFlip(scene_img_[right], scene_img_[right], 0);
+
+		if(log_type_ == 0) {
+			cvFlip(eye_bw_img_[left], eye_bw_img_[left], 0);
+			cvFlip(eye_bw_img_[right], eye_bw_img_[right], 0);
+			cvConvertImage(scene_img_[left], scene_img_[left], CV_CVTIMG_FLIP);
+			cvConvertImage(scene_img_[right], scene_img_[right], CV_CVTIMG_FLIP);
+		}
+		
+
+		memcpy(ieye[left].get(), eye_bw_img_[left]->imageData, eye_offset_[left]);
+		memcpy(ieye[right].get(), eye_bw_img_[right]->imageData, eye_offset_[right]);
+		memcpy(iscene[left].get(), scene_img_[left]->imageData,  scene_offset_[left]);
+		memcpy(iscene[right].get(), scene_img_[right]->imageData, scene_offset_[right]);
+		
+        matlab_dump();
+	
+	}
     ////////////////////////////////////////////////////////////////////////
 
     //for next loop
@@ -302,6 +374,7 @@ void gaze_reader_VI_t::matlab_dump()
 
 	mxArray* mx_scene[2];
 	mxArray* mx_eye[2];
+	//mxArray* mx_depth;
     //
     //printf("\nrgb\n");
     //-----------------
@@ -315,14 +388,13 @@ void gaze_reader_VI_t::matlab_dump()
                                                       , matlab::row_major
                                                       , scenedims_[right].row_
                                                       , scenedims_[right].col_);
-    ////printf("depth\n");
-    ////-----------------
-    //mxArray* mx_depth  = 
-    //  all::matlab::buffer2array<  core::single_t  >::create_from_planar(
+
+    //mx_depth  = 
+    //  all::matlab::buffer2array<core::single_t>::create_from_planar(
     //    idepth.get()
     //  , matlab::row_major
-    //  , scenedims_.row_
-    //  , scenedims_.col_);
+    //  , scenedims_[left].row_
+    //  , scenedims_[left].col_);
 
     //printf("eye\n");
     //------------------
@@ -351,7 +423,7 @@ void gaze_reader_VI_t::matlab_dump()
     mxArray* mx_yaw = 
       mxCreateScalarDouble(ihead.yaw.deg());
     //------------------
-#ifdef WRITESTRUCTS_
+
      const char *field_names[] = {  "elapsed",
                                     "scene_left"  ,
 									"scene_right",
@@ -378,7 +450,7 @@ void gaze_reader_VI_t::matlab_dump()
       elapsed_field = mxGetFieldNumber(ostruct,   "elapsed");
       scene_left_field   = mxGetFieldNumber(ostruct,   "scene_left");
 	  scene_right_field   = mxGetFieldNumber(ostruct,   "scene_right");
-      depth_field   = mxGetFieldNumber(ostruct,   "depth");
+      //depth_field   = mxGetFieldNumber(ostruct,   "depth");
       eye_left_field   = mxGetFieldNumber(ostruct,   "eye_left");
 	  eye_right_field   = mxGetFieldNumber(ostruct,   "eye_right");
       roll_field    = mxGetFieldNumber(ostruct,   "roll");
@@ -431,20 +503,7 @@ void gaze_reader_VI_t::matlab_dump()
 
       //write to matfile
       matPutVariable(pmat, "gazelog", ostruct);
-#else
 
-    //------------------
-    //printf("Write to mat\n");
-    //add to file
-    matPutVariable(pmat, "elapsed", mx_time);
-    matPutVariable(pmat, "scene"    , mx_rgb);
-    matPutVariable(pmat, "xyz"    , mx_depth);
-    matPutVariable(pmat, "imeye"    , mx_eye);
-    matPutVariable(pmat, "roll"   , mx_roll);
-    matPutVariable(pmat, "pitch"  , mx_pitch);
-    matPutVariable(pmat, "yaw"    , mx_yaw);
-    //------------------
-#endif
     //  
     //printf("Close mat\n");
     matClose(pmat);  
