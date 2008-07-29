@@ -133,7 +133,7 @@ private:
   size_t  eye_sz_[2]  ;
   size_t  scene_sz_[2];
 
-  //size_t  depth_sz  ;
+  size_t  depth_sz_  ;
   size_t  heading_sz_ ; 
 
   ///Samples num

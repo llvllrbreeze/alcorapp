@@ -7,12 +7,14 @@
 #include "alcor/math/rpy_angle_t.h"
 #include "alcor/math/size3d_t.hpp"
 #include "alcor/core/jpeg_decoder_t.h"
+//#include "alcor/sense/stereo_process_t.hpp"
 //-------------------------------------------------------------------------++
 #include <boost/lexical_cast.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
 #include <cv.h>
+#include <cvaux.h>
 #include <highgui.h>
 //-------------------------------------------------------------------------++
 #include "mat.h"
@@ -152,6 +154,13 @@ private:
   IplImage* eye_img_[2];
   IplImage* eye_bw_img_[2];
   IplImage* scene_img_[2];
+
+  //stereo process
+  //all::sense::stereo_process_t stereo_process;
+
+  //CvCalibFilter _eye_filter[2];
+
+  
 
 };
 //-------------------------------------------------------------------------++
