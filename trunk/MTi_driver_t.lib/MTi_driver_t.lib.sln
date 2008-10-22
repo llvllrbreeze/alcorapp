@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MTi_driver_t.lib", "MTi_driver_t.lib.vcproj", "{004D5855-E6BE-4453-9AFA-3E37A010F162}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MTi_test.exe", "..\MTi_test.exe\MTi_test.exe.vcproj", "{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
