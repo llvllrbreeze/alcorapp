@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
-	Name="MTi_test.exe"
+	Version="9.00"
+	Name="simple_gm"
 	ProjectGUID="{97F4C7CC-4CB2-4AB2-BDBF-18E8ABC9646D}"
 	RootNamespace="PLEASE_CHANGE_ME"
 	TargetFrameworkVersion="131072"
@@ -45,7 +45,7 @@
 				RuntimeLibrary="3"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="4"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -58,7 +58,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				GenerateDebugInformation="true"
+				GenerateManifest="false"
+				GenerateDebugInformation="false"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				TargetMachine="1"
@@ -110,10 +111,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="NDEBUG;WIN32"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -130,12 +129,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\..\alcor.bin\$(ProjectName)"
-				AdditionalLibraryDirectories="..\..\alcor.lib"
+				AdditionalOptions="/NODEFAULTLIB:&quot;atlthunk&quot;  "
+				AdditionalDependencies="winmm.lib comctl32.lib"
+				OutputFile="..\..\alcor.bin\$(ProjectName).exe"
+				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\Alcor\My Documents\andrea\code\alcor.extern\videoinput&quot;;..\..\alcor.lib"
 				GenerateManifest="false"
 				GenerateDebugInformation="false"
-				OptimizeReferences="0"
-				EnableCOMDATFolding="0"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
 				LinkTimeCodeGeneration="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -178,6 +179,10 @@
 				RelativePath=".\main.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\simple_gaze_logger_t.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -185,7 +190,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\alcor\sense\MTi_driver_t.h"
+				RelativePath=".\simple_gaze_logger_t.h"
 				>
 			</File>
 		</Filter>
