@@ -1,6 +1,8 @@
 #include "simple_gaze_logger_t.h"
 
 #include <boost/bind.hpp>
+#include <boost/filesystem.hpp>  // includes all needed Boost.Filesystem declarations
+ 
 
 namespace uor{
 	//
@@ -51,7 +53,6 @@ namespace uor{
 				log_gaze_();
 				show_gaze_();
 
-				//Sleep(1);
 
 				boost::thread::yield();
 			}
@@ -65,6 +66,20 @@ namespace uor{
 	//
 	bool simple_gaze_logger_t::bootstrap_()
 	{		
+		namespace fs = boost::filesystem;
+		fs::path outfolder = "./samples";
+		
+		//
+		if (!fs::exists(outfolder) )
+		{
+			std::cout 
+				<< "Creating Directory: "
+				<< outfolder
+				<< std::endl;
+
+			fs::create_directory(outfolder);
+		}
+
 		//CAMERA
 		VI_.reset(new videoInput());
 
