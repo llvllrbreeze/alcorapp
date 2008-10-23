@@ -82,9 +82,6 @@ private:
 	 ///Binary Data Stream
 	std::fstream gazelog_;
 	///
-	std::string logname_;
-
-	///
 	boost::timer timer_;
 	///loop control
 	volatile bool running_;

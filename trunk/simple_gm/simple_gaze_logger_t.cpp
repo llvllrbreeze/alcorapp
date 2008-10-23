@@ -2,7 +2,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>  // includes all needed Boost.Filesystem declarations
- 
+ #include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace uor{
 	//
@@ -10,7 +10,6 @@ namespace uor{
 	 running_(true)
 	,ipl_scene_img_(0)
 	,camera_id_(0)
-	,logname_("headingLog.dat")
 	{
 
 	}
@@ -67,6 +66,9 @@ namespace uor{
 	bool simple_gaze_logger_t::bootstrap_()
 	{		
 		namespace fs = boost::filesystem;
+		namespace pt = boost::posix_time;
+
+		//
 		fs::path outfolder = "./samples";
 		
 		//
@@ -79,6 +81,30 @@ namespace uor{
 
 			fs::create_directory(outfolder);
 		}
+
+		pt::ptime t(pt::second_clock::universal_time());
+		///
+        std::string datestr = to_iso_string(t);
+		//
+        fs::path suboutfolder ( outfolder / datestr );
+
+		//
+		if (!fs::exists(suboutfolder) )
+		{
+			std::cout 
+				<< "Creating Directory: "
+				<< suboutfolder
+				<< std::endl;
+
+			fs::create_directory(suboutfolder);
+		}
+
+		std::cout 
+			<< "UTC: "
+			<< t 
+			<< " Date: "
+			<< 	t.date()
+			<< std::endl;
 
 		//CAMERA
 		VI_.reset(new videoInput());
@@ -94,8 +120,10 @@ namespace uor{
 		//IMAGE
 		ipl_scene_img_ = cvCreateImage(cvSize(640, 480), IPL_DEPTH_8U, 3);
 
+		fs::path videopath (suboutfolder / "scene.avi");
+
 		video_  = cvCreateVideoWriter 
-				("scene.avi", -1, 15, cvSize( 640, 480));
+				(videopath.file_string().c_str(), -1, 15, cvSize( 640, 480));
 
 		std::cout 
 			<< "Opening MTi ......"
@@ -112,7 +140,8 @@ namespace uor{
 			<< std::endl;
 		
 		//output File
-		gazelog_.open(logname_.c_str(),std::ios::out);
+		fs::path filepath (suboutfolder / "mtilog.dat");
+		gazelog_.open( filepath.file_string().c_str() , std::ios::out);
 
 		return true;
 	}
