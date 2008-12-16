@@ -1,0 +1,4 @@
+1 facce/1.pgm
+2 facce/2.pgm
+3 facce/3.pgm
+4 facce/4.pgm

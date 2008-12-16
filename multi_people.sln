@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "multi_people", "multi_people\multi_people.vcproj", "{E273B858-BCB4-4F25-ACB0-02542321B54D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E273B858-BCB4-4F25-ACB0-02542321B54D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E273B858-BCB4-4F25-ACB0-02542321B54D}.Debug|Win32.Build.0 = Debug|Win32
+		{E273B858-BCB4-4F25-ACB0-02542321B54D}.Release|Win32.ActiveCfg = Release|Win32
+		{E273B858-BCB4-4F25-ACB0-02542321B54D}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
